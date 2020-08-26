@@ -1,0 +1,44 @@
+@import '@/assets/vars.scss';
+
+.input {
+  width: 100%;
+  font-size: 16px;
+  color: $black;
+}
+// 
+.label {
+  position: relative;
+}
+//
+.form-input {
+  border-radius: 8px;
+  padding: 28px 15px 13px;
+  border-width: 1px;
+  border-style: solid;
+  transition: background-color $transition;
+}
+.empty-input {
+  background-color: $grey3;
+  border-color: rgba(0, 0, 0, 0);
+}
+.filled-input {
+  background-color: $white;
+  border-color: $grey4;
+}
+.error {
+  border-color: $red;
+}
+//
+.placeholder {
+  font-size: 13px;
+  font-weight: 300;
+  color: $black;
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  transition: $transition;
+}
+.filled {
+  top: 15px;
+}

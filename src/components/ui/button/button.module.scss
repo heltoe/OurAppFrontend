@@ -1,0 +1,11 @@
+@import '@/assets/vars.scss';
+
+.button {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  color: $white;
+  border-radius: 5px;
+  background-color: $purple;
+  padding: 15px;
+}

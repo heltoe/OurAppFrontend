@@ -1,0 +1,68 @@
+@font-face {
+  font-family: 'Intro';
+  font-display: fallback;
+  src: local('Intro Light'), local('Intro-Light'),
+    url('~@/assets/fonts/intro/Intro-Light.woff') format('woff'),
+    url('~@/assets/fonts/intro/Intro-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Intro';
+  font-display: fallback;
+  src: local('Intro Regular'), local('Intro-Regular'),
+    url('~@/assets/fonts/intro/Intro-Regular.woff') format('woff'),
+    url('~@/assets/fonts/intro/Intro-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Intro';
+  font-display: fallback;
+  src: local('Intro Bold'), local('Intro-Bold'),
+    url('~@/assets/fonts/intro/Intro-Bold.woff') format('woff'),
+    url('~@/assets/fonts/intro/Intro-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-display: fallback;
+  src: local('Lato Light'), local('Lato-Light'),
+    url('~@/assets/fonts/lato/latolight.woff2') format('woff2'),
+    url('~@/assets/fonts/lato/latolight.woff') format('woff'),
+    url('~@/assets/fonts/lato/latolight.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  font-display: fallback;
+  src: local('Lato Regular'), local('Lato-Regular'),
+    url('~@/assets/fonts/lato/latoregular.woff2') format('woff2'),
+    url('~@/assets/fonts/lato/latoregular.woff') format('woff'),
+    url('~@/assets/fonts/lato/latoregular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  font-display: fallback;
+  src: local('.Lato Medium'), local('Lato-Medium'),
+    url('~@/assets/fonts/lato/latomedium.woff2') format('woff2'),
+    url('~@/assets/fonts/lato/latomedium.woff') format('woff'),
+    url('~@/assets/fonts/lato/latomedium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  font-display: fallback;
+  src: local('Lato Bold'), local('Lato-Bold'),
+    url('~@/assets/fonts/lato/latobold.woff2') format('woff2'),
+    url('~@/assets/fonts/lato/latobold.woff') format('woff'),
+    url('~@/assets/fonts/lato/latobold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}

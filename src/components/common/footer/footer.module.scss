@@ -1,0 +1,47 @@
+@import '@/assets/vars.scss';
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin-top: auto;
+}
+.copy {
+  font-size: 13px;
+  line-height: 1.38;
+  color: $white;
+}
+.footer-container {
+  & a {
+    &:not(:first-child) {
+      margin-left: 40px;
+    }
+  }
+}
+@media screen and (max-width: 600px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+  }
+  .footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & a {
+      text-align: center;
+      &:not(:first-child) {
+        margin-left: 0;
+        margin-top: 5px;
+      }
+    }
+  }
+  .copy {
+    margin-top: 5px;
+    text-align: center;
+  }
+}

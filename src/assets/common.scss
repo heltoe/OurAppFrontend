@@ -1,0 +1,40 @@
+@import '@/assets/vars.scss';
+
+* {
+  font-family: 'Lato', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+  color: $black;
+}
+html {
+  min-width: 320px;
+}
+body {
+  width: 100vw;
+  overflow-x: hidden;
+}
+#root {
+  height: 100vh;
+  overflow-y: auto;
+}
+.App {
+  min-height: 100%;
+}
+a {
+  text-decoration: none;
+}
+input,
+a,
+button {
+  outline: none;
+  border: none;
+}
+a:focus {
+  outline: none;
+}
+.wrapper {
+  width: 100%;
+  max-width: 1440px;
+  // max-width: 700px;
+  padding: 0 34px;
+}
