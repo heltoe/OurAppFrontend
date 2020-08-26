@@ -1,10 +1,8 @@
 import React from 'react'
-import styles from './intro-layout.module.scss';
-import Footer from '@/components/common/footer/Footer';
+import Footer from '@/components/common/footer/Footer'
+import styles from './intro-layout.module.scss'
 
-console.log(4545)
-
-export const IntroLayout: React.FC = ({children}) => {
+export const IntroLayout: React.FC = ({ children }) => {
   return (
     <div className={styles['intro-layout']}>
       {children}

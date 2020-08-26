@@ -6,7 +6,10 @@
     "dev": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-app-rewired eject"
+    "eject": "react-app-rewired eject",
+    "lint:eslint": "eslint . src/**/*.ts{,x}",
+    "lint:eslint:fix": "eslint . src/**/*.ts{,x} --fix",
+    "prettify": "prettier --write src/**/*.ts{,x}"
   },
   "dependencies": {
     "react": "^16.13.1",
@@ -20,11 +23,20 @@
     "@testing-library/user-event": "^7.2.1",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.53",
-    "@types/react": "^16.9.44",
+    "@types/react": "^16.9.47",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
     "babel-plugin-module-resolver": "^4.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript": "^9.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.6",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.13",
     "node-sass": "^4.14.1",
@@ -33,42 +45,22 @@
     "typescript": "^3.7.5"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "prettier"
-    ],
-    "rules": {
-      "additional-rule": "warn"
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/*.ts?(x)"
-        ],
-        "rules": {
-          "no-console": "off",
-          "no-debugger": "off",
-          "linebreak-style": "off",
-          "prettier/prettier": [
-            "error",
-            {
-              "endOfLine": "auto"
-            }
-          ],
-          "additional-typescript-only-rule": "warn"
-        }
-      }
-    ]
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --write"
-    ]
+    "extends": "react-app"
   },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "npm run lint:eslint:fix",
+      "git add --force"
+    ],
+    "*.{ts,tsx,js,jsx,json}": [
+      "npm run prettify",
+      "git add --force"
+    ]
   },
   "browserslist": {
     "production": [

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import styles from './footer-link.module.scss';
 import { getRouterByName } from '@/routes'
+import styles from './footer-link.module.scss'
 
 export interface IDataLink {
   routeName: string
@@ -9,7 +9,12 @@ export interface IDataLink {
 
 export const FooterLink: React.FC<IDataLink> = ({ children, routeName }) => {
   return (
-    <Link to={getRouterByName(routeName).path} className={styles['footer-link']}>{children}</Link>
+    <Link
+      to={getRouterByName(routeName).path}
+      className={styles['footer-link']}
+    >
+      {children}
+    </Link>
   )
 }
 

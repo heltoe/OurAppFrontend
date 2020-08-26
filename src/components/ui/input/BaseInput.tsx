@@ -20,7 +20,7 @@ export const BaseInput: React.FC<IBaseInput> = ({
   className = '',
   onChange,
   onFocus = (e: HTMLInputElement) => {},
-  onBlur = (e: HTMLInputElement) => {}
+  onBlur = (e: HTMLInputElement) => {},
 }) => {
   return (
     <input
@@ -29,7 +29,7 @@ export const BaseInput: React.FC<IBaseInput> = ({
       placeholder={placeholder}
       disabled={disabled}
       className={`${style.input} ${className}`}
-      onChange={e => onChange(e.target.value)}
+      onChange={(e) => onChange(e.target.value)}
       onFocus={(e) => onFocus(e.target)}
       onBlur={(e) => onBlur(e.target)}
     />

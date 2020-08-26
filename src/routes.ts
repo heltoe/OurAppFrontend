@@ -15,30 +15,30 @@ export const router: RouterItem[] = [
   {
     name: 'login-page',
     path: '/login',
-    component: LoginPage
+    component: LoginPage,
   },
   {
     name: 'registration-page',
     path: '/registration',
-    component: RegistrationPage
+    component: RegistrationPage,
   },
   {
     name: 'restore-password-page',
     path: '/restore-password',
-    component: RestorePasswordPage
+    component: RestorePasswordPage,
   },
   {
     name: 'contacts',
     path: '/contacts',
-    component: ContactsPage
+    component: ContactsPage,
   },
   {
     name: 'policy',
     path: '/policy',
-    component: PolicyPage
-  }
+    component: PolicyPage,
+  },
 ]
 
 export const getRouterByName = (name: string) => {
-  return router.find(item => item.name === name) || router[0]
+  return router.find((item) => item.name === name) || router[0]
 }

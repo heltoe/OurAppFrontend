@@ -4,8 +4,6 @@ import '@/assets/index.scss'
 import IntroLayout from '@/layouts/IntroLayout'
 import { getRouterByName } from '@/routes'
 
-console.log(4545)
-
 export const App: React.FC = () => {
   return (
     <div className="App">
