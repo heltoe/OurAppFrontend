@@ -1,6 +1,6 @@
 import React from 'react'
-import styles from './footer.module.scss'
-import FooterLink from './components/FooterLink'
+import styles from '@/components/common/footer/footer.module.scss'
+import FooterLink from '@/components/common/footer/components/FooterLink'
 
 export const Footer: React.FC = () => {
   return (

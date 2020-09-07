@@ -38,3 +38,30 @@ a:focus {
   // max-width: 700px;
   padding: 0 34px;
 }
+.no-select {
+  // fix select
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+// font-weight
+.bold {
+  font-weight: bold;
+}
+.middle {
+  font-weight: 600;
+}
+.light {
+  font-weight: 300;
+}
+//
+.simplebar-content {
+  height: 100%;
+  & > div {
+    height: 100%;
+  }
+}

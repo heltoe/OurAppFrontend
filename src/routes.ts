@@ -1,9 +1,12 @@
 import React from 'react'
+//
 import LoginPage from '@/components/pages/login/LoginPage'
 import RegistrationPage from '@/components/pages/registration/RegistrationPage'
 import RestorePasswordPage from '@/components/pages/restore-password/RestorePasswordPage'
 import ContactsPage from '@/components/pages/contacts/ContactsPage'
 import PolicyPage from '@/components/pages/policy/PolicyPage'
+//
+import MainPage from '@/components/pages/main-page/MainPage'
 
 type RouterItem = {
   name: string
@@ -36,6 +39,28 @@ export const router: RouterItem[] = [
     name: 'policy',
     path: '/policy',
     component: PolicyPage,
+  },
+  //
+  {
+    name: 'main-page',
+    path: '/main',
+    component: MainPage,
+  },
+  //
+  {
+    name: 'profile-page',
+    path: '/profile',
+    component: MainPage,
+  },
+  {
+    name: 'messages-page',
+    path: '/messages',
+    component: MainPage,
+  },
+  {
+    name: 'friends-page',
+    path: '/friends',
+    component: MainPage,
   },
 ]
 

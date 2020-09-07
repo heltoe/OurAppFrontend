@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './form.module.scss'
+import styles from '@/components/common/form-intro/form/form.module.scss'
 
 // type FormType = {
 //   onSubmit?(e): void

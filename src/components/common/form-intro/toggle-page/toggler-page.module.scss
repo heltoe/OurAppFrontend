@@ -8,7 +8,7 @@
 }
 .toggle-page {
   font-size: 14px;
-  color: $purple;
+  color: $purple1;
   padding: 20px;
   width: 100%;
   text-align: center;
@@ -22,7 +22,7 @@
       height: calc(100% - 40px);
       transform: translateY(-50%);
       width: 1px;
-      background-color: $purple;
+      background-color: $purple1;
     }
   }
 }

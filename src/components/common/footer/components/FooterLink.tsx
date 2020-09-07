@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { getRouterByName } from '@/routes'
-import styles from './footer-link.module.scss'
+import styles from '@/components/common/footer/components/footer-link.module.scss'
 
 export interface IDataLink {
   routeName: string

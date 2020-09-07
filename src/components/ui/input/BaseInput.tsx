@@ -1,5 +1,5 @@
 import React from 'react'
-import style from './input.module.scss'
+import style from '@/components/ui/input/input.module.scss'
 
 export interface IBaseInput {
   value: string

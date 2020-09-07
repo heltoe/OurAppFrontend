@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { IBaseInput } from '@/components/ui/input/BaseInput'
-import style from './input.module.scss'
+import style from '@/components/ui/input/input.module.scss'
 import BaseInput from './BaseInput'
 
 interface IFormInput extends IBaseInput {

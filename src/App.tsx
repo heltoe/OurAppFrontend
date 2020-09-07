@@ -3,12 +3,13 @@ import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import '@/assets/index.scss'
 import IntroLayout from '@/layouts/IntroLayout'
 import { getRouterByName } from '@/routes'
+import MainLayout from './layouts/main-layout'
 
 export const App: React.FC = () => {
   return (
     <div className="App">
       <Switch>
-        <IntroLayout>
+        {/* <IntroLayout>
           <Route
             path={getRouterByName('login-page').path}
             component={getRouterByName('login-page').component}
@@ -25,7 +26,13 @@ export const App: React.FC = () => {
             from={getRouterByName('login-page').path}
             to={getRouterByName('login-page').path}
           />
-        </IntroLayout>
+        </IntroLayout> */}
+        <MainLayout>
+          <Route
+            path={getRouterByName('main-page').path}
+            component={getRouterByName('main-page').component}
+          />
+        </MainLayout>
       </Switch>
     </div>
   )

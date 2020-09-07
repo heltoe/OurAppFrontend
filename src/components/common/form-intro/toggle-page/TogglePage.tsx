@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { getRouterByName } from '@/routes'
-import styles from './toggler-page.module.scss'
+import styles from '@/components/common/form-intro/toggle-page/toggler-page.module.scss'
 
 type LinkType = {
   routeName: string
