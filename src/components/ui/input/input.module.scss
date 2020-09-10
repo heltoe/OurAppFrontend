@@ -15,7 +15,7 @@
   padding: 28px 15px 13px;
   border-width: 1px;
   border-style: solid;
-  transition: background-color $transition;
+  transition: $transition;
 }
 .empty-input {
   background-color: $grey3;
@@ -24,6 +24,7 @@
 .filled-input {
   background-color: $white;
   border-color: $grey4;
+  box-shadow: $shadow2;
 }
 .error {
   border-color: $red;

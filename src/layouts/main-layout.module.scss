@@ -2,8 +2,10 @@
 
 .main-layout {
   width: calc(100% - 290px);
+  // width: calc(100% - 580px);
   height: 100vh;
   margin-left: auto;
+  // margin: 0 auto;
 }
 .content-container {
   display: flex;

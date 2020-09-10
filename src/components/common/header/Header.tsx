@@ -4,6 +4,7 @@ import { getRouterByName } from '@/routes'
 import AvatarStatus from '@/components/common/header/AvatarStatus'
 import BackPage from '@/components/ui/back-page/Back'
 import style from '@/components/common/header/header.module.scss'
+import { user } from '@/data/user'
 
 export const Header: React.FC = () => {
   return (
@@ -14,7 +15,7 @@ export const Header: React.FC = () => {
         to={getRouterByName('profile-page').path}
         className={style['person-info']}
       >
-        <AvatarStatus image="" initials="" />
+        <AvatarStatus image={user.image} />
       </Link>
     </div>
   )

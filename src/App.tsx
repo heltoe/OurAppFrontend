@@ -29,8 +29,8 @@ export const App: React.FC = () => {
         </IntroLayout> */}
         <MainLayout>
           <Route
-            path={getRouterByName('main-page').path}
-            component={getRouterByName('main-page').component}
+            path={getRouterByName('profile-page').path}
+            component={getRouterByName('profile-page').component}
           />
         </MainLayout>
       </Switch>

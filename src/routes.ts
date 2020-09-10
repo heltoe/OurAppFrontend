@@ -7,6 +7,7 @@ import ContactsPage from '@/components/pages/contacts/ContactsPage'
 import PolicyPage from '@/components/pages/policy/PolicyPage'
 //
 import MainPage from '@/components/pages/main-page/MainPage'
+import EditProfilePage from '@/components/pages/profile/EditProfilePage'
 
 type RouterItem = {
   name: string
@@ -50,7 +51,7 @@ export const router: RouterItem[] = [
   {
     name: 'profile-page',
     path: '/profile',
-    component: MainPage,
+    component: EditProfilePage,
   },
   {
     name: 'messages-page',

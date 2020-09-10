@@ -1,0 +1,182 @@
+@import '@/assets/vars.scss';
+
+// Page
+.profile-page {
+  display: flex;
+  justify-content: space-between;
+  background-color: $white;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.block-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 30px;
+  position: relative;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  & .overlay,
+  & .overlay-photo {
+    display: none;
+  }
+  & .wrapper-image {
+    cursor: pointer;
+    margin-top: 20px;
+    transition: box-shadow $transition;
+    &:hover {
+      box-shadow: $shadow2;
+    }
+  }
+}
+.controller-box {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  & button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    & div {
+      margin-left: 10px;
+    }
+  }
+}
+.overlay-photo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.block-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  & label {
+    margin-top: 20px;
+  }
+  & button {
+    margin-top: 20px;
+    margin-left: auto;
+  }
+  &:not(:first-child) {
+    margin-top: 30px;
+  }
+}
+// Widget
+.widget {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 290px;
+  box-shadow: $shadow2;
+  background-color: $grey2;
+  background-color: $white;
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 20px;
+  padding-top: 60px;
+  position: relative;
+}
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(#6daafe, 0.25);
+  z-index: 10;
+}
+.wrapper-image {
+  border-radius: 50%;
+  border: 2px solid $white;
+}
+.name {
+  margin-top: 15px;
+  font-size: 16px;
+  color: $white;
+  z-index: 10;
+}
+.controller {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  position: relative;
+  z-index: 10;
+  & .wrapper-icon {
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+}
+.wrapper-icon {
+  z-index: 10;
+}
+// 
+.body {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.line {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  & p {
+    margin-left: 10px;
+  }
+}
+.online {
+  color: $green1;
+}
+.offline {
+  color: $grey1;
+}
+
+@media screen and (max-width: 768px) {
+  .profile-page {
+    flex-direction: column;
+    padding: 0;
+  }
+  .block-photo {
+    order: 1;
+    margin-left: 0;
+    padding: 30px;
+    & .wrapper-image {
+      margin-top: 0;
+      z-index: 10;
+    }
+    & .overlay,
+    & .overlay-photo {
+      display: flex;
+    }
+    & p {
+      display: none;
+    }
+    & .controller-box {
+      z-index: 10;
+    }
+  }
+  .block-info {
+    order: 2;
+    padding: 34px;
+  }
+}

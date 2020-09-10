@@ -1,7 +1,8 @@
 import React from 'react'
 import Header from '@/components/common/header/Header'
 import SideBar from '@/components/common/sidebar/SideBar'
-import styles from './main-layout.module.scss'
+// import ProfileWidget from '@/components/pages/profile/widget/ProfileWidget'
+import styles from '@/layouts/main-layout.module.scss'
 
 export const MainLayout: React.FC = ({ children }) => {
   return (
@@ -11,6 +12,7 @@ export const MainLayout: React.FC = ({ children }) => {
         <Header />
         <div className={styles.content}>{children}</div>
       </div>
+      {/* <ProfileWidget /> */}
     </div>
   )
 }
