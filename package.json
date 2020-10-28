@@ -45,7 +45,6 @@
     "gulp-replace": "^1.0.0",
     "gulp-svg-sprite": "^1.5.0",
     "gulp-svgmin": "^3.0.0",
-    "husky": "^4.2.5",
     "lint-staged": "^10.2.13",
     "node-sass": "^4.14.1",
     "prettier": "^2.1.1",
@@ -54,11 +53,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
