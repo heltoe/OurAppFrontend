@@ -1,7 +1,7 @@
 import React from 'react'
 import style from '@/components/pages/profile/profile.module.scss'
-import Avatar from '@/components/ui/avatar/Avatar'
-import Icon from '@/components/ui/icon/Icon'
+import Avatar from '@/components/ui/Avatar'
+import Icon from '@/components/ui/Icon'
 
 type HeadProfileType = {
   image: string

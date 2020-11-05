@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { getRouterByName } from '@/routes'
-import Icon from '@/components/ui/icon/Icon'
+import Icon from '@/components/ui/Icon'
 import style from '../sidebar.module.scss'
 
 export const TopMenu: React.FC = () => {

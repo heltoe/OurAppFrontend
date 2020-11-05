@@ -1,5 +1,5 @@
 import React from 'react'
-import Avatar from '@/components/ui/avatar/Avatar'
+import Avatar from '@/components/ui/Avatar'
 import style from '@/components/common/sidebar/body/card/card.module.scss'
 
 type CardType = {

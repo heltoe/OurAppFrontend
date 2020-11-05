@@ -3,8 +3,6 @@ import React from 'react'
 import LoginPage from '@/components/pages/login/LoginPage'
 import RegistrationPage from '@/components/pages/registration/RegistrationPage'
 import RestorePasswordPage from '@/components/pages/restore-password/RestorePasswordPage'
-import ContactsPage from '@/components/pages/contacts/ContactsPage'
-import PolicyPage from '@/components/pages/policy/PolicyPage'
 //
 import MainPage from '@/components/pages/main-page/MainPage'
 import EditProfilePage from '@/components/pages/profile/EditProfilePage'
@@ -14,8 +12,7 @@ type RouterItem = {
   path: string
   component: React.FC
 }
-
-export const router: RouterItem[] = [
+export const IntroPages: RouterItem[] = [
   {
     name: 'login-page',
     path: '/login',
@@ -31,17 +28,8 @@ export const router: RouterItem[] = [
     path: '/restore-password',
     component: RestorePasswordPage,
   },
-  {
-    name: 'contacts',
-    path: '/contacts',
-    component: ContactsPage,
-  },
-  {
-    name: 'policy',
-    path: '/policy',
-    component: PolicyPage,
-  },
-  //
+]
+export const MainRoutes: RouterItem[] = [
   {
     name: 'main-page',
     path: '/main',
@@ -64,6 +52,7 @@ export const router: RouterItem[] = [
     component: MainPage,
   },
 ]
+export const router: RouterItem[] = [...IntroPages, ...MainRoutes]
 
 export const getRouterByName = (name: string) => {
   return router.find((item) => item.name === name) || router[0]

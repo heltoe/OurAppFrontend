@@ -1,8 +1,8 @@
 import React from 'react'
-import Avatar from '@/components/ui/avatar/Avatar'
-import BaseButton from '@/components/ui/button/BaseButton'
+import Avatar from '@/components/ui/Avatar'
+import BaseButton from '@/components/ui/BaseButton'
 import style from '@/components/pages/profile/profile.module.scss'
-import Icon from '@/components/ui/icon/Icon'
+import Icon from '@/components/ui/Icon'
 
 type PhotoBlockType = {
   image: string

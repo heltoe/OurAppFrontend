@@ -1,5 +1,5 @@
 import React from 'react'
-import Avatar from '@/components/ui/avatar/Avatar'
+import Avatar from '@/components/ui/Avatar'
 import style from '@/components/common/header/header.module.scss'
 
 type AvatarStatusType = {

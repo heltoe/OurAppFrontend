@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Icon from '@/components/ui/icon/Icon'
+import Icon from '@/components/ui/Icon'
 import test from '@/assets/images/arrow-left.svg'
 import style from '@/components/ui/back-page/back-page.module.scss'
 

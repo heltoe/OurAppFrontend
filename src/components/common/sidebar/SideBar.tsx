@@ -1,5 +1,5 @@
 import React from 'react'
-import Simple from '@/components/ui/simplebar/SimpleBar'
+import Simple from '@/components/ui/SimpleBar'
 import TopMenu from '@/components/common/sidebar/top/TopMenu'
 import ContainerMessages from '@/components/common/sidebar/body/chat/ContainerMessages'
 import style from '@/components/common/sidebar/sidebar.module.scss'
