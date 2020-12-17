@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { device } from '@/Theme'
 import Footer from '@/components/common/footer/Footer'
 
 const MainLayoutStyled = styled.div`
@@ -14,7 +15,7 @@ const MainLayoutStyled = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   padding: 20px 0 80px;
-  @media screen and (max-width: 600px) {
+  @media screen and ${device.tabletS} {
     padding-bottom: 115px;
   }
 `

@@ -13,7 +13,7 @@ const ProfilePageStyled = styled.div`
   color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   padding-top: 30px;
   padding-bottom: 30px;
-  @media ${device.tablet} {
+  @media ${device.tabletL} {
     flex-direction: column;
     padding: 0;
   }
@@ -22,7 +22,7 @@ const BlockInfoStyled = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  @media ${device.tablet} {
+  @media ${device.tabletL} {
     order: 2;
     padding: 34px;
   }

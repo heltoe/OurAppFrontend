@@ -1,10 +1,17 @@
 import React, { useState } from 'react'
+import styled from 'styled-components'
 import FormIntroContainer from '@/components/common/form-intro/FotmIntroContainer'
-import TogglePage from '@/components/common/form-intro/toggle-page/TogglePage'
-import FormIntro from '@/components/common/form-intro/form/FormIntro'
+import TogglePage from '@/components/common/form-intro/TogglePage'
+import FormIntro from '@/components/common/form-intro/FormIntro'
 import FormInput from '@/components/ui/FormInput'
 import BaseButton from '@/components/ui/BaseButton'
-import style from './registration.module.scss'
+
+export const RequiredDescriptionStyled = styled.button`
+  font-size: 12px;
+  font-weight: 300;
+  color: ${(props) => props.theme.rgb(props.theme.colors.black)};
+  margin-top: 15px;
+`
 
 export const RegistrationPage: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -42,9 +49,9 @@ export const RegistrationPage: React.FC = () => {
           placeholder="Фамилия*"
           onChange={(e) => setLastName(e)}
         />
-        <p className={style['required-description']}>
+        <RequiredDescriptionStyled>
           * Обязательные поля для заполнения
-        </p>
+        </RequiredDescriptionStyled>
         <BaseButton>Зарегестрироваться</BaseButton>
       </FormIntro>
       <TogglePage routes={[{ routeName: 'login-page', content: 'Вход' }]} />

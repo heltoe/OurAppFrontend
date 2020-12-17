@@ -1,20 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import { getRouterByName } from '@/routes'
-import styles from '@/components/common/footer/components/footer-link.module.scss'
 
 export interface IDataLink {
   routeName: string
 }
-
+export const FooterLinkStyled = styled(Link)`
+  font-size: 14px;
+  line-height: 0.93;
+  color: ${(props) => props.theme.rgb(props.theme.colors.white)};
+`
 export const FooterLink: React.FC<IDataLink> = ({ children, routeName }) => {
   return (
-    <Link
-      to={getRouterByName(routeName).path}
-      className={styles['footer-link']}
-    >
+    <FooterLinkStyled to={getRouterByName(routeName).path}>
       {children}
-    </Link>
+    </FooterLinkStyled>
   )
 }
 

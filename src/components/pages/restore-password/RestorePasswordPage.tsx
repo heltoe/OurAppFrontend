@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormIntroContainer from '@/components/common/form-intro/FotmIntroContainer'
-import TogglePage from '@/components/common/form-intro/toggle-page/TogglePage'
-import FormIntro from '@/components/common/form-intro/form/FormIntro'
+import TogglePage from '@/components/common/form-intro/TogglePage'
+import FormIntro from '@/components/common/form-intro/FormIntro'
 import FormInput from '@/components/ui/FormInput'
 import BaseButton from '@/components/ui/BaseButton'
 

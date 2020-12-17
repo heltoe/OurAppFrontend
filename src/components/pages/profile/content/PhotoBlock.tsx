@@ -69,7 +69,7 @@ const BlockPhotoStyled = styled.div`
       box-shadow: ${(props) => props.theme.shadow.shadow2};
     }
   }
-  @media ${device.tablet} {
+  @media ${device.tabletL} {
     order: 1;
     margin-left: 0;
     padding: 30px;

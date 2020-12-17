@@ -1,8 +1,19 @@
 import React from 'react'
-import styles from '@/components/common/form-intro/form-intro-container.module.scss'
+import styled from 'styled-components'
+import { device } from '@/Theme'
 
+export const FormContainerStyled = styled.div`
+  width: 400px;
+  border-radius: 10px;
+  margin: 0 auto;
+  box-shadow: ${(props) => props.theme.shadow.shadow1};
+  background-color: $white;
+  @media screen and ${device.mobileL} {
+    width: calc(100% - 68px);
+  }
+`
 export const FormIntroContainer: React.FC = ({ children }) => {
-  return <div className={styles['form-container']}>{children}</div>
+  return <FormContainerStyled>{children}</FormContainerStyled>
 }
 
 export default FormIntroContainer
