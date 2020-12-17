@@ -6,7 +6,7 @@ import FormIntro from '@/components/common/form-intro/FormIntro'
 import FormInput from '@/components/ui/FormInput'
 import BaseButton from '@/components/ui/BaseButton'
 
-export const RequiredDescriptionStyled = styled.button`
+export const RequiredDescriptionStyled = styled.p`
   font-size: 12px;
   font-weight: 300;
   color: ${(props) => props.theme.rgb(props.theme.colors.black)};

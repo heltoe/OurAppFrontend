@@ -20,7 +20,6 @@ const LogoStyled = styled.p`
   color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   font-weight: 600;
   text-transform: uppercase;
-  cursor: default;
   margin: 0 10px;
 `
 const PersonInfoStyled = styled(Link)`
@@ -34,7 +33,9 @@ export const Header: React.FC = () => {
   return (
     <HeaderStyled>
       <BackPage path="/" />
-      <LogoStyled className="no-select">Chat</LogoStyled>
+      <Link to={getRouterByName('main-page').path}>
+        <LogoStyled className="no-select">Chat</LogoStyled>
+      </Link>
       <PersonInfoStyled to={getRouterByName('profile-page').path}>
         <AvatarStatus image={user.image} />
       </PersonInfoStyled>

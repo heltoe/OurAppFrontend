@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { device } from '@/Theme'
 import Footer from '@/components/common/footer/Footer'
+import BgDot from '@/assets/images/intro/bg-dot.svg'
 
 const MainLayoutStyled = styled.div`
   display: flex;
@@ -10,7 +11,7 @@ const MainLayoutStyled = styled.div`
   position: relative;
   min-height: 100vh;
   width: 100%;
-  background-image: url('~@/assets/images/intro/bg-dot.svg');
+  background-image: url(${BgDot});
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;

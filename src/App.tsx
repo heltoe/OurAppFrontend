@@ -14,6 +14,7 @@ export const App: React.FC = () => {
             <Route
               path={getRouterByName(item.name).path}
               component={getRouterByName(item.name).component}
+              key={item.name}
             />
           ))}
           <Redirect

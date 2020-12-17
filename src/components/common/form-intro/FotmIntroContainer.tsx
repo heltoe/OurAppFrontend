@@ -7,7 +7,7 @@ export const FormContainerStyled = styled.div`
   border-radius: 10px;
   margin: 0 auto;
   box-shadow: ${(props) => props.theme.shadow.shadow1};
-  background-color: $white;
+  background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   @media screen and ${device.mobileL} {
     width: calc(100% - 68px);
   }

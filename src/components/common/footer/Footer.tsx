@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { device } from '@/Theme'
-import FooterLink, { FooterLinkStyled } from '@/components/common/footer/FooterLink'
 
 const FooterStyled = styled.div`
   display: flex;
@@ -18,25 +17,6 @@ const FooterStyled = styled.div`
     align-items: center;
   }
 `
-const FooterContainerStyled = styled.div`
-  & ${FooterLinkStyled} {
-    &:not(:first-child) {
-      margin-left: 40px;
-    }
-  }
-  @media screen and ${device.tabletS} {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    & ${FooterLinkStyled} {
-      text-align: center;
-      &:not(:first-child) {
-        margin-left: 0;
-        margin-top: 5px;
-      }
-    }
-  }
-`
 const CopyStyled = styled.p`
   font-size: 13px;
   line-height: 1.38;
@@ -47,13 +27,10 @@ const CopyStyled = styled.p`
   }
 `
 export const Footer: React.FC = () => {
+  const currentDate = new Date().getFullYear()
   return (
     <FooterStyled>
-      <FooterContainerStyled>
-        <FooterLink routeName="policy">Политика конфиденциальности</FooterLink>
-        <FooterLink routeName="contacts">Контакты</FooterLink>
-      </FooterContainerStyled>
-      <CopyStyled>© 2019–2020 ООО «Человек»</CopyStyled>
+      <CopyStyled>© {currentDate} ООО «Chat»</CopyStyled>
     </FooterStyled>
   )
 }
