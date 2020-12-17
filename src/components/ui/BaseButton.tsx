@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export interface IBaseButton {
   disabled?: boolean
 }
-const BaseButtonStyled = styled.button`
+export const BaseButtonStyled = styled.button`
   font-size: 14px;
   font-weight: 600;
   text-align: center;

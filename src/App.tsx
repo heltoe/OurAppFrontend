@@ -9,7 +9,7 @@ export const App: React.FC = () => {
   return (
     <div className="App">
       <Switch>
-        <IntroLayout>
+        {/* <IntroLayout>
           {IntroPages.map((item) => (
             <Route
               path={getRouterByName(item.name).path}
@@ -20,8 +20,8 @@ export const App: React.FC = () => {
             from={getRouterByName('login-page').path}
             to={getRouterByName('login-page').path}
           />
-        </IntroLayout>
-        {/* <MainLayout>
+        </IntroLayout> */}
+        <MainLayout>
           {MainRoutes.map((item) => (
             <Route
               path={getRouterByName(item.name).path}
@@ -29,10 +29,10 @@ export const App: React.FC = () => {
             />
           ))}
           <Redirect
-            from={getRouterByName('main-page').path}
-            to={getRouterByName('main-page').path}
+            from={getRouterByName('profile-page').path}
+            to={getRouterByName('profile-page').path}
           />
-        </MainLayout> */}
+        </MainLayout>
       </Switch>
     </div>
   )

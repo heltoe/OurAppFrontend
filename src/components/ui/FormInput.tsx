@@ -5,7 +5,7 @@ import { IBaseInput, BaseInputStyled } from '@/components/ui/BaseInput'
 interface IFormInput extends IBaseInput {
   error?: string
 }
-const LabelStyled = styled.label`
+export const LabelStyled = styled.label`
   position: relative;
 `
 const PlaceholderStyled = styled.p<{ filled: boolean }>`

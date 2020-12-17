@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import BaseButton from '@/components/ui/BaseButton'
 import FormInput from '@/components/ui/FormInput'
 import Loader from '@/components/ui/Loader'
-import style from '@/components/pages/profile/profile.module.scss'
+import FormStyled from '@/components/pages/profile/content/MainInfoForm'
 
 export const LocationMap: React.FC = () => {
   const [location, setLocation] = useState('')
   const isLoading = false
 
   return (
-    <div className={style.form}>
+    <FormStyled>
       <p className="middle">Местоположение</p>
       <FormInput
         value={location}
@@ -19,7 +19,7 @@ export const LocationMap: React.FC = () => {
       {/* Map */}
       {isLoading ? <Loader /> : ''}
       <BaseButton>Сохранить</BaseButton>
-    </div>
+    </FormStyled>
   )
 }
 

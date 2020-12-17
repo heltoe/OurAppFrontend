@@ -1,8 +1,24 @@
 import React, { useState } from 'react'
-import BaseButton from '@/components/ui/BaseButton'
-import FormInput from '@/components/ui/FormInput'
+import styled from 'styled-components'
+import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
+import FormInput, { LabelStyled } from '@/components/ui/FormInput'
 import Loader from '@/components/ui/Loader'
-import style from '@/components/pages/profile/profile.module.scss'
+
+export const FormStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  & ${LabelStyled} {
+    margin-top: 20px;
+  }
+  & ${BaseButtonStyled} {
+    margin-top: 20px;
+    margin-left: auto;
+  }
+  &:not(:first-child) {
+    margin-top: 30px;
+  }
+`
 
 export const MainInfoForm: React.FC = () => {
   const [firstName, setFirstName] = useState('')
@@ -11,7 +27,7 @@ export const MainInfoForm: React.FC = () => {
   const isLoading = false
 
   return (
-    <div className={style.form}>
+    <FormStyled>
       <p className="middle">Основная информация</p>
       <FormInput
         value={firstName}
@@ -31,7 +47,7 @@ export const MainInfoForm: React.FC = () => {
       {/* birthday */}
       <BaseButton>Сохранить</BaseButton>
       {isLoading ? <Loader /> : ''}
-    </div>
+    </FormStyled>
   )
 }
 

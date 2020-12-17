@@ -15,6 +15,7 @@ const theme = {
     purple2: '116, 129, 235',
     red: '254, 125, 139',
     darkBlue1: '39, 42, 70',
+    lightBlue: `109, 170, 254`,
     green1: '30, 199, 172',
   },
   rgb: (color: string) => `rgb(${color})`,
@@ -31,6 +32,25 @@ const theme = {
     light: '300',
   },
 }
+const size = {
+  mobileS: '320px',
+  mobileM: '375px',
+  mobileL: '425px',
+  tablet: '768px',
+  laptop: '1024px',
+  laptopL: '1440px',
+  desktop: '2560px'
+}
+export const device = {
+  mobileS: `(max-width: ${size.mobileS})`,
+  mobileM: `(max-width: ${size.mobileM})`,
+  mobileL: `(max-width: ${size.mobileL})`,
+  tablet: `(max-width: ${size.tablet})`,
+  laptop: `(max-width: ${size.laptop})`,
+  laptopL: `(max-width: ${size.laptopL})`,
+  desktop: `(max-width: ${size.desktop})`,
+  desktopL: `(max-width: ${size.desktop})`
+};
 
 const Theme: React.FC = ({ children }) => (
   <ThemeProvider theme={theme}>{children}</ThemeProvider>

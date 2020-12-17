@@ -1,5 +1,5 @@
 import React from 'react'
-import style from '@/components/pages/profile/profile.module.scss'
+import styled from 'styled-components'
 import Icon from '@/components/ui/Icon'
 
 type LocationType = {
@@ -12,44 +12,65 @@ type BodyProfileType = {
   birthday: string
   status: string
 }
+
+const BodyStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+`
+const StatusTextStyled = styled.p<{ status: string }>`
+  color: ${(props) => props.theme.rgba(props.theme.colors[props.status === 'online' ? 'green1' : 'grey1'])};
+`
+const LineStyled = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  & p {
+    margin-left: 10px;
+  }
+`
+const LinkLineStyled = styled.a`
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  & p {
+    margin-left: 10px;
+  }
+`
 export const BodyProfile: React.FC<BodyProfileType> = ({
   location = null,
   email = '',
   birthday = '',
   status = 'offline',
 }) => {
-  const classStaus =
-    status === 'offline' ? `${style.offline}` : `${style.online}`
-  const textStatus = status === 'offline' ? 'Offline' : 'Online'
   const greyColor = '#9f9f9f'
   return (
-    <div className={style.body}>
+    <BodyStyled>
       {location ? (
-        <a
+        <LinkLineStyled
           href={location.link}
           target="_blank"
           rel="noreferrer"
-          className={style.line}
         >
           <Icon type="pin" color={greyColor} />
           <p>{location.label}</p>
-        </a>
+        </LinkLineStyled>
       ) : (
         ''
       )}
-      <a href={`mailto:${email}`} className={style.line}>
+      <LinkLineStyled href={`mailto:${email}`}>
         <Icon type="letter" color={greyColor} />
         <p>{email}</p>
-      </a>
-      <div className={style.line}>
+      </LinkLineStyled>
+      <LineStyled>
         <Icon type="birthday" color={greyColor} />
         <p>{birthday}</p>
-      </div>
-      <div className={style.line}>
+      </LineStyled>
+      <LineStyled>
         <Icon type="phone" color={greyColor} />
-        <p className={classStaus}>{textStatus}</p>
-      </div>
-    </div>
+        <StatusTextStyled status={status}>{status === 'online' ? 'Online' : 'Offline'}</StatusTextStyled>
+      </LineStyled>
+    </BodyStyled>
   )
 }
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import Sprite from '@/assets/icons/sprite.svg'
 
 type IconType = {
@@ -8,6 +9,12 @@ type IconType = {
   type: string
 }
 
+export const IconStyled = styled.div`
+  & use {
+    transition: ${(props) => props.theme.transition}
+  }
+`
+
 export const Icon: React.FC<IconType> = ({
   color = '#cccccc',
   size = '24px',
@@ -16,11 +23,11 @@ export const Icon: React.FC<IconType> = ({
 }) => {
   const spritepath = `${Sprite}#${type}`
   return (
-    <div className="no-select">
+    <IconStyled className="no-select">
       <svg viewBox={viewBox} width={size} height={size}>
         <use xlinkHref={spritepath} fill={color} />
       </svg>
-    </div>
+    </IconStyled>
   )
 }
 
