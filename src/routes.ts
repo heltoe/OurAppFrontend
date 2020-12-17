@@ -6,6 +6,7 @@ import RestorePasswordPage from '@/components/pages/restore-password/RestorePass
 //
 import MainPage from '@/components/pages/main-page/MainPage'
 import EditProfilePage from '@/components/pages/profile/EditProfilePage'
+import FriendsPage from '@/components/pages/friends/FriendsPage'
 
 type RouterItem = {
   name: string
@@ -49,7 +50,12 @@ export const MainRoutes: RouterItem[] = [
   {
     name: 'friends-page',
     path: '/friends',
-    component: MainPage,
+    component: FriendsPage,
+  },
+  {
+    name: 'friends-page-find',
+    path: '/friends/find',
+    component: FriendsPage,
   },
 ]
 export const router: RouterItem[] = [...IntroPages, ...MainRoutes]
