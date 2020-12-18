@@ -13,7 +13,7 @@ const SideBarStyled = styled.div`
   box-shadow: ${(props) => props.theme.shadow.shadow2};
   // background-color: $grey6;
   // background-color: #25294a;
-  background-color: ${(props) => props.theme.rgb(props.theme.colors.grey6)};
+  background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
 `
 const SideBarBodyStyled = styled.div`
   height: 100%;

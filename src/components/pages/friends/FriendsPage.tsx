@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import TogglerBlock from '@/components/pages/friends/TogglerBlock'
 import FriendsList from '@/components/pages/friends/FriendsList'
+import FindNewFriendList from '@/components/pages/friends/FindNewFriendList'
+import SearchField from '@/components/pages/friends/SearchField'
 
 const FriendsPageStyled = styled.div`
   display: flex;
@@ -12,14 +14,16 @@ const FriendsPageStyled = styled.div`
 const WrapperContentStyled = styled.div`
   display: flex;
   flex-direction: column;
-  width: 760px;
+  width: 560px;
 `
 export const FriendsPage: React.FC = () => {
+  const [typePage, setTypePage] = useState('friends-page')
   return (
     <FriendsPageStyled className="wrapper">
       <WrapperContentStyled>
         <TogglerBlock />
-        <FriendsList />
+        <SearchField />
+        { typePage === 'friends-page' ? <FriendsList /> : <FindNewFriendList /> }
       </WrapperContentStyled>
     </FriendsPageStyled>
   )

@@ -52,14 +52,12 @@ export const MainRoutes: RouterItem[] = [
     path: '/friends',
     component: FriendsPage,
   },
-  {
-    name: 'friends-page-find',
-    path: '/friends/find',
-    component: FriendsPage,
-  },
 ]
 export const router: RouterItem[] = [...IntroPages, ...MainRoutes]
 
 export const getRouterByName = (name: string) => {
   return router.find((item) => item.name === name) || router[0]
+}
+export const getRouterByPath = (path: string) => {
+  return router.find((item) => item.path === path) || router[0]
 }

@@ -10,7 +10,7 @@ type CardType = {
   message: string
 }
 
-const AvatarOvarlay = styled.div`
+export const AvatarOvarlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,25 +37,23 @@ const BlockColumnStyled = styled.div`
   flex-direction: column;
   width: calc(100% - 80px);
   padding: 10px;
-  background-color: ${(props) => props.theme.rgb(props.theme.colors.grey3)};
   transition: ${(props) => `background-color ${props.theme.transition}`};
 `
 export const CardStyled = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 80px;
+  height: 90px;
   width: 100%;
+  padding: 5px 0;
   cursor: pointer;
+  transition: ${(props) => `box-shadow ${props.theme.transition}`};
   &:hover {
+    box-shadow: ${(props) => props.theme.shadow.shadow2};
+    z-index: 10;
     ${AvatarOvarlay} {
-      background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
       &:after {
-        box-shadow: ${(props) => props.theme.shadow.shadow2};
         background-color: ${(props) => props.theme.rgba(props.theme.colors.purple2, 0.1)};
       }
-    }
-    ${BlockColumnStyled} {
-      background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
     }
   }
 `

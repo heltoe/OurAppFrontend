@@ -8,7 +8,7 @@ type AvatarType = {
   color?: string
   initials?: string
 }
-const AvatarStyled = styled.div<AvatarType>`
+export const AvatarStyled = styled.div<AvatarType>`
   display: flex;
   align-items: center;
   justify-content: center;

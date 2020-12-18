@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 export interface IBaseInput {
-  value: string
+  value: string | number
   type?: string
   placeholder?: string
   disabled?: boolean
@@ -31,6 +31,8 @@ export const BaseInput: React.FC<IBaseInput> = ({
       value={value}
       placeholder={placeholder}
       disabled={disabled}
+      min="0"
+      max="80"
       onChange={(e) => onChange(e.target.value)}
       onFocus={(e) => onFocus(e.target)}
       onBlur={(e) => onBlur(e.target)}

@@ -43,15 +43,15 @@ export const FormInput: React.FC<IFormInput> = ({
 }) => {
   const [activeInput, setActiveInput] = useState(false)
   const handlerChange = (str: string) => {
-    if (!value.length) setActiveInput(true)
-    onChange(str)
+    if (typeof value === 'string' && !value.length) setActiveInput(true)
+    onChange(`${str}`)
   }
   const handlerFocus = (e: HTMLInputElement) => {
-    if (!value.length) setActiveInput(true)
+    if (typeof value === 'string' && !value.length) setActiveInput(true)
     onFocus(e)
   }
   const handlerBlur = (e: HTMLInputElement) => {
-    if (!value.length) setActiveInput(false)
+    if (typeof value === 'string' && !value.length) setActiveInput(false)
     onBlur(e)
   }
   return (

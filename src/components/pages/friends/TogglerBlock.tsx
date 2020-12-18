@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { getRouterByName } from '@/routes'
 import { BaseButtonStyled } from '@/components/ui/BaseButton'
 import { BlockStyled } from '@/components/ui/Block'
 
@@ -9,6 +7,7 @@ const TogglerWrapperStyled = styled(BlockStyled)`
   display: flex;
   align-items: center;
   padding: 0 10px;
+  border-radius: 8px 8px 0 0;
 `
 const ToggleItemStyled = styled.div<{ active: boolean }>`
   display: flex;
@@ -17,11 +16,9 @@ const ToggleItemStyled = styled.div<{ active: boolean }>`
   transition: ${(props) => props.theme.transition};
   border-bottom: ${(props) => `2px solid ${props.theme.rgba(props.theme.colors.purple1, props.active ? 1 : 0)}`};
 `
-const LinkStyled = styled(Link)`
-  margin-left: auto;
-`
 const LinkBtn = styled(BaseButtonStyled)`
   padding: 10px;
+  margin-left: auto;
 `
 export const TogglerBlock: React.FC = () => {
     const [countAll, setCountAll] = useState(0)
@@ -43,9 +40,7 @@ export const TogglerBlock: React.FC = () => {
       >
         Друзья онлайн {countOnline}
       </ToggleItemStyled>
-      <LinkStyled to={getRouterByName('friends-page-find').path}>
-        <LinkBtn>Найти друзей</LinkBtn>
-      </LinkStyled>
+      <LinkBtn onClick={() => setActiveTab('find-friend')}>Найти друзей</LinkBtn>
     </TogglerWrapperStyled>
   )
 }
