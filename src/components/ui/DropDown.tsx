@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
@@ -48,11 +48,15 @@ const DropDown: React.FC<IDropDown> = ({ value, placeholder = '', options = [], 
   const [isShowParams, setIsShowParams] = useState(false)
   const [currentValue, setCurrentValue] = useState(0)
   const [currentPlaceholder, setCurrentPlaceholder] = useState('')
+  useEffect(() => {
+  //   console.log(value)
+    // setValue(value)
+  })
   const handleSelect = (id: number) => {
     setValue(id)
     setIsShowParams(false)
     console.log(currentValue)
-    selected(currentValue)
+    // selected(currentValue)
   }
   const setValue = (value: number) => {
     const element = options.find((item) => item.id === value)
