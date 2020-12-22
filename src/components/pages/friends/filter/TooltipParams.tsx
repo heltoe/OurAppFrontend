@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
+import useClickOutside from '@/directives/ClickOutside'
 import { BlockStyled } from '@/components/ui/Block'
 import RadioButton, { LabelRadioStyled } from '@/components/ui/RadioButton'
 import DropDown from '@/components/ui/DropDown'
@@ -41,42 +42,20 @@ const WrapperGenderBlock = styled.div`
     margin-top: 10px;
   }
 `
+const ages = Array.from({ length: 81 }, (v, k) => k).filter(item => item > 13).map(item => ({ id: item, name: `${item}` })); 
 const TooltipParams: React.FC = () => {
-  const [isShowParams, setIsShowParams] = useState(true)
-  const [minYear, setMinYear] = useState(1)
-  const [maxYear, setMaxYear] = useState(1)
+  const ref = useRef(null)
+  const [isShowParams, setIsShowParams] = useState(false)
+  const [minYear, setMinYear] = useState(0)
+  const [maxYear, setMaxYear] = useState(0)
   const [gender, setGender] = useState('all')
-  const years = [
-    {
-      id: 1,
-      name: '14',
-    },
-    {
-      id: 2,
-      name: '15',
-    },
-    {
-      id: 3,
-      name: '16',
-    },
-    {
-      id: 4,
-      name: '17',
-    },
-    {
-      id: 5,
-      name: '18',
-    },
-    {
-      id: 6,
-      name: '19',
-    }
-  ]
+  const handleClickOutside = () => {
+    if (isShowParams) setIsShowParams(false)
+  }
+  useClickOutside(ref, handleClickOutside)
   return (
-    <ParamsStyled>
+    <ParamsStyled ref={ref}>
       <p className="light no-select" onClick={() => setIsShowParams(!isShowParams)}>Параметры</p>
-      {minYear}
-      {maxYear}
       {isShowParams && <BlockContentTooltipStyled>
         <WrapperGenderBlock>
           <p>Возраст:</p>
@@ -84,14 +63,14 @@ const TooltipParams: React.FC = () => {
             <DropDown
               value={minYear}
               placeholder="От"
-              options={years}
+              options={maxYear ? ages.filter(item => item.id < maxYear) : ages}
               selected={(year => setMinYear(year))}
             />
             <span>-</span>
             <DropDown
               value={maxYear}
               placeholder="До"
-              options={years}
+              options={ages.filter(item => item.id > minYear)}
               selected={(year => setMaxYear(year))}
             />
           </WrapperYearBlock>

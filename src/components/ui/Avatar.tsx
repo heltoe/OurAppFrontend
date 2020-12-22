@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
 type AvatarType = {
@@ -7,6 +7,7 @@ type AvatarType = {
   image?: string
   color?: string
   initials?: string
+  fullName?: string
 }
 export const AvatarStyled = styled.div<AvatarType>`
   display: flex;
@@ -34,14 +35,16 @@ export const Avatar: React.FC<AvatarType> = ({
   image = '',
   size = '30px',
   isRound = false,
-  initials = '',
   color = '#9f9f9f',
+  initials = '',
+  fullName = ''
 }) => {
+  useEffect(() => {
+
+  }, [fullName])
   return (
     <AvatarStyled size={size} image={image} color={color} isRound={isRound}>
-      {!image.length && (
-        <InitialsStyled className="no-select">{initials}</InitialsStyled>
-      )}
+      {!image.length && <InitialsStyled className="no-select">{initials}</InitialsStyled>}
     </AvatarStyled>
   )
 }

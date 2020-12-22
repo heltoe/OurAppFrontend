@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
+import useClickOutside from '@/directives/ClickOutside'
 import { BlockStyled } from '@/components/ui/Block'
+import Simple from '@/components/ui/SimpleBar'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 
 type OptionItem = {
@@ -31,7 +33,7 @@ const DropDownItem = styled.div`
   }
 `
 const WrapperDropDownItems = styled(BlockStyled)<{ specialPadding: boolean }>`
-  min-width: 70px;
+  min-width: ${(props) => props.specialPadding ? '200px' : '70px' };
   position: absolute;
   left: 0;
   bottom: -10px;
@@ -45,38 +47,43 @@ const WrapperDropDownItems = styled(BlockStyled)<{ specialPadding: boolean }>`
   }
 `
 const DropDown: React.FC<IDropDown> = ({ value, placeholder = '', options = [], selected }) => {
+  const ref = useRef(null)
   const [isShowParams, setIsShowParams] = useState(false)
   const [currentValue, setCurrentValue] = useState(0)
-  const [currentPlaceholder, setCurrentPlaceholder] = useState('')
-  useEffect(() => {
-  //   console.log(value)
-    // setValue(value)
-  })
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(placeholder)
   const handleSelect = (id: number) => {
     setValue(id)
+    selected(id)
     setIsShowParams(false)
-    console.log(currentValue)
-    // selected(currentValue)
   }
   const setValue = (value: number) => {
     const element = options.find((item) => item.id === value)
     setCurrentValue(element ? element.id : value)
     setCurrentPlaceholder(element ? element.name : '')
   }
+  const handleClickOutside = () => {
+    if (isShowParams) setIsShowParams(false)
+  }
+  useClickOutside(ref, handleClickOutside)
+  useEffect(() => {
+    if (currentValue !== value) setValue(value)
+  }, [value])
   return (
-    <DropDownStyled>
+    <DropDownStyled ref={ref}>
       <ActivatorStyled className="no-select" onClick={() => {setIsShowParams(!isShowParams)}}>
         {currentPlaceholder || placeholder}
       </ActivatorStyled>
-      { isShowParams && <WrapperDropDownItems specialPadding={!options.length}>
-        {
-          options.length ? options.map((item) => (
-            <DropDownItem key={item.id} className="no-select" onClick={() => handleSelect(item.id)}>
-              {item.name}
-            </DropDownItem>
-          )) : <EmptyPlaceholder>Список сообщений пуст</EmptyPlaceholder>
-        }
-      </WrapperDropDownItems>}
+        { isShowParams && <WrapperDropDownItems specialPadding={!options.length}>
+          <Simple maxHeight="200px">
+          {
+            options.length ? [{ id: 0, name: placeholder }, ...options].map((item) => (
+              <DropDownItem key={item.id} className="no-select" onClick={() => handleSelect(item.id)}>
+                {item.name}
+              </DropDownItem>
+            )) : <EmptyPlaceholder>Список пуст</EmptyPlaceholder>
+          }
+          </Simple>
+        </WrapperDropDownItems>}
     </DropDownStyled>
   )
 }

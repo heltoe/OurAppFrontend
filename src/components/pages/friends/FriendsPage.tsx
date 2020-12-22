@@ -17,11 +17,18 @@ const WrapperContentStyled = styled.div`
   width: 560px;
 `
 export const FriendsPage: React.FC = () => {
+  const [countAll, setCountAll] = useState(0)
+  const [countOnline, setCountOnline] = useState(0)
   const [typePage, setTypePage] = useState('friends-page')
   return (
     <FriendsPageStyled className="wrapper">
       <WrapperContentStyled>
-        <TogglerBlock />
+        <TogglerBlock
+          activeTab={typePage}
+          countAll={countAll}
+          countOnline={countOnline}
+          setActiveTab={(type) => setTypePage(type)}
+        />
         <SearchField />
         { typePage === 'friends-page' ? <FriendsList /> : <FindNewFriendList /> }
       </WrapperContentStyled>

@@ -90,10 +90,10 @@ const CardFriend: React.FC<CardFriend> = ({ image, fullName }) => {
   return (
     <CardFriendStyled>
       <CardAvatarOverlay>
-        <Avatar size="70px" isRound image={image} />
-        <ShowPhotoStyled>
+        <Avatar size="70px" isRound image={image} fullName={fullName} />
+        {image && <ShowPhotoStyled>
           <Icon type="search-plus" color="#fff" size="18px" />
-        </ShowPhotoStyled>
+        </ShowPhotoStyled>}
       </CardAvatarOverlay>
       <ContentWrapperStyled>
         <LinkStyled to="/" className="middle">{fullName}</LinkStyled>

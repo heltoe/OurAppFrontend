@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
-import CardFriend, { CardFriendStyled } from '@/components/pages/friends/CardFriend'
+import CardFriend, { CardFriendStyled } from '@/components/pages/friends/cards/CardFriend'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 
 const FriendsListStyled = styled(BlockStyled)`
@@ -48,7 +48,68 @@ const FriendsListStyled = styled(BlockStyled)`
   }
 `
 const FriendsList: React.FC = () => {
-  const friendsList: any[] = [];
+  const friendsList: any[] = [
+    {
+      id: 1,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 2,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 3,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 4,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 5,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 6,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 7,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 8,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 9,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    },
+    {
+      id: 10,
+      image: '',
+      status: 'online',
+      fullName: 'adasdasd asdasda'
+    }
+  ];
   return (
     <FriendsListStyled>
       {

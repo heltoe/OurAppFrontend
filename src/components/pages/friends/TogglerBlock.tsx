@@ -1,7 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { BaseButtonStyled } from '@/components/ui/BaseButton'
 import { BlockStyled } from '@/components/ui/Block'
+
+type ToggleBlockType = {
+  activeTab: string
+  setActiveTab(tab: string): void
+  countAll: number
+  countOnline: number
+}
 
 const TogglerWrapperStyled = styled(BlockStyled)`
   display: flex;
@@ -16,14 +23,11 @@ const ToggleItemStyled = styled.div<{ active: boolean }>`
   transition: ${(props) => props.theme.transition};
   border-bottom: ${(props) => `2px solid ${props.theme.rgba(props.theme.colors.purple1, props.active ? 1 : 0)}`};
 `
-const LinkBtn = styled(BaseButtonStyled)`
+const FindFriendStyled = styled(BaseButtonStyled)`
   padding: 10px;
   margin-left: auto;
 `
-export const TogglerBlock: React.FC = () => {
-    const [countAll, setCountAll] = useState(0)
-    const [countOnline, setCountOnline] = useState(0)
-    const [activeTab, setActiveTab] = useState('all')
+export const TogglerBlock: React.FC<ToggleBlockType> = ({ activeTab, setActiveTab, countAll, countOnline }) => {
   return (
     <TogglerWrapperStyled>
       <ToggleItemStyled
@@ -40,7 +44,9 @@ export const TogglerBlock: React.FC = () => {
       >
         Друзья онлайн {countOnline}
       </ToggleItemStyled>
-      <LinkBtn onClick={() => setActiveTab('find-friend')}>Найти друзей</LinkBtn>
+      <FindFriendStyled onClick={() => setActiveTab('find-friend')}>
+        Найти друзей
+      </FindFriendStyled>
     </TogglerWrapperStyled>
   )
 }
