@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
-import FormInput, { LabelStyled } from '@/components/ui/FormInput'
+import FormInput, { LabelStyled, FormInputStyled } from '@/components/ui/FormInput'
 import Loader from '@/components/ui/Loader'
 
 export const FormStyled = styled.div`
@@ -10,6 +10,9 @@ export const FormStyled = styled.div`
   position: relative;
   & ${LabelStyled} {
     margin-top: 20px;
+    ${FormInputStyled} {
+      background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
+    }
   }
   & ${BaseButtonStyled} {
     margin-top: 20px;

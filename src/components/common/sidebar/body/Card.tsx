@@ -8,16 +8,19 @@ type CardType = {
   time: string
   fullName: string
   message: string
+  isOpen: boolean
 }
 
-export const AvatarOvarlay = styled.div`
+export const AvatarOvarlay = styled.div<{ shortType?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   width: 80px;
   height: 79px;
-  transition: ${(props) => `background-color ${props.theme.transition}`};
+  transition: ${(props) => props.theme.transition};
+  transform: ${(props) => `translateX(${props.shortType ? 0 : 200}px)`};
+  background-color: #fff;
   &:after {
     content: '';
     position: absolute;
@@ -39,12 +42,12 @@ const BlockColumnStyled = styled.div`
   padding: 10px;
   transition: ${(props) => `background-color ${props.theme.transition}`};
 `
-export const CardStyled = styled.div`
+export const CardStyled = styled.div<{ shortType: boolean }>`
   display: flex;
   justify-content: space-between;
   height: 90px;
   width: 100%;
-  padding: 5px 0;
+  padding: ${(props) => props.shortType ? '5px 0' : '5px'};
   cursor: pointer;
   transition: ${(props) => `box-shadow ${props.theme.transition}`};
   &:hover {
@@ -75,24 +78,25 @@ const MessageStyled = styled.div`
   text-overflow: ellipsis;
 `
 export const Card: React.FC<CardType> = ({
-  image = '',
-  status = '',
-  time = '',
-  fullName = '',
-  message = '',
+  image,
+  status,
+  time,
+  fullName,
+  message,
+  isOpen
 }) => {
   return (
-    <CardStyled>
-      <AvatarOvarlay>
+    <CardStyled shortType={isOpen}>
+      <AvatarOvarlay shortType={isOpen}>
         <Avatar size="70px" isRound image={image} />
       </AvatarOvarlay>
-      <BlockColumnStyled>
+      {isOpen && <BlockColumnStyled>
         <BlockStyled>
           <FullNameStyled className="middle">{fullName}</FullNameStyled>
           <p>{time}</p>
         </BlockStyled>
         <MessageStyled>{message}</MessageStyled>
-      </BlockColumnStyled>
+      </BlockColumnStyled>}
     </CardStyled>
   )
 }

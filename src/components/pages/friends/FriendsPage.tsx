@@ -19,7 +19,7 @@ const WrapperContentStyled = styled.div`
 export const FriendsPage: React.FC = () => {
   const [countAll, setCountAll] = useState(0)
   const [countOnline, setCountOnline] = useState(0)
-  const [typePage, setTypePage] = useState('friends-page')
+  const [typePage, setTypePage] = useState('all')
   return (
     <FriendsPageStyled className="wrapper">
       <WrapperContentStyled>
@@ -30,7 +30,7 @@ export const FriendsPage: React.FC = () => {
           setActiveTab={(type) => setTypePage(type)}
         />
         <SearchField />
-        { typePage === 'friends-page' ? <FriendsList /> : <FindNewFriendList /> }
+        { typePage !== 'find-friend' ? <FriendsList /> : <FindNewFriendList /> }
       </WrapperContentStyled>
     </FriendsPageStyled>
   )

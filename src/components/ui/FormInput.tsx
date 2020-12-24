@@ -18,7 +18,7 @@ const PlaceholderStyled = styled.p<{ filled: boolean }>`
   transform: translateY(-50%);
   transition: ${(props) => props.theme.transition};
 `
-const FormInputStyled = styled(BaseInputStyled)<{ filled: boolean }>`
+export const FormInputStyled = styled(BaseInputStyled)<{ filled: boolean }>`
   border-radius: 8px;
   padding: 28px 15px 13px;
   border-width: 1px;

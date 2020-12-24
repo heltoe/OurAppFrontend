@@ -10,6 +10,7 @@ const ParamsStyled = styled.div`
   position: relative;
   cursor: pointer;
   margin-left: 10px;
+  z-index: 100;
 `
 const BlockContentTooltipStyled = styled(BlockStyled)`
   position: absolute;

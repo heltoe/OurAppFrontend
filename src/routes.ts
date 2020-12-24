@@ -4,9 +4,9 @@ import LoginPage from '@/components/pages/login/LoginPage'
 import RegistrationPage from '@/components/pages/registration/RegistrationPage'
 import RestorePasswordPage from '@/components/pages/restore-password/RestorePasswordPage'
 //
-import MainPage from '@/components/pages/main-page/MainPage'
 import EditProfilePage from '@/components/pages/profile/EditProfilePage'
 import FriendsPage from '@/components/pages/friends/FriendsPage'
+import ChatPage from '@/components/pages/chat/ChatPage'
 
 type RouterItem = {
   name: string
@@ -32,25 +32,19 @@ export const IntroPages: RouterItem[] = [
 ]
 export const MainRoutes: RouterItem[] = [
   {
-    name: 'main-page',
-    path: '/main',
-    component: MainPage,
-  },
-  //
-  {
     name: 'profile-page',
     path: '/profile',
     component: EditProfilePage,
   },
   {
-    name: 'messages-page',
-    path: '/messages',
-    component: MainPage,
-  },
-  {
     name: 'friends-page',
     path: '/friends',
     component: FriendsPage,
+  },
+  {
+    name: 'chat-page',
+    path: '/chat',
+    component: ChatPage,
   },
 ]
 export const router: RouterItem[] = [...IntroPages, ...MainRoutes]

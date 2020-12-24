@@ -1,19 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
 import Simple from '@/components/ui/SimpleBar'
-import TopMenu from '@/components/common/sidebar/TopMenu'
+import TopMenu, { ToggleSideBarType } from '@/components/common/sidebar/TopMenu'
 import ContainerMessages from '@/components/common/sidebar/body/ContainerMessages'
 
-const SideBarStyled = styled.div`
+const SideBarStyled = styled.div<{ isOpen: boolean }>`
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
   width: 290px;
   box-shadow: ${(props) => props.theme.shadow.shadow2};
-  // background-color: $grey6;
-  // background-color: #25294a;
   background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
+  transition: ${(props) => `transform ${props.theme.transition}`};
+  transform: ${(props) => `translateX(${props.isOpen ? 0 : -200}px)`};
 `
 const SideBarBodyStyled = styled.div`
   height: 100%;
@@ -21,13 +21,13 @@ const SideBarBodyStyled = styled.div`
     height: 100%;
   }
 `
-export const SideBar: React.FC = () => {
+export const SideBar: React.FC<ToggleSideBarType> = ({ isOpen, setIsOpenSideBar }) => {
   return (
-    <SideBarStyled>
-      <TopMenu />
+    <SideBarStyled isOpen={isOpen}>
+      <TopMenu isOpen={isOpen} setIsOpenSideBar={(value) => setIsOpenSideBar(value)} />
       <SideBarBodyStyled>
         <Simple maxHeight="calc(100vh - 70px)">
-          <ContainerMessages />
+          <ContainerMessages isOpen={isOpen}/>
         </Simple>
       </SideBarBodyStyled>
     </SideBarStyled>

@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Avatar from '@/components/ui/Avatar'
-import { AvatarOvarlay } from '@/components/common/sidebar/body/Card'
 import { BlockStyled } from '@/components/ui/Block'
 import Icon, { IconStyled } from '@/components/ui/Icon'
 
@@ -29,7 +28,27 @@ const ShowPhotoStyled = styled.div`
     transition: ${(props) => `opacity ${props.theme.transition}`};
   }
 `
-const CardAvatarOverlay = styled(AvatarOvarlay)`
+const CardAvatarOverlay = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 80px;
+  height: 79px;
+  transition: ${(props) => `background-color ${props.theme.transition}`};
+  &:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: ${(props) => props.theme.rgba(props.theme.colors.purple2, 0)};
+    transition: ${(props) => props.theme.transition};
+    z-index: 10;
+  }
   &:hover {
     & ${IconStyled} {
       opacity: 1;
