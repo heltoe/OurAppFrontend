@@ -120,9 +120,8 @@ export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
     <WrapperCardsStyled>
       {
         messages.length ? messages.map((item) => (
-          <Link to={`${getRouterByName('chat-page').path}`}>
+          <Link to={`${getRouterByName('chat-page').path}`} key={item.id}>
             <Card
-              key={item.id}
               image={item.image}
               status={item.status}
               time={item.time}
