@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
 import MessageController from '@/components/pages/chat/MessageController'
+import Editor from '@/components/ui/Editor'
 
 const ChatPageStyled = styled.div`
   display: flex;
@@ -21,11 +22,13 @@ const BLockContainer = styled(BlockStyled)`
   padding: 0;
 `
 const ChatPage: React.FC = () => {
+  const [message, setMessage] = useState('')
   return (
     <ChatPageStyled className="wrapper">
       <WrapperContentStyled>
         <BLockContainer>
           123
+          <Editor value={message} onChange={(msg) => setMessage(msg)} />
           <MessageController />
         </BLockContainer>
       </WrapperContentStyled>

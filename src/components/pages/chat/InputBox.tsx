@@ -1,5 +1,10 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
+
+type InputBoxType = {
+  value: string
+  onChange(value: string): void
+}
 
 const InputBoxStyled = styled.div`
   width: 100%;
@@ -28,21 +33,27 @@ const InputBoxFieldStyled = styled.div`
   // отображение или скрытие элемента placeholder
   &:not(:empty) ~ ${InputBoxPlaceholderStyled} { display: none; }
   // скрытие лишних элементов внутри поля, которые могут в него попасть из-за особенностей браузеров
-  br, p, div { display: none; }
+  /* br, p { display: none; } */
 `
-const InputBox: React.FC = () => {
+const InputBox: React.FC<InputBoxType> = ({ value, onChange }) => {
+  const ref = useRef(null)
+  const handleInput = (e: any) => {
+    // const el: any = ref?.current
+    // if ((!value && e.keyCode === 13) || e.keyCode === 13) return e.preventDefault()
+    // // onChange(e.target.innerHTML)
+    // // console.log(ref)
+    return e.preventDefault()
+  }
   return (
     <InputBoxStyled>
       <InputBoxFieldStyled
-        // autocomplete={false}
-        // spellcheck={false}
-        // autofocus={true}
-        // typefocus={true}
-        // pastecheck={true}
-        // tabindex="-1"
+        ref={ref}
         role="textbox"
         contentEditable={true}
-        aria-multiline
+        aria-multiline={true}
+        // onInput={(e) => handleInput(e)}
+        onKeyUp={(e) => handleInput(e)}
+        // dangerouslySetInnerHTML={{__html: value}}
       />
       <InputBoxPlaceholderStyled>Написать сообщение</InputBoxPlaceholderStyled>
     </InputBoxStyled>

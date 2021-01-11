@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Icon from '@/components/ui/Icon'
 import InputBox from '@/components/pages/chat/InputBox'
@@ -42,11 +42,13 @@ const MessageWrapperStyled = styled.div`
   }
 `
 const MessageController: React.FC = () => {
+  const [massage, setMessage] = useState('')
   const sendMessage = () => {
     console.log('send');
   }
   return (
     <MessageControllerStyled>
+      {massage}
       <IconWrapperStyled>
         <Icon
           type="clip"
@@ -55,7 +57,7 @@ const MessageController: React.FC = () => {
         />
       </IconWrapperStyled>
       <MessageWrapperStyled>
-        <InputBox />
+        <InputBox value={massage} onChange={(message) => setMessage(message)} />
         <IconWrapperStyled>
           <Icon
             type="smile"

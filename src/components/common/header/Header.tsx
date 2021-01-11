@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { getRouterByName } from '@/routes'
 import AvatarStatus from '@/components/common/header/AvatarStatus'
-import Icon from '@/components/ui/Icon'
 import { user } from '@/data/user'
 
 const HeaderStyled = styled.div`

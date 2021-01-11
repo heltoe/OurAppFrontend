@@ -20,7 +20,7 @@ const TopMenuStyled = styled.div`
   justify-content: space-between;
   width: 100%;
   height: ${(props) => props.theme.Hheader};
-  background-color: #25294a;
+  background: ${(props) => `linear-gradient(45deg, ${props.theme.rgb(props.theme.colors.darkBlue1)} 0%, ${props.theme.rgb(props.theme.colors.darkBlue2)} 100%)`};
 `
 const WrapperIconStyled = styled.div`
   display: flex;
