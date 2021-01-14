@@ -6,11 +6,9 @@
   box-sizing: border-box;
   color: $black;
 }
-html {
-  min-width: 320px;
-}
 body {
   width: 100vw;
+  min-width: 720px;
   overflow-x: hidden;
 }
 #root {

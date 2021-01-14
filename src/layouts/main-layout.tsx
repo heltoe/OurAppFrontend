@@ -16,6 +16,7 @@ const ContentContainerStyled = styled.div`
   flex-direction: column;
   height: 100%;
   width: 100%;
+  min-width: 630px;
   background-color: ${(props) => props.theme.rgb(props.theme.colors.grey5)};
 `
 const ContentStyled = styled.div`
