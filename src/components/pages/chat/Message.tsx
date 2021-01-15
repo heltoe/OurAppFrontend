@@ -49,7 +49,7 @@ const AvatarOvarlay = styled.div`
 const BlockColumnStyled = styled.div`
   display: flex;
   flex-direction: column;
-  width: calc(100% - 60px);
+  width: calc(100% - 120px);
   margin-left: 10px;
 `
 const MessageDataStyled = styled.div`
@@ -103,7 +103,7 @@ const ContentMessageStyled = styled.div`
   display: flex;
   flex-direction: column;
 `
-const MessageTextStyled = styled.p`
+const MessageTextStyled = styled.div`
   word-break: break-all;
   line-height: 1.2;
 `
@@ -119,16 +119,16 @@ const Message: React.FC<MessageType> = ({ image, name, time, text, messageId, se
       <BlockColumnStyled>
         <MessageDataStyled>
           <WrapperAuthorTextStyled>
-            <Link to={`${getRouterByName(linkMessage).path}`}>
+            {name.length && <Link to={`${getRouterByName(linkMessage).path}`}>
               <AuthorMessageStyled>{name}</AuthorMessageStyled>
-            </Link>
+            </Link>}
           </WrapperAuthorTextStyled>
           <WrapperDataTextStyled>
-            <DataMessageStyled>{time}</DataMessageStyled>
+            {time.length && <DataMessageStyled>{time}</DataMessageStyled>}
           </WrapperDataTextStyled>
         </MessageDataStyled>
         <ContentMessageStyled>
-          <MessageTextStyled>{text}</MessageTextStyled>
+          <MessageTextStyled dangerouslySetInnerHTML={{__html: text }} />
           <GridImages images={photos} />
         </ContentMessageStyled>
       </BlockColumnStyled>

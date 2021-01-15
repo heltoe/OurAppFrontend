@@ -45,6 +45,7 @@ const BindFile: React.FC<BindFileType> = ({ settings, callBack }) => {
       const limit = settings.limit || 10
       callBack(filesList.length > limit ? filesList.slice(0, limit) : filesList)
       if (filesList.length > limit) alert(`Максимальное количество файлов не должно превышать ${limit} единиц`)
+      el.value = ''
       el.blur()
     }
   }

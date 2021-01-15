@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Icon, { IconStyled } from '@/components/ui/Icon'
-import InputBox from '@/components/pages/chat/InputBox'
+import Editor from '@/components/ui/Editor'
 import BindFile, { ElementFileType } from '@/components/pages/chat/BindFile'
 
 type Message = {
@@ -32,7 +32,7 @@ const MessageControllerStyled = styled.div`
   border-top: ${(props) => `1px solid ${props.theme.rgb(props.theme.colors.grey7)}`};
   padding: 20px;
   position: sticky;
-  bottom: 30px;
+  bottom: 0;
   z-index: 100;
   &:after {
     content: '';
@@ -108,8 +108,9 @@ const MessageWrapperStyled = styled.div`
     right: 20px;
   }
 `
-const MessageController: React.FC<MessageController> = ({ sendMessage }) => {
-  const [massage, setMessage] = useState('')
+const MessageController: React.FC<MessageController> = ({ children, sendMessage }) => {
+  const [message, setMessage] = useState('')
+  const [triggerClean, setTriggerClean] = useState(false)
   const [fileList, setFileList] = useState<ElementFileType[]>([])
   const settingsForUploadPhoto = {
     multiple: true,
@@ -117,9 +118,12 @@ const MessageController: React.FC<MessageController> = ({ sendMessage }) => {
     accept: 'image/png, image/jpeg',
   }
   const emitMessage = () => {
-    sendMessage({ text: massage, photos: fileList })
-    setMessage('')
-    setFileList([])
+    if (message.length || fileList.length) {
+      sendMessage({ text: message, photos: fileList })
+      setMessage('')
+      setFileList([])
+      setTriggerClean(!triggerClean)
+    }
   }
   const addPhoto = (arr: ElementFileType[]) => {
     const newFileList = [...fileList, ...arr]
@@ -135,13 +139,20 @@ const MessageController: React.FC<MessageController> = ({ sendMessage }) => {
       return newFileList
     })
   }
+  const handlerBtn = (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.keyCode == 13) emitMessage()
+  }
+  useEffect(() => {
+    window.addEventListener('keyup', handlerBtn)
+    return () => window.removeEventListener('keyup', handlerBtn)
+  })
   return (
     <MessageControllerStyled>
+      {children}
       <MainLineStyled>
-        {massage}
         <BindFile settings={settingsForUploadPhoto} callBack={(arr) => addPhoto(arr)}/>
         <MessageWrapperStyled>
-          <InputBox value={massage} onChange={(message) => setMessage(message)} />
+          <Editor value={message} triggerClean={triggerClean} onChange={(msg) => setMessage(msg)} />
           <IconWrapperStyled>
             <Icon
               type="smile"

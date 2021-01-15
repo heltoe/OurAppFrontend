@@ -21,7 +21,7 @@ const ContentContainerStyled = styled.div`
 `
 const ContentStyled = styled.div`
   flex-grow: 1;
-  overflow: auto;
+  overflow: hidden;
   position: relative;
 `
 const WrapperSearchField = styled.div`
@@ -67,7 +67,7 @@ export const MainLayout: React.FC = ({ children }) => {
       <SideBar isOpen={isOpenSideBar} setIsOpenSideBar={(value) => setIsOpenSideBar(value)}/>
       <ContentContainerStyled>
         <Header />
-        <ContentStyled ref={ref} onScroll={() => listener()}>
+        <ContentStyled id="content-container" ref={ref} onScroll={() => listener()}>
           {scrollTop >= 90 && <WrapperSearchField>
             <SearchField />
           </WrapperSearchField>}
