@@ -27,6 +27,7 @@ const theme = {
   shadow: {
     shadow1: '0 2px 24px 0 rgba(0, 0, 0, 0.17)',
     shadow2: '1px 2px 16px 0 rgba(0, 0, 0, 0.1)',
+    shadow3: '1px 2px 16px 0 rgba(254, 125, 139, 0.2)',
   },
   Hheader: '70px',
   fontWeight: {

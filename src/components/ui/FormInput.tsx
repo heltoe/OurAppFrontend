@@ -5,8 +5,16 @@ import { IBaseInput, BaseInputStyled } from '@/components/ui/BaseInput'
 interface IFormInput extends IBaseInput {
   error?: string
 }
-export const LabelStyled = styled.label`
+export const LabelStyled = styled.label<{ error: string }>`
   position: relative;
+  transition: ${(props) => props.theme.transition};
+  border-width: 1px;
+  border-style: solid;
+  border-color: ${(props) =>
+    props.theme.rgba(props.theme.colors.red, props.error && props.error.length ? 1 : 0)};
+  box-shadow: ${(props) =>
+    props.error && props.error.length ? props.theme.shadow.shadow3 : 'none'};
+  border-radius: 8px;
 `
 const PlaceholderStyled = styled.p<{ filled: boolean }>`
   font-size: 13px;
@@ -30,6 +38,28 @@ export const FormInputStyled = styled(BaseInputStyled)<{ filled: boolean }>`
     props.theme.rgba(props.theme.colors.grey4, props.filled ? 1 : 0)};
   box-shadow: ${(props) =>
     props.filled ? props.theme.shadow.shadow2 : 'none'};
+`
+const ErrorMessageStyled = styled.div`
+  font-size: 14px;
+  position: absolute;
+  right: -15px;
+  top: 50%;
+  transform: translate(100%, -50%);
+  text-align: right;
+  background-color: ${(props) => props.theme.rgb(props.theme.colors.red)};
+  color:${(props) => props.theme.rgb(props.theme.colors.white)};
+  box-shadow: ${(props) => props.theme.shadow.shadow1};
+  padding: 10px;
+  border-radius: 8px;
+  &:after {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 7px solid transparent;
+    border-right: ${(props) => `15px solid ${props.theme.rgb(props.theme.colors.red)}`};
+  }
 `
 export const FormInput: React.FC<IFormInput> = ({
   value,
@@ -55,7 +85,7 @@ export const FormInput: React.FC<IFormInput> = ({
     onBlur(e)
   }
   return (
-    <LabelStyled>
+    <LabelStyled error={error}>
       <PlaceholderStyled filled={activeInput}>{placeholder}</PlaceholderStyled>
       <FormInputStyled
         type={type}
@@ -67,6 +97,7 @@ export const FormInput: React.FC<IFormInput> = ({
         onFocus={(e) => handlerFocus(e.target)}
         onBlur={(e) => handlerBlur(e.target)}
       />
+      {error && error.length &&<ErrorMessageStyled>{error}</ErrorMessageStyled>}
     </LabelStyled>
   )
 }

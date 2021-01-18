@@ -30,7 +30,7 @@ export const Footer: React.FC = () => {
   const currentDate = new Date().getFullYear()
   return (
     <FooterStyled>
-      <CopyStyled>© {currentDate} ООО «Chat»</CopyStyled>
+      <CopyStyled>© {currentDate} ООО «CHAT»</CopyStyled>
     </FooterStyled>
   )
 }

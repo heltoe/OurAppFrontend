@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 export interface IBaseButton {
   disabled?: boolean
+  onClick?(): void
 }
 export const BaseButtonStyled = styled.button`
   font-size: 14px;
@@ -20,9 +21,10 @@ export const BaseButtonStyled = styled.button`
 export const BaseButton: React.FC<IBaseButton> = ({
   children,
   disabled = false,
+  onClick = () => {}
 }) => {
   return (
-    <BaseButtonStyled disabled={disabled} type="button">
+    <BaseButtonStyled disabled={disabled} type="button" onClick={(e) => onClick()}>
       {children}
     </BaseButtonStyled>
   )
