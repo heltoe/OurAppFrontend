@@ -31,8 +31,8 @@ export const App: React.FC = () => {
             />
           ))}
           <Redirect
-            from={getRouterByName('chat-page').path}
-            to={getRouterByName('chat-page').path}
+            from={getRouterByName('profile-page').path}
+            to={getRouterByName('profile-page').path}
           />
         </MainLayout>
       </Switch>

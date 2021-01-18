@@ -24,8 +24,7 @@ export const IconWrapperStyled = styled.div`
 const MessageControllerStyled = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 100%;
+  width: 560px;
   border-radius: 0 0 8px 8px;
   margin-top: auto;
   background-color: ${(props) => props.theme.rgb(props.theme.colors.grey8)};

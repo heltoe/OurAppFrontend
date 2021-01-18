@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { PageStyled } from '@/components/common/Page'
 import { BlockStyled } from '@/components/ui/Block'
 import MessageController from '@/components/pages/chat/MessageController'
 import Message, { MessageType } from '@/components/pages/chat/Message'
-import Icon, { IconStyled } from '@/components/ui/Icon'
+import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
+import Icon from '@/components/ui/Icon'
 import { ElementFileType } from '@/components/pages/chat/BindFile'
 
 type SendMessageType = {
@@ -11,24 +13,23 @@ type SendMessageType = {
   photos: ElementFileType[]
 }
 
-const ChatPageStyled = styled.div`
+const ChatPageStyled = styled(PageStyled)`
   display: flex;
-  justify-content: center;
-  height: 100%;
-  min-height: calc(100vh - 70px);
-  padding-top: 30px;
-  padding-bottom: 30px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
 `
-const WrapperContentStyled = styled.div`
-  display: flex;
+const TestStyled = styled.div`
   width: 560px;
+  height: 1500px;
+  background-color: grey;
 `
 const BLockContainer = styled(BlockStyled)`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  width: 560px;
+  border-radius: 8px 8px 0 0;
   padding: 0;
 `
 const ButtonGoToLastMessage = styled.div<{ isShow: boolean }>`
@@ -64,19 +65,16 @@ const ChatPage: React.FC = () => {
     goToLastMessage()
   }
   const goToLastMessage = (typeScrolling: 'auto' | 'smooth' | undefined = 'smooth'): void => {
-    const page = document.querySelector('#content-container')
+    const page = chatPage?.current as HTMLDivElement | null
     if (page) page.scrollTo({ top: page.scrollHeight, behavior: typeScrolling })
   }
   const handlerScrolling = (e: any) => {
     const wrapperContent = chatPage?.current as HTMLDivElement | null
-    if (wrapperContent) console.log(wrapperContent.offsetHeight, wrapperContent.scrollTop, window)
-    // const page = document.querySelector('#content-container') as HTMLDivElement | null
-    // const wrapperContent = chatPage?.current as HTMLDivElement | null
-    // if (page && wrapperContent) console.log(wrapperContent.offsetHeight, page.scrollTop, page.offsetHeight)
-    // const conditionToShow = isShow === false && page && wrapperContent && wrapperContent.offsetHeight - page.scrollTop > 700
-    // const conditionToClose = isShow === true && page && wrapperContent && wrapperContent.offsetHeight - page.scrollTop < 700
-    // if (conditionToShow) setIsShow(true)
-    // if (conditionToClose) setIsShow(false)
+    if (wrapperContent) {
+      const condition = (wrapperContent.scrollHeight - wrapperContent.scrollTop) > (wrapperContent.offsetHeight + 200)
+      if (condition && !isShow) setIsShow(true)
+      if (!condition && isShow) setIsShow(false)
+    }
   }
   useEffect(() => {
     goToLastMessage('auto')
@@ -89,30 +87,28 @@ const ChatPage: React.FC = () => {
     }
   })
   return (
-    <ChatPageStyled ref={chatPage} className="wrapper">
-      <WrapperContentStyled>
-        <BLockContainer>
-          {
-            messages.map(item => 
-              <Message
-                key={item.messageId}
-                messageId={item.messageId}
-                senderId={item.senderId}
-                image={item.image}
-                name={item.name}
-                time={item.time}
-                text={item.text}
-                photos={item.photos}
-              />
-            )
-          }
-          <MessageController sendMessage={(message) => sendMessage(message)}>
-            <ButtonGoToLastMessage isShow={isShow} onClick={() => goToLastMessage('smooth')}>
-              <Icon type="arrow-down" color="#343753" />
-            </ButtonGoToLastMessage>
-          </MessageController>
-        </BLockContainer>
-      </WrapperContentStyled>
+    <ChatPageStyled ref={chatPage}>
+      <BLockContainer>
+        {
+          messages.length ? messages.map(item => 
+            <Message
+              key={item.messageId}
+              messageId={item.messageId}
+              senderId={item.senderId}
+              image={item.image}
+              name={item.name}
+              time={item.time}
+              text={item.text}
+              photos={item.photos}
+            />
+          ) : <EmptyPlaceholder>Список сообщений пуст</EmptyPlaceholder>
+        }
+      </BLockContainer>
+      <MessageController sendMessage={(message) => sendMessage(message)}>
+        <ButtonGoToLastMessage isShow={isShow} onClick={() => goToLastMessage('smooth')}>
+          <Icon type="arrow-down" color="#343753" />
+        </ButtonGoToLastMessage>
+      </MessageController>
     </ChatPageStyled>
   )
 } 

@@ -1,21 +1,26 @@
 import React from 'react'
 import styled from 'styled-components'
 import { device } from '@/Theme'
+import { PageStyled } from '@/components/common/Page'
 import MainInfoForm from '@/components/pages/profile/content/MainInfoForm'
 import LocationMap from '@/components/pages/profile/content/LocationMap'
 import ChangePass from '@/components/pages/profile/content/ChangePass'
 import PhotoBlock from '@/components/pages/profile/content/PhotoBlock'
 import { user } from '@/data/user'
 
-const ProfilePageStyled = styled.div`
+const ProfilePageStyled = styled(PageStyled)`
+  @media ${device.tabletL} {
+    padding: 0;
+  }
+`
+const WrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  max-width: 1440px;
   color: ${(props) => props.theme.rgb(props.theme.colors.white)};
-  padding-top: 30px;
-  padding-bottom: 30px;
   @media ${device.tabletL} {
     flex-direction: column;
-    padding: 0;
   }
 `
 const BlockInfoStyled = styled.div`
@@ -29,13 +34,15 @@ const BlockInfoStyled = styled.div`
 `
 export const EditProfilePage: React.FC = () => {
   return (
-    <ProfilePageStyled className="wrapper">
-      <BlockInfoStyled>
-        <MainInfoForm />
-        <LocationMap />
-        <ChangePass />
-      </BlockInfoStyled>
-      <PhotoBlock image={user.image} />
+    <ProfilePageStyled>
+      <WrapperStyled className="wrapper">
+        <BlockInfoStyled>
+          <MainInfoForm />
+          <LocationMap />
+          <ChangePass />
+        </BlockInfoStyled>
+        <PhotoBlock image={user.image} />
+      </WrapperStyled>
     </ProfilePageStyled>
   )
 }

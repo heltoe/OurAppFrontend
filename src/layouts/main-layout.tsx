@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Header from '@/components/common/header/Header'
 import SideBar from '@/components/common/sidebar/SideBar'
-import SearchField from '@/components/pages/friends/SearchField'
 import ProfileWidget from '@/components/pages/profile/widget/ProfileWidget'
 
 const MainLayoutStyled = styled.div<{ isOpen: boolean }>`
@@ -68,9 +67,6 @@ export const MainLayout: React.FC = ({ children }) => {
       <ContentContainerStyled>
         <Header />
         <ContentStyled id="content-container" ref={ref} onScroll={() => listener()}>
-          {scrollTop >= 90 && <WrapperSearchField>
-            <SearchField />
-          </WrapperSearchField>}
           {children}
         </ContentStyled>
       </ContentContainerStyled>
