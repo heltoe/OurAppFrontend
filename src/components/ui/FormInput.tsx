@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { IBaseInput, BaseInputStyled } from '@/components/ui/BaseInput'
+import FadeInOut from '@/components/ui/FadeInOut'
 
 interface IFormInput extends IBaseInput {
   error?: string
@@ -40,12 +41,13 @@ export const FormInputStyled = styled(BaseInputStyled)<{ filled: boolean }>`
     props.filled ? props.theme.shadow.shadow2 : 'none'};
 `
 const ErrorMessageStyled = styled.div`
+  max-width: 235px;
   font-size: 14px;
+  line-height: 1.3;
   position: absolute;
   right: -15px;
   top: 50%;
   transform: translate(100%, -50%);
-  text-align: right;
   background-color: ${(props) => props.theme.rgb(props.theme.colors.red)};
   color:${(props) => props.theme.rgb(props.theme.colors.white)};
   box-shadow: ${(props) => props.theme.shadow.shadow1};
@@ -97,7 +99,7 @@ export const FormInput: React.FC<IFormInput> = ({
         onFocus={(e) => handlerFocus(e.target)}
         onBlur={(e) => handlerBlur(e.target)}
       />
-      {error && error.length &&<ErrorMessageStyled>{error}</ErrorMessageStyled>}
+      {error && error.length && <FadeInOut><ErrorMessageStyled>{error}</ErrorMessageStyled></FadeInOut>}
     </LabelStyled>
   )
 }

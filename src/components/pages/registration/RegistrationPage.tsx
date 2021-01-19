@@ -1,11 +1,27 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useStore } from 'effector-react'
 import styled from 'styled-components'
+import {
+  $form,
+  $errors,
+  $canSubmit,
+  emailChanged,
+  passwordChanged,
+  repeatPasswordChanged,
+  firstNameChanged,
+  lastNameChanged,
+  emailErrorChanged,
+  passwordErrorChanged,
+  repeatPasswordErrorChanged,
+  firstNameErrorChanged,
+  lastNameErrorChanged,
+  validateForm
+} from '@/components/pages/registration/Registration.model'
 import FormIntroContainer from '@/components/common/form-intro/FotmIntroContainer'
 import TogglePage from '@/components/common/form-intro/TogglePage'
 import FormIntro from '@/components/common/form-intro/FormIntro'
 import FormInput from '@/components/ui/FormInput'
 import BaseButton from '@/components/ui/BaseButton'
-import { validateEmail } from '@/helpers/helpers'
 
 export const RequiredDescriptionStyled = styled.p`
   font-size: 12px;
@@ -13,120 +29,55 @@ export const RequiredDescriptionStyled = styled.p`
   color: ${(props) => props.theme.rgb(props.theme.colors.black)};
   margin-top: 15px;
 `
-
 export const RegistrationPage: React.FC = () => {
-  const [email, setEmail] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [repeatPassword, setRepeatPassword] = useState('')
-  const [repeatPasswordError, setRepeatPasswordError] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [firstNameError, setFirstNameError] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [lastNameError, setLastNameError] = useState('')
-  const minCountPass = 6
-  const minCountName = 2
-  const showErrors = () => {
-    let error = false
-    if (!email.length) {
-      setEmailError('Поле обязательно к заполнению')
-      error = true
-    }
-    if (email.length && !validateEmail(email)) {
-      setEmailError('Не валидный Email')
-      if (!error) error = true
-    }
-    if (!password.length) {
-      setPasswordError('Поле обязательно к заполнению')
-      if (!error) error = true
-    }
-    if (password.length < minCountPass) {
-      setPasswordError(`Пароль должен быть минимум ${minCountPass} символов`)
-      if (!error) error = true
-    }
-    if (!repeatPassword.length) {
-      setRepeatPasswordError('Поле обязательно к заполнению')
-      if (!error) error = true
-    }
-    if (password.length && repeatPassword.length && password !== repeatPassword) {
-      setRepeatPasswordError(`Пароли не совпадают`)
-      if (!error) error = true
-    }
-    if (!firstName.length) {
-      setFirstNameError('Поле обязательно к заполнению')
-      if (!error) error = true
-    }
-    if (firstName.length < minCountName) {
-      setFirstNameError(`Имя должно быть минимум ${minCountName} символов`)
-      if (!error) error = true
-    }
-    if (!lastName.length) {
-      setLastNameError('Поле обязательно к заполнению')
-      if (!error) error = true
-    }
-    if (lastName.length < minCountName) {
-      setLastNameError(`Фамилия должна быть минимум ${minCountName} символов`)
-      if (!error) error = true
-    }
-    return error
-  }
-  const onSubmit = () => {
-    if (
-        emailError.length
-        || passwordError.length
-        || repeatPasswordError.length
-        || firstNameError.length
-        || lastNameError.length
-      ) return
-    const isError = showErrors()
-    if (isError) return
-  }
+  const form = useStore($form)
+  const errors = useStore($errors)
+  const canSubmit = useStore($canSubmit)
   const settingsFields = [
     {
       id: 1,
-      value: email,
+      value: form.email,
       placeholder: "Ваш e-mail*",
-      error: emailError,
-      onChange: (e: string) => setEmail(e),
-      onFocus: () => setEmailError('')
+      error: errors.emailError,
+      onChange: (e: string) => emailChanged(e),
+      onFocus: () => emailErrorChanged('')
     },
     {
       id: 2,
-      value: password,
+      value: form.password,
       placeholder: "Пароль*",
-      error: passwordError,
-      onChange: (e: string) => setPassword(e),
-      onFocus: () => setPasswordError('')
+      error: errors.passwordError,
+      onChange: (e: string) => passwordChanged(e),
+      onFocus: () => passwordErrorChanged('')
     },
     {
       id: 3,
-      value: repeatPassword,
+      value: form.repeatPassword,
       placeholder: "Повторите пароль*",
-      error: repeatPasswordError,
-      onChange: (e: string) => setRepeatPassword(e),
-      onFocus: () => setRepeatPasswordError('')
+      error: errors.repeatPasswordError,
+      onChange: (e: string) => repeatPasswordChanged(e),
+      onFocus: () => repeatPasswordErrorChanged('')
     },
     {
       id: 4,
-      value: firstName,
+      value: form.firstName,
       placeholder: "Имя*",
-      error: firstNameError,
-      onChange: (e: string) => setFirstName(e),
-      onFocus: () => setFirstNameError('')
+      error: errors.firstNameError,
+      onChange: (e: string) => firstNameChanged(e),
+      onFocus: () => firstNameErrorChanged('')
     },
     {
       id: 5,
-      value: lastName,
+      value: form.lastName,
       placeholder: "Фамилия*",
-      error: lastNameError,
-      onChange: (e: string) => setLastName(e),
-      onFocus: () => setLastNameError('')
+      error: errors.lastNameError,
+      onChange: (e: string) => lastNameChanged(e),
+      onFocus: () => lastNameErrorChanged('')
     }
   ]
   return (
     <FormIntroContainer>
-      <FormIntro onSubmit={() => onSubmit()}>
+      <FormIntro onSubmit={() => validateForm()}>
         {settingsFields.map(item => 
           <FormInput
             key={item.id}
@@ -141,14 +92,8 @@ export const RegistrationPage: React.FC = () => {
           * Обязательные поля для заполнения
         </RequiredDescriptionStyled>
         <BaseButton
-          disabled={
-            emailError.length > 0
-            || passwordError.length > 0
-            || repeatPasswordError.length > 0
-            || firstNameError.length > 0
-            || lastNameError.length > 0
-          }
-          onClick={() => onSubmit()}
+          disabled={!canSubmit}
+          onClick={() => validateForm()}
         >
           Зарегестрироваться
         </BaseButton>
