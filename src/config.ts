@@ -1,4 +1,5 @@
 export const config = {
-  TOKEN: 'token',
-  BACKEND_URL: ''
+  TOKEN: 'chat-token',
+  REFRESH_TOKEN: 'chat-refresh-token',
+  BACKEND_URL: process.env.DOMAIN || 'http://localhost:8080'
 }

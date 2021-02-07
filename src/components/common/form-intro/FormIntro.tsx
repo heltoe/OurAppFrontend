@@ -6,6 +6,7 @@ import { device } from '@/Theme'
 
 type FormType = {
   onSubmit(): void
+  feedBack: string
 }
 export const FormIntroStyled = styled.form`
   display: flex;
@@ -26,7 +27,12 @@ export const FormIntroStyled = styled.form`
     padding: 20px;
   }
 `
-export const FormIntro: React.FC<FormType> = ({ children, onSubmit }) => {
+const FeedBackMessageStyled = styled.p`
+  margin-top: 20px;
+  color: ${(props) => props.theme.rgb(props.theme.colors.red)};
+  font-weight: ${(props) => props.theme.fontWeight.middle};
+`
+export const FormIntro: React.FC<FormType> = ({ children, onSubmit, feedBack }) => {
   const keyHandler = (e: KeyboardEvent) => {
     if (e.keyCode === 13) onSubmit()
   }
@@ -39,6 +45,7 @@ export const FormIntro: React.FC<FormType> = ({ children, onSubmit }) => {
   return (
     <FormIntroStyled>
       {children}
+      {feedBack && feedBack.length && <FeedBackMessageStyled>{feedBack}</FeedBackMessageStyled>}
     </FormIntroStyled>
   )
 }

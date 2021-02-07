@@ -2,10 +2,10 @@ import React from 'react'
 import { useStore } from 'effector-react'
 import {
   $email,
-  emailChanged,
-  $canSubmit,
   $emailError,
-  emailErrorChanged,
+  emilFormChanged,
+  $feedBack,
+  $canSubmit,
   validateForm
 } from '@/components/pages/restore-password/RestorePassword.model'
 import FormIntroContainer from '@/components/common/form-intro/FotmIntroContainer'
@@ -16,7 +16,8 @@ import BaseButton from '@/components/ui/BaseButton'
 
 export const RestorePasswordPage: React.FC = () => {
   const email = useStore($email)
-  const emailError = useStore($emailError)
+  const feedBack = useStore($feedBack)
+  const error = useStore($emailError)
   const canSubmit = useStore($canSubmit)
   const routes = [
     { routeName: 'login-page', content: 'Вход' },
@@ -24,13 +25,13 @@ export const RestorePasswordPage: React.FC = () => {
   ]
   return (
     <FormIntroContainer>
-      <FormIntro onSubmit={() => validateForm()}>
+      <FormIntro feedBack={feedBack} onSubmit={() => validateForm()}>
         <FormInput
           value={email}
-          onChange={(e) => emailChanged(e)}
-          error={emailError}
+          onChange={(e) => emilFormChanged.email(e)}
+          error={error}
           placeholder="Ваш e-mail"
-          onFocus={() => emailErrorChanged('')}
+          onFocus={() => emilFormChanged.errorEmail('')}
         />
         <BaseButton
           disabled={canSubmit}

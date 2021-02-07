@@ -1,4 +1,5 @@
 import React from 'react'
+import { createBrowserHistory } from 'history'
 //
 import LoginPage from '@/components/pages/login/LoginPage'
 import RegistrationPage from '@/components/pages/registration/RegistrationPage'
@@ -7,6 +8,9 @@ import RestorePasswordPage from '@/components/pages/restore-password/RestorePass
 import EditProfilePage from '@/components/pages/profile/EditProfilePage'
 import FriendsPage from '@/components/pages/friends/FriendsPage'
 import ChatPage from '@/components/pages/chat/ChatPage'
+
+// создаём кастомную историю
+export const history = createBrowserHistory()
 
 type RouterItem = {
   name: string

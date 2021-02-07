@@ -113,7 +113,7 @@ const Message: React.FC<MessageType> = ({ image, name, time, text, messageId, se
     <MessageStyled>
       <Link to={`${getRouterByName(linkMessage).path}`}>
         <AvatarOvarlay>
-          <Avatar size="50px" isRound image={image} />
+          <Avatar id={3} size="50px" isRound image={image} />
         </AvatarOvarlay>
       </Link>
       <BlockColumnStyled>

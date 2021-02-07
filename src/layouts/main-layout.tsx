@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useStore } from 'effector-react'
+import { loadPersonalInfo } from '@/components/pages/profile/EditProfile.model'
+import { loadListChat } from '@/components/common/sidebar/SideBar.model'
+import { $idUser } from '@/App.module'
 import styled from 'styled-components'
-import Header from '@/components/common/header/Header'
+import Header from '@/components/common/Header'
 import SideBar from '@/components/common/sidebar/SideBar'
 import ProfileWidget from '@/components/pages/profile/widget/ProfileWidget'
 
@@ -33,6 +37,7 @@ const WrapperSearchField = styled.div`
   margin: 0 auto;
 `
 export const MainLayout: React.FC = ({ children }) => {
+  const idProfile = useStore($idUser)
   const ref = useRef(null)
   const [isOpenSideBar, setIsOpenSideBar] = useState(true)
   const [isShowWidget, setIsShowWidget] = useState(false)
@@ -61,6 +66,12 @@ export const MainLayout: React.FC = ({ children }) => {
   //   // }
   //   return () => window.removeEventListener('resize', handleResize)
   // })
+  useEffect(() => {
+    loadPersonalInfo()
+  }, [])
+  useEffect(() => {
+    loadListChat()
+  }, [idProfile])
   return (
     <MainLayoutStyled isOpen={isOpenSideBar}>
       <SideBar isOpen={isOpenSideBar} setIsOpenSideBar={(value) => setIsOpenSideBar(value)}/>

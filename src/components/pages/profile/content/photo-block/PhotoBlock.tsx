@@ -1,13 +1,13 @@
 import React from 'react'
+import { useStore } from 'effector-react'
 import styled from 'styled-components'
+import { logout } from '@/api/common/AuthorizedRequest'
+import { $photo, removeAccount } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { device } from '@/Theme'
 import Avatar from '@/components/ui/Avatar'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import Icon, { IconStyled } from '@/components/ui/Icon'
-
-type PhotoBlockType = {
-  image: string
-}
 
 const OverlayPhotoStyled = styled.div<{ backgroundImage: string }>`
   position: absolute;
@@ -91,26 +91,28 @@ const BlockPhotoStyled = styled.div`
 const RedButtonStyled = styled(BaseButtonStyled)`
   background-color: ${(props) => props.theme.rgb(props.theme.colors.red)};
 `
-export const PhotoBlock: React.FC<PhotoBlockType> = ({ image = '' }) => {
+export const PhotoBlock: React.FC = () => {
+  const photo = useStore($photo)
+  const mainInfoForm = useStore($mainInfoForm)
   const color = '#fff'
   return (
     <BlockPhotoStyled>
       <OverlayStyled />
-      <OverlayPhotoStyled backgroundImage={image} />
+      <OverlayPhotoStyled backgroundImage={photo} />
       <p className="middle">Фото профиля</p>
       <WrapperImageStyled>
-        <Avatar image={image} isRound size="180px" />
+        <Avatar id={mainInfoForm.id} image={photo} fullName={mainInfoForm.fullName} isRound size="180px" />
       </WrapperImageStyled>
       <ControllerBoxStyled>
         <BaseButton>
           Загрузить фото
           <Icon type="upload" color={color} size="18px" />
         </BaseButton>
-        <RedButtonStyled>
+        <RedButtonStyled onClick={() => logout()}>
           Выйти
           <Icon type="exit" color={color} size="18px" />
         </RedButtonStyled>
-        <RedButtonStyled>
+        <RedButtonStyled onClick={() => removeAccount()}>
           Удалить аккаунт
           <Icon type="remove-user" color={color} size="18px" />
         </RedButtonStyled>

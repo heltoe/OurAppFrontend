@@ -1,10 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useStore } from 'effector-react'
+import {
+  usersChanged,
+  loadLists,
+  $typePage,
+  typePageChanged
+} from '@/components/pages/friends/FriendsPage.module'
 import { PageStyled } from '@/components/common/Page'
 import TogglerBlock from '@/components/pages/friends/TogglerBlock'
 import FriendsList from '@/components/pages/friends/FriendsList'
 import FindNewFriendList from '@/components/pages/friends/FindNewFriendList'
-import SearchField from '@/components/pages/friends/SearchField'
+import SearchField from '@/components/pages/friends/SearchField/SearchField'
 
 const WrapperContentStyled = styled.div`
   display: flex;
@@ -15,9 +22,7 @@ const WrapperContentStyled = styled.div`
 export const FriendsPage: React.FC = () => {
   const friendsPage = useRef(null)
   const [isShowShadow, setIsShowShadow] = useState(false)
-  const [countAll, setCountAll] = useState(0)
-  const [countOnline, setCountOnline] = useState(0)
-  const [typePage, setTypePage] = useState('all')
+  const typePage = useStore($typePage)
   const handlerScrolling = (e: any) => {
     const wrapperContent = friendsPage?.current as HTMLDivElement | null
     if (wrapperContent) {
@@ -32,14 +37,19 @@ export const FriendsPage: React.FC = () => {
       if (page) page.removeEventListener('scroll', handlerScrolling)
     }
   })
+  useEffect(() => {
+    usersChanged([])
+    if (typePage === 'all') loadLists.all()
+    if (typePage === 'online') loadLists.online()
+    if (typePage === 'frienship') loadLists.friendShip()
+    if (typePage === 'find-friend') loadLists.users()
+  }, [typePage])
   return (
     <PageStyled ref={friendsPage}>
       <WrapperContentStyled>
         <TogglerBlock
           activeTab={typePage}
-          countAll={countAll}
-          countOnline={countOnline}
-          setActiveTab={(type) => setTypePage(type)}
+          setActiveTab={(type) => typePageChanged(type)}
         />
         <SearchField isShadow={isShowShadow} />
         { typePage !== 'find-friend' ? <FriendsList /> : <FindNewFriendList /> }

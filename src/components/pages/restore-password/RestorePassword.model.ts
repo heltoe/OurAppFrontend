@@ -2,7 +2,9 @@ import { combine, createEvent, createEffect, sample, guard, attach, forward } fr
 import { RestoreFx } from '@/api/RestorePassword'
 import { RestorePasswordFxParams } from '@/api/types'
 import { createEffectorField } from '@/helpers/effector-field'
+import { navigatePush } from '@/helpers/navigation'
 import { validatorForm } from '@/helpers/validator'
+import { getRouterByName } from '@/routes'
 
 // эффекты
 const validateFormFx = createEffect((params: RestorePasswordFxParams) => {
@@ -11,14 +13,24 @@ const validateFormFx = createEffect((params: RestorePasswordFxParams) => {
 })
 const submitFormFx = attach({
   effect: RestoreFx,
-  mapParams: (params: any) => params
+  mapParams: (params: any) => {
+    feedBackChanged('')
+    return params
+  }
 })
+const setErrorFx = createEffect(() => feedBackChanged('Сервис временно не работает...'))
 // events
 export const validateForm = createEvent()
 export const submitForm = createEvent()
+const resetFields = createEvent()
 // сторы
-export const [$email, emailChanged] = createEffectorField({ defaultValue: '' })
+export const [$email, emailChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$feedBack, feedBackChanged] = createEffectorField({ defaultValue: '' })
 export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '' })
+export const emilFormChanged = {
+  email: emailChanged,
+  errorEmail: emailErrorChanged
+}
 export const $canSubmit = combine(
   $email,
   $emailError,
@@ -26,17 +38,20 @@ export const $canSubmit = combine(
 )
 // методы
 sample({
-  source: { email: $email },
   clock: validateForm,
+  source: { email: $email },
   target: validateFormFx
 })
 sample({
+  clock: submitForm,
   source: guard({ source: $email, filter: $canSubmit }),
-  clock: validateForm,
   target: submitFormFx
 })
-// forward юзаем после запроса
-// forward({
-//   from: submitFormFx.doneData,
-//   to: addToast.prepend(() => ({ type: 'error', message: 'Пользователь не найден' })),
-// })
+forward({
+  from: submitFormFx.failData,
+  to: setErrorFx
+})
+forward({
+  from: submitFormFx.doneData,
+  to: [navigatePush.prepend(() => ({ pathname: getRouterByName('login-page').path })), resetFields]
+})

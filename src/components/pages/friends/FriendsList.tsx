@@ -1,4 +1,6 @@
 import React from 'react'
+import { useStore } from 'effector-react'
+import { $typePage, $friendsGrid } from '@/components/pages/friends/FriendsPage.module'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
 import CardFriend, { CardFriendStyled } from '@/components/pages/friends/cards/CardFriend'
@@ -48,78 +50,20 @@ const FriendsListStyled = styled(BlockStyled)`
   }
 `
 const FriendsList: React.FC = () => {
-  const friendsList: any[] = [
-    {
-      id: 1,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 2,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 3,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 4,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 5,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 6,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 7,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 8,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 9,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    },
-    {
-      id: 10,
-      image: '',
-      status: 'online',
-      fullName: 'adasdasd asdasda'
-    }
-  ];
+  const typePage = useStore($typePage)
+  const friendsList = useStore($friendsGrid)
   return (
     <FriendsListStyled>
       {
-        friendsList.length ? friendsList.map((card) => (
+        // @ts-ignore
+        friendsList[typePage] && friendsList[typePage].length ? friendsList[typePage].map((card) => (
           <CardFriend
             key={card.id}
             id={card.id}
-            image={card.image}
+            firstName={card.firstName}
+            lastName={card.lastName}
             status={card.status}
-            fullName={card.fullName}
+            image={card.image}
           />
         )) : <EmptyPlaceholder>Список друзей пуст</EmptyPlaceholder>
       }

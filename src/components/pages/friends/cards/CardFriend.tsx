@@ -8,8 +8,9 @@ import Icon, { IconStyled } from '@/components/ui/Icon'
 type CardFriend = {
   id: number
   image: string
-  status: string
-  fullName: string
+  status?: string
+  firstName: string
+  lastName: string
 }
 
 const ShowPhotoStyled = styled.div`
@@ -97,7 +98,8 @@ const LinkStyled = styled(Link)`
 const ControllerStyled = styled.div`
   position: absolute;
   right: 10px;
-  top: 0px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
   &:hover {
     use {
@@ -105,17 +107,23 @@ const ControllerStyled = styled.div`
     }
   }
 `
-const CardFriend: React.FC<CardFriend> = ({ image, fullName }) => {
+const CardFriend: React.FC<CardFriend> = ({ id, image, firstName, lastName }) => {
   return (
     <CardFriendStyled>
       <CardAvatarOverlay>
-        <Avatar size="70px" isRound image={image} fullName={fullName} />
+        <Avatar
+          id={id}
+          size="70px"
+          isRound
+          image={image}
+          fullName={`${firstName} ${lastName}`}
+        />
         {image && <ShowPhotoStyled>
           <Icon type="search-plus" color="#fff" size="18px" />
         </ShowPhotoStyled>}
       </CardAvatarOverlay>
       <ContentWrapperStyled>
-        <LinkStyled to="/" className="middle">{fullName}</LinkStyled>
+        <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
         <WriteMessageStyled className="middle">Написать сообщение</WriteMessageStyled>
         <ControllerStyled>
           <Icon type="remove-user" color="grey" size="25px" />

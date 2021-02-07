@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Avatar from '@/components/ui/Avatar'
 import Icon from '@/components/ui/Icon'
-import { OverlayStyled, WrapperImageStyled } from '@/components/pages/profile/content/PhotoBlock'
+import { OverlayStyled, WrapperImageStyled } from '@/components/pages/profile/content/photo-block/PhotoBlock'
 
 type HeadProfileType = {
   image: string
@@ -71,7 +71,7 @@ export const HeadProfile: React.FC<HeadProfileType> = ({
       </CloseWidgetStyled>
       <OverlayStyled />
       <WrapperImageStyled>
-        <Avatar image={image} size="150px" isRound />
+        <Avatar id={8} image={image} size="150px" isRound />
       </WrapperImageStyled>
       <NameStyled className="middle">{name}</NameStyled>
       <ControllerStyled>

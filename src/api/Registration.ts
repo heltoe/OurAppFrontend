@@ -1,10 +1,10 @@
 import { createApiEffect } from '@/api/common/CreateApiEffect'
-import { RegistrationFxParams, RegistrationFxResponse } from '@/api/types'
+import { RegistrationFxParams, IntroFxResponse } from '@/api/types'
 
-export const RegistrationFx = createApiEffect<RegistrationFxParams, RegistrationFxResponse>({
+export const RegistrationFx = createApiEffect<RegistrationFxParams, IntroFxResponse>({
   requestMapper: (params: any) => ({
     method: 'POST',
-    url: '/entry/register/',
+    url: '/api/registration',
     body: params
   })
 })

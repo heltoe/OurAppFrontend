@@ -1,9 +1,13 @@
 import React from 'react'
+import { useStore } from 'effector-react'
+import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { getRouterByName } from '@/routes'
-import AvatarStatus from '@/components/common/header/AvatarStatus'
-import { user } from '@/data/user'
+import { $photo } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
+import { getRouterByPath } from '@/routes'
+import Avatar from '@/components/ui/Avatar'
 
 const HeaderStyled = styled.div`
   display: flex;
@@ -11,6 +15,7 @@ const HeaderStyled = styled.div`
   justify-content: flex-end;
   position: relative;
   height: ${(props) => props.theme.Hheader};
+  min-height: ${(props) => props.theme.Hheader};
   padding: 15px 34px;
   position: relative;
   background: rgb(146,129,255);
@@ -33,18 +38,23 @@ const PersonInfoStyled = styled(Link)`
     box-shadow: ${(props) => props.theme.shadow.shadow2};
   }
 `
-const WrapperIconStyled = styled.div`
-  cursor: pointer;
-`
 export const Header: React.FC = () => {
+  const photo = useStore($photo)
+  const mainInfoForm = useStore($mainInfoForm)
+  const location = useLocation()
   return (
     <HeaderStyled>
       <LogoStyled to={getRouterByName('profile-page').path} className="no-select">
         Chat
       </LogoStyled>
-      <PersonInfoStyled to={getRouterByName('profile-page').path}>
-        <AvatarStatus image={user.image} />
-      </PersonInfoStyled>
+      {getRouterByPath(location.pathname).name !== 'profile-page' && <PersonInfoStyled to={getRouterByName('profile-page').path}>
+        <Avatar
+          id={mainInfoForm.id}
+          image={photo}
+          fullName={mainInfoForm.fullName}
+          isRound size="40px"
+        />
+      </PersonInfoStyled>}
     </HeaderStyled>
   )
 }

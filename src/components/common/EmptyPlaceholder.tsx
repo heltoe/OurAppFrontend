@@ -11,11 +11,11 @@ export const EmptyListStyled = styled.div`
 `
 
 const EmptyPlaceholder: React.FC = ({ children }) => {
-    return (
-      <EmptyListStyled>
-        <p className="light no-select">{children}</p>
-      </EmptyListStyled>
-    )
+  return (
+    <EmptyListStyled>
+      <p className="light no-select">{children}</p>
+    </EmptyListStyled>
+  )
 }
 
 export default EmptyPlaceholder

@@ -3,25 +3,19 @@ import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import {
   $form,
+  $feedBack,
   $errors,
   $canSubmit,
-  emailChanged,
-  passwordChanged,
-  repeatPasswordChanged,
-  firstNameChanged,
-  lastNameChanged,
-  emailErrorChanged,
-  passwordErrorChanged,
-  repeatPasswordErrorChanged,
-  firstNameErrorChanged,
-  lastNameErrorChanged,
+  formChanged,
   validateForm
 } from '@/components/pages/registration/Registration.model'
 import FormIntroContainer from '@/components/common/form-intro/FotmIntroContainer'
 import TogglePage from '@/components/common/form-intro/TogglePage'
 import FormIntro from '@/components/common/form-intro/FormIntro'
-import FormInput from '@/components/ui/FormInput'
+import FormInput, { ErrorMessageStyled } from '@/components/ui/FormInput'
 import BaseButton from '@/components/ui/BaseButton'
+import FadeInOut from '@/components/ui/FadeInOut'
+import RadioButton, { LabelRadioStyled } from '@/components/ui/RadioButton'
 
 export const RequiredDescriptionStyled = styled.p`
   font-size: 12px;
@@ -29,55 +23,73 @@ export const RequiredDescriptionStyled = styled.p`
   color: ${(props) => props.theme.rgb(props.theme.colors.black)};
   margin-top: 15px;
 `
+const GenderRowStyled = styled.div`
+  display: flex;
+  width: 100%;
+  margin-top: 20px;
+  position: relative;
+  ${LabelRadioStyled} {
+    margin-left: 10px;
+  }
+`
 export const RegistrationPage: React.FC = () => {
   const form = useStore($form)
   const errors = useStore($errors)
   const canSubmit = useStore($canSubmit)
+  const feedBack = useStore($feedBack)
   const settingsFields = [
     {
       id: 1,
       value: form.email,
-      placeholder: "Ваш e-mail*",
+      placeholder: 'Ваш e-mail*',
       error: errors.emailError,
-      onChange: (e: string) => emailChanged(e),
-      onFocus: () => emailErrorChanged('')
+      onChange: (e: string) => formChanged.email(e),
+      onFocus: () => formChanged.emailError('')
     },
     {
       id: 2,
       value: form.password,
-      placeholder: "Пароль*",
+      placeholder: 'Пароль*',
       error: errors.passwordError,
-      onChange: (e: string) => passwordChanged(e),
-      onFocus: () => passwordErrorChanged('')
+      onChange: (e: string) => formChanged.password(e),
+      onFocus: () => formChanged.passwordError('')
     },
     {
       id: 3,
       value: form.repeatPassword,
-      placeholder: "Повторите пароль*",
+      placeholder: 'Повторите пароль*',
       error: errors.repeatPasswordError,
-      onChange: (e: string) => repeatPasswordChanged(e),
-      onFocus: () => repeatPasswordErrorChanged('')
+      onChange: (e: string) => formChanged.repeatPassword(e),
+      onFocus: () => formChanged.repeatPasswordError('')
     },
     {
       id: 4,
       value: form.firstName,
-      placeholder: "Имя*",
+      placeholder: 'Имя*',
       error: errors.firstNameError,
-      onChange: (e: string) => firstNameChanged(e),
-      onFocus: () => firstNameErrorChanged('')
+      onChange: (e: string) => formChanged.firstName(e),
+      onFocus: () => formChanged.firstNameError('')
     },
     {
       id: 5,
       value: form.lastName,
-      placeholder: "Фамилия*",
+      placeholder: 'Фамилия*',
       error: errors.lastNameError,
-      onChange: (e: string) => lastNameChanged(e),
-      onFocus: () => lastNameErrorChanged('')
+      onChange: (e: string) => formChanged.lastName(e),
+      onFocus: () => formChanged.lastNameError('')
+    },
+    {
+      id: 6,
+      value: form.birthDate,
+      placeholder: 'Дата рождения*',
+      error: errors.lastNameError,
+      onChange: (e: string) => formChanged.birthDate(e),
+      onFocus: () => formChanged.birthDateError('')
     }
   ]
   return (
     <FormIntroContainer>
-      <FormIntro onSubmit={() => validateForm()}>
+      <FormIntro feedBack={feedBack} onSubmit={() => validateForm()}>
         {settingsFields.map(item => 
           <FormInput
             key={item.id}
@@ -86,8 +98,38 @@ export const RegistrationPage: React.FC = () => {
             error={item.error}
             onChange={(e) => item.onChange(e)}
             onFocus={() => item.onFocus()}
-          />  
+          />
         )}
+        {/* <GenderRowStyled> */}
+        {/* <p>Дата рождения*:</p> */}
+        {/* <FormInput
+          value={form.birthDate}
+          placeholder="Дата рождения"
+          error={errors.birthDateError}
+          onChange={(e) => formChanged.birthDate(e)}
+          onFocus={() => formChanged.birthDateError('')}
+        /> */}
+        {/* </GenderRowStyled> */}
+        <GenderRowStyled>
+          <p>Пол*:</p>
+          <RadioButton
+            name="gender"
+            value="male"
+            isChecked={form.gender === 'male'}
+            onChange={(e) => formChanged.gender(e)}
+          >
+            Мужской
+          </RadioButton>
+          <RadioButton
+            name="gender"
+            value="female"
+            isChecked={form.gender === 'female'}
+            onChange={(e) => formChanged.gender(e)}
+          >
+            Женский
+          </RadioButton>
+          {errors.genderError && errors.genderError.length && <FadeInOut><ErrorMessageStyled>{errors.genderError}</ErrorMessageStyled></FadeInOut>}
+        </GenderRowStyled>
         <RequiredDescriptionStyled>
           * Обязательные поля для заполнения
         </RequiredDescriptionStyled>

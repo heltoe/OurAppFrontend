@@ -7,7 +7,8 @@ import Avatar, { AvatarStyled } from '@/components/ui/Avatar'
 type CardUser = {
   id: number
   image: string
-  fullName: string
+  firstName: string
+  lastName: string
 }
 
 export const CardUserStyled = styled.div`
@@ -44,14 +45,19 @@ const LinkStyled = styled(Link)`
     color: ${(props) => props.theme.rgb(props.theme.colors.purple1)};
   }
 `
-const CardUser: React.FC<CardUser> = ({ image, fullName }) => {
+const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName }) => {
   return (
     <CardUserStyled>
       <Link to="/">
-        <Avatar size="160px" image={image} />
+        <Avatar
+          id={id}
+          size="160px"
+          image={image}
+          fullName={`${firstName} ${lastName}`}
+        />
       </Link>
       <WrapperContentStyled>
-        <LinkStyled to="/" className="middle">{fullName}</LinkStyled>
+        <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
         <ControllerStyled>
           <Icon type="add-user" color="grey" size="25px" />
         </ControllerStyled>

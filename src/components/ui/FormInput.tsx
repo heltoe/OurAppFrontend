@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { IBaseInput, BaseInputStyled } from '@/components/ui/BaseInput'
 import FadeInOut from '@/components/ui/FadeInOut'
@@ -40,7 +40,7 @@ export const FormInputStyled = styled(BaseInputStyled)<{ filled: boolean }>`
   box-shadow: ${(props) =>
     props.filled ? props.theme.shadow.shadow2 : 'none'};
 `
-const ErrorMessageStyled = styled.div`
+export const ErrorMessageStyled = styled.div`
   max-width: 235px;
   font-size: 14px;
   line-height: 1.3;
@@ -86,6 +86,9 @@ export const FormInput: React.FC<IFormInput> = ({
     if (typeof value === 'string' && !value.length) setActiveInput(false)
     onBlur(e)
   }
+  useEffect(() => {
+    if (value && !activeInput) setActiveInput(true)
+  }, [value])
   return (
     <LabelStyled error={error}>
       <PlaceholderStyled filled={activeInput}>{placeholder}</PlaceholderStyled>

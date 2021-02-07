@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import {
   $form,
+  $feedBack,
   $errors,
   $canSubmit,
   emailChanged,
@@ -38,11 +39,12 @@ export const LinkStyled = styled(Link)`
 `
 export const LoginPage: React.FC = () => {
   const form = useStore($form)
+  const feedBack = useStore($feedBack)
   const errors = useStore($errors)
   const canSubmit = useStore($canSubmit)
   return (
     <FormIntroContainer>
-      <FormIntro onSubmit={() => validateForm()}>
+      <FormIntro feedBack={feedBack} onSubmit={() => validateForm()}>
         <FormInput
           value={form.email}
           placeholder="Ваш e-mail"

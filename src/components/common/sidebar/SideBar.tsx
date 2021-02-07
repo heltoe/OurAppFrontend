@@ -27,7 +27,7 @@ export const SideBar: React.FC<ToggleSideBarType> = ({ isOpen, setIsOpenSideBar 
       <TopMenu isOpen={isOpen} setIsOpenSideBar={(value) => setIsOpenSideBar(value)} />
       <SideBarBodyStyled>
         <Simple maxHeight="calc(100vh - 70px)">
-          <ContainerMessages isOpen={isOpen}/>
+          <ContainerMessages isOpen={isOpen} />
         </Simple>
       </SideBarBodyStyled>
     </SideBarStyled>

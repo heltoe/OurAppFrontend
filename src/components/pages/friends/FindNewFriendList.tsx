@@ -1,7 +1,9 @@
 import React from 'react'
+import { useStore } from 'effector-react'
+import { $users } from '@/components/pages/friends/FriendsPage.module'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
-import CardUser, { CardUserStyled } from '@/components/pages/friends/CardUser'
+import CardUser, { CardUserStyled } from '@/components/pages/friends/cards/CardUser'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 
 const UserListStyled = styled(BlockStyled)<{ isSpecialStyle: boolean }>`
@@ -16,16 +18,17 @@ const UserListStyled = styled(BlockStyled)<{ isSpecialStyle: boolean }>`
   }
 `
 const FindNewFriendList: React.FC = () => {
-  const UserList: any[] = [];
+  const usersList = useStore($users)
   return (
-    <UserListStyled isSpecialStyle={UserList.length > 0}>
+    <UserListStyled isSpecialStyle={usersList.length > 0}>
       {
-        UserList.length ? UserList.map((card) => (
+        usersList.length ? usersList.map((card) => (
           <CardUser
             key={card.id}
             id={card.id}
             image={card.image}
-            fullName={card.fullName}
+            firstName={card.firstName}
+            lastName={card.lastName}
           />
         )) : <EmptyPlaceholder>Список пользователей пуст</EmptyPlaceholder>
       }

@@ -3,6 +3,7 @@ import Avatar from '@/components/ui/Avatar'
 import styled from 'styled-components'
 
 type CardType = {
+  id: number
   image: string
   status: string
   time: string
@@ -78,6 +79,7 @@ const MessageStyled = styled.div`
   text-overflow: ellipsis;
 `
 export const Card: React.FC<CardType> = ({
+  id,
   image,
   status,
   time,
@@ -88,7 +90,7 @@ export const Card: React.FC<CardType> = ({
   return (
     <CardStyled shortType={isOpen}>
       <AvatarOvarlay shortType={isOpen}>
-        <Avatar size="70px" isRound image={image} />
+        <Avatar id={id} fullName={fullName} size="70px" isRound image={image} />
       </AvatarOvarlay>
       {isOpen && <BlockColumnStyled>
         <BlockStyled>

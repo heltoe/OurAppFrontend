@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import BaseButton from '@/components/ui/BaseButton'
 import FormInput from '@/components/ui/FormInput'
 import Loader from '@/components/ui/Loader'
-import { FormStyled } from '@/components/pages/profile/content/MainInfoForm'
+import { FormStyled } from '@/components/pages/profile/content/main-info-form/MainInfoForm'
 
 export const ChangePass: React.FC = () => {
   const [password, setPassword] = useState('')

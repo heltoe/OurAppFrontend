@@ -1,10 +1,10 @@
 import { createApiEffect } from '@/api/common/CreateApiEffect'
-import { RestorePasswordFxParams, RestorePasswordFxResponse } from '@/api/types'
+import { RestorePasswordFxParams } from '@/api/types'
 
-export const RestoreFx = createApiEffect<RestorePasswordFxParams, RestorePasswordFxResponse>({
+export const RestoreFx = createApiEffect<RestorePasswordFxParams, void>({
   requestMapper: (params: any) => ({
     method: 'POST',
-    url: '/entry/register/',
+    url: '/api/reset-password',
     body: params
   })
 })

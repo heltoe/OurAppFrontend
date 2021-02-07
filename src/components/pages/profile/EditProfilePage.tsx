@@ -2,11 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import { device } from '@/Theme'
 import { PageStyled } from '@/components/common/Page'
-import MainInfoForm from '@/components/pages/profile/content/MainInfoForm'
-import LocationMap from '@/components/pages/profile/content/LocationMap'
-import ChangePass from '@/components/pages/profile/content/ChangePass'
-import PhotoBlock from '@/components/pages/profile/content/PhotoBlock'
-import { user } from '@/data/user'
+import MainInfoForm from '@/components/pages/profile/content/main-info-form/MainInfoForm'
+import LocationMap from '@/components/pages/profile/content/location-map/LocationMap'
+import ChangePass from '@/components/pages/profile/content/change-pass/ChangePass'
+import PhotoBlock from '@/components/pages/profile/content/photo-block/PhotoBlock'
 
 const ProfilePageStyled = styled(PageStyled)`
   @media ${device.tabletL} {
@@ -41,7 +40,7 @@ export const EditProfilePage: React.FC = () => {
           <LocationMap />
           <ChangePass />
         </BlockInfoStyled>
-        <PhotoBlock image={user.image} />
+        <PhotoBlock />
       </WrapperStyled>
     </ProfilePageStyled>
   )
