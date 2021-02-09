@@ -4,7 +4,7 @@ import { ListFriendsFxResponse, ListUsersFxResponse, CommonFxParams, CommonRespo
 export const ListFriendsFx = createApiEffect<void, ListFriendsFxResponse>({
   requestMapper: (params: any) => ({
     method: 'GET',
-    url: `/api/user-friends/${params.userId}`,
+    url: `/api/user-friends/${params.userId}`
   })
 })
 export const AddToFriendFx = createApiEffect<CommonFxParams, CommonResponse>({
@@ -14,7 +14,6 @@ export const AddToFriendFx = createApiEffect<CommonFxParams, CommonResponse>({
     body: params
   })
 })
-
 export const RemoveToFriendFx = createApiEffect<CommonFxParams, CommonResponse>({
   requestMapper: (params: any) => ({
     method: 'DELETE',
@@ -25,6 +24,6 @@ export const RemoveToFriendFx = createApiEffect<CommonFxParams, CommonResponse>(
 export const ListUsersFx = createApiEffect<void, ListUsersFxResponse>({
   requestMapper: (params: any) => ({
     method: 'GET',
-    url: `/api/user-list/${params.id}`,
+    url: `/api/user-list/${params.userId}`,
   })
 })

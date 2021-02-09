@@ -1,10 +1,10 @@
-import { attach, createEvent, createEffect, sample, guard, combine, forward } from 'effector-root'
-import { Response } from '@/api/common/Request'
-import { ListFriendsFxResponse, User, CommonFxParams, UserId } from '@/api/types'
+import { attach, createEvent, sample, guard, combine, forward } from 'effector-root'
+import { User, CommonFxParams, UserId } from '@/api/types'
 import { ListFriendsFx, ListUsersFx } from '@/api/Friends'
+import { AddToFriendShipFx } from '@/api/FriendShip'
 import { ListFriendShipFx } from '@/api/FriendShip'
 import { createEffectorField } from '@/helpers/effector-field'
-import { $prepareUserDataId } from '@/App.module'
+import { $prepareUserDataId, $idUser } from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты
@@ -18,13 +18,18 @@ export const submitRequestFriendShipListFx = attach({
 })
 export const submitRequestUsersListFx = attach({
   effect: ListUsersFx,
+  mapParams: (params: UserId) => params
+})
+// добавить в friendShip
+export const submitRequestAddToFriendShipFx = attach({
+  effect: AddToFriendShipFx,
   mapParams: (params: CommonFxParams) => params
 })
-const setFriendsListFx = createEffect(({ body }: Response<ListFriendsFxResponse>) => {
-  usersChanged(body.friends)
-  countAllFriendsChanged(body.friends.length)
-  countOnlineFriendsChanged(body.friends.length)
-})
+// const setFriendsListFx = createEffect(({ body }: Response<ListFriendsFxResponse>) => {
+//   usersChanged(body.friends)
+//   countAllFriendsChanged(body.friends.length)
+//   countOnlineFriendsChanged(body.friends.length)
+// })
 
 // события
 export const loadAllFriends = createEvent()
@@ -37,6 +42,8 @@ export const loadLists = {
   friendShip: loadListFriendShip,
   users: loadListUsers
 }
+//
+export const addToFriendShip = createEvent()
 
 // сторы
 export const [$typePage, typePageChanged] = createEffectorField({ defaultValue: 'all' })
@@ -44,6 +51,11 @@ export const [$users, usersChanged] = createEffectorField<User[]>({ defaultValue
 export const [$allFriends, allFriendsChanged] = createEffectorField<User[]>({ defaultValue: [] })
 export const [$onlineFriends, onlineFriendsChanged] = createEffectorField<User[]>({ defaultValue: [] })
 export const [$friendShips, friendShipsChanged] = createEffectorField<User[]>({ defaultValue: [] })
+export const [$friendId, friendIdChanged] = createEffectorField({ defaultValue: 0 })
+export const $friendData = combine({
+  userId: $idUser,
+  friendId: $friendId,
+})
 export const $friendsGrid = combine({
   all: $allFriends,
   online: $onlineFriends,
@@ -101,7 +113,7 @@ forward({
 // загрузка и запись предложений в друзья
 sample({
   clock: loadListFriendShip,
-  source: guard({ source: $prepareUserDataId, filter: $canSendFriendShipRequest }),
+  source: guard({ source: $friendData, filter: $canSendFriendShipRequest }),
   target: submitRequestFriendShipListFx
 })
 forward({
@@ -121,3 +133,13 @@ forward({
   from: submitRequestUsersListFx.doneData,
   to: usersChanged.prepend(({ body }: any) => body.users)
 })
+// добавить в friendShip
+sample({
+  clock: addToFriendShip,
+  source: guard({ source: $friendData, filter: $canSendUserRequest }),
+  target: submitRequestAddToFriendShipFx
+})
+// forward({
+//   from: submitRequestUsersListFx.doneData,
+//   to: usersChanged.prepend(() => [])
+// })

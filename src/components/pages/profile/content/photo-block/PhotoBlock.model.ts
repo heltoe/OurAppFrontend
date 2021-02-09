@@ -25,12 +25,11 @@ export const $canSendPersonalRequest = combine(
 )
 
 // методы
-sample({
-  clock: removeAccount,
-  source: guard({ source: $combinePersonalData, filter: $canSendPersonalRequest }),
-  target: submitRequestRemoveAccountFx
-})
-
+// sample({
+//   clock: removeAccount,
+//   source: guard({ source: $combinePersonalData, filter: $canSendPersonalRequest }),
+//   target: submitRequestRemoveAccountFx
+// })
 forward({
   from: submitRequestRemoveAccountFx.doneData,
   to: logout

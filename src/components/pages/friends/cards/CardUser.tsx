@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { addToFriendShip, friendIdChanged } from '@/components/pages/friends/FriendsPage.module'
 import Icon from '@/components/ui/Icon'
 import Avatar, { AvatarStyled } from '@/components/ui/Avatar'
 
@@ -46,6 +47,10 @@ const LinkStyled = styled(Link)`
   }
 `
 const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName }) => {
+  const addToFriendShipList = (userId: number) => {
+    friendIdChanged(userId)
+    addToFriendShip()
+  }
   return (
     <CardUserStyled>
       <Link to="/">
@@ -58,7 +63,7 @@ const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName }) => {
       </Link>
       <WrapperContentStyled>
         <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
-        <ControllerStyled>
+        <ControllerStyled onClick={() => addToFriendShipList(id)}>
           <Icon type="add-user" color="grey" size="25px" />
         </ControllerStyled>
       </WrapperContentStyled>

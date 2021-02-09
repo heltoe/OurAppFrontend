@@ -3,7 +3,7 @@ import {
   PersonalInfoFxParams,
   ProfileFxResponse,
   RemoveAccountFxParams,
-  RemoveAccountFxResponse
+  CommonResponse
 } from '@/api/types'
 
 export const ProfileFx = createApiEffect<void, ProfileFxResponse>({
@@ -21,7 +21,7 @@ export const PersonalInfoFx = createApiEffect<PersonalInfoFxParams, ProfileFxRes
   })
 })
 
-export const RemoveAccountFx = createApiEffect<RemoveAccountFxParams, RemoveAccountFxResponse>({
+export const RemoveAccountFx = createApiEffect<RemoveAccountFxParams, CommonResponse>({
   requestMapper: (params: any) => ({
     method: 'POST',
     url: '/api/remove-account',

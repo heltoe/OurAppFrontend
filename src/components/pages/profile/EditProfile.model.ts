@@ -1,12 +1,12 @@
 import { attach, createEvent, createEffect, restore, sample, guard, combine, forward } from 'effector-root'
 import { ProfileFx, PersonalInfoFx } from '@/api/Profile'
 import { Response } from '@/api/common/Request'
-import { PersonalInfoFxParams, ProfileFxParams, ProfileFxResponse } from '@/api/types'
+import { PersonalInfoFxParams, UserId, ProfileFxResponse } from '@/api/types'
 import { $token } from '@/api/common/AuthorizedRequest'
 import { mainInfoFormChanged } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { locationFormChanged } from '@/components/pages/profile/content/location-map/LocationMap.model'
 import { photoChanged } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
-import { $idUser, $preparePersonDataId, $preparePersonalDataToken } from '@/App.module'
+import { $idUser, $prepareUserDataId, $preparePersonalDataToken } from '@/App.module'
 import { setIdUser } from '@/App.module'
 
 // эффекты
@@ -18,10 +18,10 @@ export const submitRequestPersonalInfoFx = attach({
 // инфо выбранного пользователя
 export const submitRequestUserInfoFx = attach({
   effect: ProfileFx,
-  mapParams: (params: ProfileFxParams) => params
+  mapParams: (params: UserId) => params
 })
 const setPersonalDataFx = createEffect(({ body }: Response<ProfileFxResponse>) => {
-  setIdUser(`${body.id}`)
+  setIdUser(body.id)
   mainInfoFormChanged.id(body.id)
   mainInfoFormChanged.firstName(body.firstName || '')
   mainInfoFormChanged.lastName(body.lastName || '')
@@ -56,7 +56,7 @@ export const $canSendPersonalRequest = combine(
 export const $canSendUserRequest = combine(
   $idUser,
   submitRequestUserInfoFx.pending,
-  (idUser, sendRequestPending) => idUser.length > 0 && !sendRequestPending
+  (idUser, sendRequestPending) => typeof idUser === 'number' && !sendRequestPending
 )
 
 // методы
@@ -67,10 +67,10 @@ sample({
 })
 sample({
   clock: loadUser,
-  source: guard({ source: $preparePersonDataId, filter: $canSendUserRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendUserRequest }),
   target: submitRequestUserInfoFx
 })
-//
+
 // forward({
 //   from: submitRequestPersonalInfoFx.failData,
 //   to: setErrorFx

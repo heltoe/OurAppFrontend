@@ -25,9 +25,6 @@ export type RestorePasswordFxParams = {
 export type PersonalInfoFxParams = {
   token: string
 }
-export type ProfileFxParams = {
-  id: string
-}
 export type ProfileFxResponse = {
   id: number
   email: string
@@ -43,9 +40,6 @@ export type ProfileFxResponse = {
 export type RemoveAccountFxParams = {
   token: string
   id: string
-}
-export type RemoveAccountFxResponse = {
-  status: string
 }
 //
 export type Message = {
@@ -76,9 +70,9 @@ export type ListFriendsFxResponse = {
 export type ListUsersFxResponse = {
   users: User[]
 }
-// common response 
+// common response
 export type CommonResponse = {
-  data: string
+  status: string
 }
 export type CommonFxParams = {
   userId: number

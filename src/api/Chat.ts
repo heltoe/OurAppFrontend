@@ -1,10 +1,10 @@
 import { createApiEffect } from '@/api/common/CreateApiEffect'
-import { ProfileFxParams, ListMessagesFxResponse } from '@/api/types'
+import { UserId, ListMessagesFxResponse } from '@/api/types'
 
-export const ListMessagesFx = createApiEffect<ProfileFxParams, ListMessagesFxResponse>({
+export const ListMessagesFx = createApiEffect<UserId, ListMessagesFxResponse>({
   requestMapper: (params: any) => ({
     method: 'GET',
-    url: `/api/list-chat/${params.id}`
+    url: `/api/list-chat/${params.userId}`
   })
 })
 
