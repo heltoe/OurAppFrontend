@@ -30,11 +30,11 @@ export const $canSendListChatRequest = combine(
 )
 
 // методы
-sample({
-  clock: loadListChat,
-  source: guard({ source: $preparePersonDataId, filter: $canSendListChatRequest }),
-  target: submitRequestListChatFx
-})
+// sample({
+//   clock: loadListChat,
+//   source: guard({ source: $preparePersonDataId, filter: $canSendListChatRequest }),
+//   target: submitRequestListChatFx
+// })
 forward({
   from: submitRequestListChatFx.doneData,
   to: setListChatFx

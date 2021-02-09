@@ -1,23 +1,24 @@
 import { attach, createEvent, createEffect, sample, guard, combine, forward } from 'effector-root'
 import { Response } from '@/api/common/Request'
-import { ListFriendsFx, ListFriendShipFx, ListUsersFx } from '@/api/Friends'
-import { ProfileFxParams, ListFriendsFxResponse, User } from '@/api/types'
+import { ListFriendsFxResponse, User, CommonFxParams, UserId } from '@/api/types'
+import { ListFriendsFx, ListUsersFx } from '@/api/Friends'
+import { ListFriendShipFx } from '@/api/FriendShip'
 import { createEffectorField } from '@/helpers/effector-field'
-import { $preparePersonDataId } from '@/App.module'
+import { $prepareUserDataId } from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты
 export const submitRequestFriendsListFx = attach({
   effect: ListFriendsFx,
-  mapParams: (params: ProfileFxParams) => params
+  mapParams: (params: UserId) => params
 })
 export const submitRequestFriendShipListFx = attach({
   effect: ListFriendShipFx,
-  mapParams: (params: ProfileFxParams) => params
+  mapParams: (params: CommonFxParams) => params
 })
 export const submitRequestUsersListFx = attach({
   effect: ListUsersFx,
-  mapParams: (params: ProfileFxParams) => params
+  mapParams: (params: CommonFxParams) => params
 })
 const setFriendsListFx = createEffect(({ body }: Response<ListFriendsFxResponse>) => {
   usersChanged(body.friends)
@@ -36,6 +37,7 @@ export const loadLists = {
   friendShip: loadListFriendShip,
   users: loadListUsers
 }
+
 // сторы
 export const [$typePage, typePageChanged] = createEffectorField({ defaultValue: 'all' })
 export const [$users, usersChanged] = createEffectorField<User[]>({ defaultValue: [] })
@@ -69,11 +71,12 @@ export const $canSendUserRequest = combine(
   submitRequestUsersListFx.pending,
   (sendRequestPending) => !sendRequestPending
 )
+
 // методы
 // загрузка и запись друзей
 sample({
   clock: loadAllFriends,
-  source: guard({ source: $preparePersonDataId, filter: $canSendFriendRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendFriendRequest }),
   target: submitRequestFriendsListFx
 })
 forward({
@@ -85,7 +88,7 @@ forward({
 })
 sample({
   clock: loadOnlineFriends,
-  source: guard({ source: $preparePersonDataId, filter: $canSendFriendRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendFriendRequest }),
   target: submitRequestFriendsListFx
 })
 forward({
@@ -98,7 +101,7 @@ forward({
 // загрузка и запись предложений в друзья
 sample({
   clock: loadListFriendShip,
-  source: guard({ source: $preparePersonDataId, filter: $canSendFriendShipRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendFriendShipRequest }),
   target: submitRequestFriendShipListFx
 })
 forward({
@@ -111,7 +114,7 @@ forward({
 // загрузка и запись всех пользователей
 sample({
   clock: loadListUsers,
-  source: guard({ source: $preparePersonDataId, filter: $canSendUserRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendUserRequest }),
   target: submitRequestUsersListFx
 })
 forward({

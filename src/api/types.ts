@@ -76,3 +76,14 @@ export type ListFriendsFxResponse = {
 export type ListUsersFxResponse = {
   users: User[]
 }
+// common response 
+export type CommonResponse = {
+  data: string
+}
+export type CommonFxParams = {
+  userId: number
+  friendId: number
+}
+export type UserId = {
+  userId: number
+}
