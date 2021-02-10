@@ -41,7 +41,7 @@ export const FriendsPage: React.FC = () => {
     usersChanged([])
     if (typePage === 'all') loadLists.all()
     if (typePage === 'online') loadLists.online()
-    if (typePage === 'frienship') loadLists.friendShip()
+    if (typePage === 'friendship') loadLists.friendShip()
     if (typePage === 'find-friend') loadLists.users()
   }, [typePage])
   return (

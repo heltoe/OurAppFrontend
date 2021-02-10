@@ -46,8 +46,8 @@ export const TogglerBlock: React.FC<ToggleBlockType> = ({ activeTab, setActiveTa
         Друзья онлайн {counter.online}
       </ToggleItemStyled>
       <ToggleItemStyled
-        active={activeTab === 'frienship'}
-        onClick={() => setActiveTab('frienship')}
+        active={activeTab === 'friendship'}
+        onClick={() => setActiveTab('friendship')}
         className="no-select"
       >
         Заявки в друзья {counter.friendship}

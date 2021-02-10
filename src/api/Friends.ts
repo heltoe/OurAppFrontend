@@ -7,14 +7,14 @@ export const ListFriendsFx = createApiEffect<void, ListFriendsFxResponse>({
     url: `/api/user-friends/${params.userId}`
   })
 })
-export const AddToFriendFx = createApiEffect<CommonFxParams, CommonResponse>({
+export const AddToFriendsFx = createApiEffect<CommonFxParams, CommonResponse>({
   requestMapper: (params: any) => ({
     method: 'PUT',
     url: '/api/add-to-friend',
     body: params
   })
 })
-export const RemoveToFriendFx = createApiEffect<CommonFxParams, CommonResponse>({
+export const RemoveFromFriendsFx = createApiEffect<CommonFxParams, CommonResponse>({
   requestMapper: (params: any) => ({
     method: 'DELETE',
     url: '/api/remove-from-friend',

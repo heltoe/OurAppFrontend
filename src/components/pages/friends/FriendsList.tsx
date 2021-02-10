@@ -51,12 +51,12 @@ const FriendsListStyled = styled(BlockStyled)`
 `
 const FriendsList: React.FC = () => {
   const typePage = useStore($typePage)
-  const friendsList = useStore($friendsGrid)
+  const listUsers = useStore($friendsGrid)
   return (
     <FriendsListStyled>
       {
         // @ts-ignore
-        friendsList[typePage] && friendsList[typePage].length ? friendsList[typePage].map((card) => (
+        listUsers[typePage] && listUsers[typePage].length ? listUsers[typePage].map((card: any) => (
           <CardFriend
             key={card.id}
             id={card.id}
@@ -65,7 +65,7 @@ const FriendsList: React.FC = () => {
             status={card.status}
             image={card.image}
           />
-        )) : <EmptyPlaceholder>Список друзей пуст</EmptyPlaceholder>
+        )) : <EmptyPlaceholder>{typePage !== 'friendship' ? 'Список друзей пуст' : 'Список заявок в друзья пуст'}</EmptyPlaceholder>
       }
     </FriendsListStyled>
   )

@@ -15,7 +15,7 @@ export const AddToFriendShipFx = createApiEffect<CommonFxParams, CommonResponse>
   })
 })
 
-export const RemoveToFriendShipFx = createApiEffect<CommonFxParams, CommonResponse>({
+export const RemoveFromFriendShipFx = createApiEffect<CommonFxParams, CommonResponse>({
   requestMapper: (params: any) => ({
     method: 'DELETE',
     url: '/api/remove-from-friendship',

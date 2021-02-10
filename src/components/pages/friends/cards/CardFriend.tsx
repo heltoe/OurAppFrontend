@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useStore } from 'effector-react'
 import styled from 'styled-components'
+import { $typePage, clickHandlers, friendIdChanged } from '@/components/pages/friends/FriendsPage.module'
 import Avatar from '@/components/ui/Avatar'
 import { BlockStyled } from '@/components/ui/Block'
 import Icon, { IconStyled } from '@/components/ui/Icon'
@@ -96,18 +98,40 @@ const LinkStyled = styled(Link)`
   }
 `
 const ControllerStyled = styled.div`
+  cursor: pointer;
+  &:hover {
+    &.green {
+      use {
+        fill: ${(props) => props.theme.rgb(props.theme.colors.green1)};
+      }
+    }
+    &.red {
+      use {
+        fill: ${(props) => props.theme.rgb(props.theme.colors.red)};
+      }
+    }
+  }
+`
+const WrapperIconsStyled = styled.div`
+  display: flex;
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  cursor: pointer;
-  &:hover {
-    use {
-      fill: ${(props) => props.theme.rgb(props.theme.colors.red)};
+  ${ControllerStyled} {
+    &:not(:first-child) {
+      margin-left: 10px;
     }
   }
 `
 const CardFriend: React.FC<CardFriend> = ({ id, image, firstName, lastName }) => {
+  const typePage = useStore($typePage)
+  const clickHandler = (userId: number, type: string) => {
+    friendIdChanged(userId)
+    if (type === 'remove-from-friend') clickHandlers.removeFromFriends()
+    if (type === 'add-to-friends') clickHandlers.addToFriends()
+    if (type === 'remove-from-friendship') clickHandlers.removeFromFriendShip()
+  }
   return (
     <CardFriendStyled>
       <CardAvatarOverlay>
@@ -125,9 +149,17 @@ const CardFriend: React.FC<CardFriend> = ({ id, image, firstName, lastName }) =>
       <ContentWrapperStyled>
         <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
         <WriteMessageStyled className="middle">Написать сообщение</WriteMessageStyled>
-        <ControllerStyled>
-          <Icon type="remove-user" color="grey" size="25px" />
-        </ControllerStyled>
+        <WrapperIconsStyled>
+          {typePage !== 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(id, 'remove-from-friend')}>
+            <Icon type="remove-user" color="grey" size="25px" />
+          </ControllerStyled>}
+          {typePage === 'friendship' && <ControllerStyled className="green" onClick={() => clickHandler(id, 'add-to-friends')}>
+            <Icon type="check" color="grey" size="25px" />
+          </ControllerStyled>}
+          {typePage === 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(id, 'remove-from-friendship')}>
+            <Icon type="close" color="grey" size="25px" />
+          </ControllerStyled>}
+        </WrapperIconsStyled>
       </ContentWrapperStyled>
     </CardFriendStyled>
   )

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { addToFriendShip, friendIdChanged } from '@/components/pages/friends/FriendsPage.module'
+import { clickHandlers, friendIdChanged } from '@/components/pages/friends/FriendsPage.module'
 import Icon from '@/components/ui/Icon'
 import Avatar, { AvatarStyled } from '@/components/ui/Avatar'
 
@@ -10,6 +10,7 @@ type CardUser = {
   image: string
   firstName: string
   lastName: string
+  isCalledToFriendShip: boolean
 }
 
 export const CardUserStyled = styled.div`
@@ -46,10 +47,10 @@ const LinkStyled = styled(Link)`
     color: ${(props) => props.theme.rgb(props.theme.colors.purple1)};
   }
 `
-const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName }) => {
+const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName, isCalledToFriendShip }) => {
   const addToFriendShipList = (userId: number) => {
     friendIdChanged(userId)
-    addToFriendShip()
+    clickHandlers.addToFriendShip()
   }
   return (
     <CardUserStyled>
@@ -63,9 +64,9 @@ const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName }) => {
       </Link>
       <WrapperContentStyled>
         <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
-        <ControllerStyled onClick={() => addToFriendShipList(id)}>
+        {!isCalledToFriendShip && <ControllerStyled onClick={() => addToFriendShipList(id)}>
           <Icon type="add-user" color="grey" size="25px" />
-        </ControllerStyled>
+        </ControllerStyled>}
       </WrapperContentStyled>
     </CardUserStyled>
   )

@@ -64,11 +64,14 @@ export type User = {
   gender: string
   birthDate: string
 }
+export interface UserInGrid extends User {
+  calledToFriendShip: boolean
+}
 export type ListFriendsFxResponse = {
   friends: User[]
 }
 export type ListUsersFxResponse = {
-  users: User[]
+  users: UserInGrid[]
 }
 // common response
 export type CommonResponse = {

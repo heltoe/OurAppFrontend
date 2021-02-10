@@ -29,6 +29,7 @@ const FindNewFriendList: React.FC = () => {
             image={card.image}
             firstName={card.firstName}
             lastName={card.lastName}
+            isCalledToFriendShip={card.calledToFriendShip}
           />
         )) : <EmptyPlaceholder>Список пользователей пуст</EmptyPlaceholder>
       }
