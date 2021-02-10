@@ -1,4 +1,4 @@
-import { attach, createEvent, sample, guard, combine, forward } from 'effector-root'
+import { attach, createEvent, sample, guard, createEffect, combine, forward } from 'effector-root'
 import { User, UserInGrid, CommonFxParams, UserId } from '@/api/types'
 import { AddToFriendsFx, RemoveFromFriendsFx, ListFriendsFx, ListUsersFx } from '@/api/Friends'
 import { AddToFriendShipFx, RemoveFromFriendShipFx } from '@/api/FriendShip'
@@ -44,11 +44,20 @@ export const submitRequestRemoveFromFriendsFx = attach({
   mapParams: (params: CommonFxParams) => params
 })
 
-// const setFriendsListFx = createEffect(({ body }: Response<ListFriendsFxResponse>) => {
-//   usersChanged(body.friends)
-//   countAllFriendsChanged(body.friends.length)
-//   countOnlineFriendsChanged(body.friends.length)
-// })
+const changeListFriendShipFx = createEffect(({ userId, userList }: { userId: number, userList: User[] }) => {
+  const newList = userList.filter(item => item.id !== userId)
+  friendShipsChanged(newList)
+  countFriendsShipChanged(newList.length)
+})
+const changeListUsersFx = createEffect(({ userId, userList }: { userId: number, userList: UserInGrid[] }) => {
+  const elementId = userList.findIndex(item => item.id === userId)
+  if (elementId > -1) {
+    const element = userList[elementId]
+    userList.splice(elementId, 1, { ...element, calledToFriendShip: true })
+    console.log(userList)
+    usersChanged(userList)
+  }
+})
 
 // события
 // загрузка списков
@@ -167,11 +176,22 @@ sample({
   source: guard({ source: $friendData, filter: $canSendUserRequest }),
   target: submitRequestAddToFriendShipFx
 })
+sample({
+  clock: submitRequestAddToFriendShipFx.doneData,
+  source: { userId: $friendId, userList: $users },
+  target: changeListUsersFx
+})
 // удалить из friendShip
 sample({
   clock: clickHandlers.removeFromFriendShip,
   source: guard({ source: $friendData, filter: $canSendUserRequest }),
   target: submitRequestRemoveFromFriendShipFx
+})
+// выпиливаем карточку
+sample({
+  clock: submitRequestRemoveFromFriendShipFx.doneData,
+  source: { userId: $friendId, userList: $friendShips },
+  target: changeListFriendShipFx
 })
 // добавить из друзья
 sample({
@@ -179,9 +199,22 @@ sample({
   source: guard({ source: $friendData, filter: $canSendUserRequest }),
   target: submitRequestAddToFriendsFx
 })
-// удалить из друзья
+sample({
+  clock: submitRequestAddToFriendsFx.doneData,
+  source: { userId: $friendId, userList: $friendShips },
+  target: changeListFriendShipFx
+})
+forward({
+  from: submitRequestAddToFriendsFx.doneData,
+  to: [loadAllFriends, loadOnlineFriends]
+})
+// удалить из друзей
 sample({
   clock: clickHandlers.removeFromFriends,
   source: guard({ source: $friendData, filter: $canSendUserRequest }),
   target: submitRequestRemoveFromFriendsFx
+})
+forward({
+  from: submitRequestRemoveFromFriendsFx.doneData,
+  to: [loadAllFriends, loadOnlineFriends]
 })
