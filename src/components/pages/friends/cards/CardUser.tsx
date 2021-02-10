@@ -10,7 +10,7 @@ type CardUser = {
   image: string
   firstName: string
   lastName: string
-  isCalledToFriendShip: boolean
+  isexistInFriendList: boolean
 }
 
 export const CardUserStyled = styled.div`
@@ -26,7 +26,7 @@ const WrapperContentStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 8px;
 `
 const ControllerStyled = styled.div`
   margin-left: auto;
@@ -47,7 +47,7 @@ const LinkStyled = styled(Link)`
     color: ${(props) => props.theme.rgb(props.theme.colors.purple1)};
   }
 `
-const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName, isCalledToFriendShip }) => {
+const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName, isexistInFriendList }) => {
   const addToFriendShipList = (userId: number) => {
     friendIdChanged(userId)
     clickHandlers.addToFriendShip()
@@ -64,8 +64,8 @@ const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName, isCalled
       </Link>
       <WrapperContentStyled>
         <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
-        {!isCalledToFriendShip && <ControllerStyled onClick={() => addToFriendShipList(id)}>
-          <Icon type="add-user" color="grey" size="25px" />
+        {!isexistInFriendList && <ControllerStyled onClick={() => addToFriendShipList(id)}>
+          <Icon type="add-user" color="grey" size="20px" />
         </ControllerStyled>}
       </WrapperContentStyled>
     </CardUserStyled>

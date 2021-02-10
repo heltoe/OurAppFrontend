@@ -151,13 +151,13 @@ const CardFriend: React.FC<CardFriend> = ({ id, image, firstName, lastName }) =>
         <WriteMessageStyled className="middle">Написать сообщение</WriteMessageStyled>
         <WrapperIconsStyled>
           {typePage !== 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(id, 'remove-from-friend')}>
-            <Icon type="remove-user" color="grey" size="25px" />
+            <Icon type="remove-user" color="grey" size="20px" />
           </ControllerStyled>}
           {typePage === 'friendship' && <ControllerStyled className="green" onClick={() => clickHandler(id, 'add-to-friends')}>
-            <Icon type="check" color="grey" size="25px" />
+            <Icon type="check" color="grey" size="20px" />
           </ControllerStyled>}
           {typePage === 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(id, 'remove-from-friendship')}>
-            <Icon type="close" color="grey" size="25px" />
+            <Icon type="close" color="grey" size="20px" />
           </ControllerStyled>}
         </WrapperIconsStyled>
       </ContentWrapperStyled>

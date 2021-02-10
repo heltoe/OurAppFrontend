@@ -53,9 +53,8 @@ const changeListUsersFx = createEffect(({ userId, userList }: { userId: number, 
   const elementId = userList.findIndex(item => item.id === userId)
   if (elementId > -1) {
     const element = userList[elementId]
-    userList.splice(elementId, 1, { ...element, calledToFriendShip: true })
-    console.log(userList)
-    usersChanged(userList)
+    userList.splice(elementId, 1, { ...element, existInFriendList: true })
+    usersChanged([...userList])
   }
 })
 
@@ -187,7 +186,6 @@ sample({
   source: guard({ source: $friendData, filter: $canSendUserRequest }),
   target: submitRequestRemoveFromFriendShipFx
 })
-// выпиливаем карточку
 sample({
   clock: submitRequestRemoveFromFriendShipFx.doneData,
   source: { userId: $friendId, userList: $friendShips },

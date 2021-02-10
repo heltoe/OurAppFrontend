@@ -65,7 +65,7 @@ export type User = {
   birthDate: string
 }
 export interface UserInGrid extends User {
-  calledToFriendShip: boolean
+  existInFriendList: boolean
 }
 export type ListFriendsFxResponse = {
   friends: User[]
