@@ -12,7 +12,7 @@ import { $token } from '@/api/common/AuthorizedRequest'
 export const submitRequestUsersListFx = attach({
   effect: ListUsersFx,
   mapParams: (params: { userId: number, page: number }) => {
-    const query = `page=${params.page}&size=10`
+    const query = `page=${params.page}&limit=9`
     return { ...params, query }
   }
 })
@@ -86,17 +86,20 @@ export const clickHandlers = {
 }
 
 // сторы
+// для загрузки записей при скроллинге
+export const [$page, pageChanged] = createEffectorField({ defaultValue: 1 })
+export const [$canLoadMore, canLoadMoreChanged] = createEffectorField({ defaultValue: true })
+const $prepareDataGetRequest = combine({
+  userId: $idUser,
+  page: $page
+})
+
 export const [$typePage, typePageChanged] = createEffectorField({ defaultValue: 'all' })
 export const [$users, usersChanged] = createEffectorField<UserInGrid[]>({ defaultValue: [] })
 export const [$allFriends, allFriendsChanged] = createEffectorField<User[]>({ defaultValue: [] })
 export const [$onlineFriends, onlineFriendsChanged] = createEffectorField<User[]>({ defaultValue: [] })
 export const [$friendShips, friendShipsChanged] = createEffectorField<User[]>({ defaultValue: [] })
 export const [$friendId, friendIdChanged] = createEffectorField({ defaultValue: 0 })
-export const [$page, pageChanged] = createEffectorField({ defaultValue: 1 })
-const $prepareDataGetRequest = combine({
-  userId: $idUser,
-  page: $page
-})
 export const $friendData = combine({
   userId: $idUser,
   friendId: $friendId,
@@ -116,18 +119,22 @@ export const $counter = combine({
 })
 export const $canSendFriendRequest = combine(
   $token,
+  $canLoadMore,
   submitRequestFriendsListFx.pending,
-  (token, sendRequestPending) => token.length > 0 && !sendRequestPending
+  (token, canLoadMore, sendRequestPending) => token.length > 0 && canLoadMore && !sendRequestPending
 )
 export const $canSendFriendShipRequest = combine(
   $token,
+  $canLoadMore,
   submitRequestFriendShipListFx.pending,
-  (token, sendRequestPending) => token.length > 0 && !sendRequestPending
+  (token, canLoadMore, sendRequestPending) => token.length > 0 && canLoadMore && !sendRequestPending
 )
 export const $canSendUserRequest = combine(
+  $canLoadMore,
   submitRequestUsersListFx.pending,
-  (sendRequestPending) => !sendRequestPending
+  (canLoadMore, sendRequestPending) => canLoadMore && !sendRequestPending
 )
+
 // методы
 // загрузка и запись друзей
 sample({
@@ -174,8 +181,18 @@ sample({
   target: submitRequestUsersListFx
 })
 forward({
+  from: loadLists.users,
+  to: [
+    canLoadMoreChanged.prepend(() => false),
+    pageChanged.prepend(() => $page.getState() + 1)
+  ]
+})
+forward({
   from: submitRequestUsersListFx.doneData,
-  to: usersChanged.prepend(({ body }: any) => body.users)
+  to: [
+    usersChanged.prepend(({ body }: any) => [...$users.getState(), ...body.users]),
+    canLoadMoreChanged.prepend(() => true)
+  ]
 })
 // добавить в friendShip
 sample({
