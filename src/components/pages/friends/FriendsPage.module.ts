@@ -11,12 +11,15 @@ import { $token } from '@/api/common/AuthorizedRequest'
 // получить список пользователей
 export const submitRequestUsersListFx = attach({
   effect: ListUsersFx,
-  mapParams: (params: UserId) => params
+  mapParams: (params: { userId: number, page: number }) => {
+    const query = `page=${params.page}&size=10`
+    return { ...params, query }
+  }
 })
 // получить список friendship
 export const submitRequestFriendShipListFx = attach({
   effect: ListFriendShipFx,
-  mapParams: (params: CommonFxParams) => params
+  mapParams: (params: UserId) => params
 })
 // добавить в friendShip
 export const submitRequestAddToFriendShipFx = attach({
@@ -89,6 +92,11 @@ export const [$allFriends, allFriendsChanged] = createEffectorField<User[]>({ de
 export const [$onlineFriends, onlineFriendsChanged] = createEffectorField<User[]>({ defaultValue: [] })
 export const [$friendShips, friendShipsChanged] = createEffectorField<User[]>({ defaultValue: [] })
 export const [$friendId, friendIdChanged] = createEffectorField({ defaultValue: 0 })
+export const [$page, pageChanged] = createEffectorField({ defaultValue: 1 })
+const $prepareDataGetRequest = combine({
+  userId: $idUser,
+  page: $page
+})
 export const $friendData = combine({
   userId: $idUser,
   friendId: $friendId,
@@ -149,7 +157,7 @@ forward({
 // загрузка и запись предложений в друзья
 sample({
   clock: loadLists.friendShip,
-  source: guard({ source: $friendData, filter: $canSendFriendShipRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendFriendShipRequest }),
   target: submitRequestFriendShipListFx
 })
 forward({
@@ -162,7 +170,7 @@ forward({
 // загрузка и запись всех пользователей
 sample({
   clock: loadLists.users,
-  source: guard({ source: $prepareUserDataId, filter: $canSendUserRequest }),
+  source: guard({ source: $prepareDataGetRequest, filter: $canSendUserRequest }),
   target: submitRequestUsersListFx
 })
 forward({

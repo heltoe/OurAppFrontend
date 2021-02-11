@@ -4,7 +4,7 @@ import { CommonFxParams, ListUsersFxResponse, CommonResponse } from '@/api/types
 export const ListFriendShipFx = createApiEffect<void, ListUsersFxResponse>({
   requestMapper: (params: any) => ({
     method: 'GET',
-    url: `/api/list-friendship/${params.userId}`,
+    url: `/api/list-friendship/${params.userId}${params.query ? `?${params.query}` : ''}`,
   })
 })
 export const AddToFriendShipFx = createApiEffect<CommonFxParams, CommonResponse>({
