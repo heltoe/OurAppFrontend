@@ -1,4 +1,4 @@
-export default (target: HTMLElement) => {
+export const isVisible = (target: HTMLElement) => {
   // Все позиции элемента
   const targetPosition = {
     top: window.pageYOffset + target.getBoundingClientRect().top,
@@ -20,4 +20,18 @@ export default (target: HTMLElement) => {
     targetPosition.right > windowPosition.left && // Если позиция правой стороны элемента больше позиции левой части окна, то элемент виден слева
     targetPosition.left < windowPosition.right // Если позиция левой стороны элемента меньше позиции правой чайти окна, то элемент виден справа
   )
+}
+
+export const debounce = (f: any, ms: number) => {
+  let timer: any = null
+  return function (...args: any) {
+    const onComplete = () => {
+      f.apply(args)
+      timer = null
+    }
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(onComplete, ms)
+  }
 }

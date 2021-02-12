@@ -1,6 +1,6 @@
 import React from 'react'
 import { useStore } from 'effector-react'
-import { $users } from '@/components/pages/friends/FriendsPage.module'
+import { $friendsGrid } from '@/components/pages/friends/Friends.Page.models'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
 import CardUser, { CardUserStyled } from '@/components/pages/friends/cards/CardUser'
@@ -18,11 +18,11 @@ const UserListStyled = styled(BlockStyled)<{ isSpecialStyle: boolean }>`
   }
 `
 const FindNewFriendList: React.FC = () => {
-  const usersList = useStore($users)
+  const usersList = useStore($friendsGrid)
   return (
-    <UserListStyled isSpecialStyle={usersList.length > 0}>
+    <UserListStyled isSpecialStyle={usersList.users.length > 0}>
       {
-        usersList.length ? usersList.map((card) => (
+        usersList.users.length ? usersList.users.map((card) => (
           <CardUser
             key={card.id}
             id={card.id}

@@ -28,7 +28,7 @@ export const AvatarStyled = styled.div<{ size: string, image: string, isRound: b
 `
 const InitialsStyled = styled.p<{ size: string }>`
   position: relative;
-  z-index: 100;
+  z-index: 10;
   color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   text-align: center;
   text-transform: uppercase;

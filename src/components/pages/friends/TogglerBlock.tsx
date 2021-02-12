@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
-import { $counter } from '@/components/pages/friends/FriendsPage.module'
+import { $counter } from '@/components/pages/friends/Friends.Page.models'
 import { BaseButtonStyled } from '@/components/ui/BaseButton'
 import { BlockStyled } from '@/components/ui/Block'
 
@@ -32,11 +32,11 @@ export const TogglerBlock: React.FC<ToggleBlockType> = ({ activeTab, setActiveTa
   return (
     <TogglerWrapperStyled>
       <ToggleItemStyled
-        active={activeTab === 'all'}
-        onClick={() => setActiveTab('all')}
+        active={activeTab === 'friends'}
+        onClick={() => setActiveTab('friends')}
         className="no-select"
       >
-        Все друзья {counter.all}
+        Все друзья {counter.friends}
       </ToggleItemStyled>
       <ToggleItemStyled
         active={activeTab === 'online'}

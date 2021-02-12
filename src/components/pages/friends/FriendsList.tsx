@@ -1,6 +1,6 @@
 import React from 'react'
 import { useStore } from 'effector-react'
-import { $typePage, $friendsGrid } from '@/components/pages/friends/FriendsPage.module'
+import { $typePage, $friendsGrid } from '@/components/pages/friends/Friends.Page.models'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
 import CardFriend, { CardFriendStyled } from '@/components/pages/friends/cards/CardFriend'

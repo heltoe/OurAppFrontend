@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { clickHandlers, friendIdChanged } from '@/components/pages/friends/FriendsPage.module'
+import { clickHandlers, friendIdChanged } from '@/components/pages/friends/Friends.Page.models'
 import Icon from '@/components/ui/Icon'
 import Avatar, { AvatarStyled } from '@/components/ui/Avatar'
 

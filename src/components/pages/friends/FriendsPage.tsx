@@ -1,33 +1,18 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import isVisible from '@/helpers/visible-element'
 import { useStore } from 'effector-react'
 import {
-  usersChanged,
   loadLists,
   $typePage,
-  typePageChanged,
-  pageChanged,
+  typePageChanged, 
   $canLoadMore
-} from '@/components/pages/friends/FriendsPage.module'
-import { PageStyled } from '@/components/common/Page'
+} from '@/components/pages/friends/Friends.Page.models'
+import PageInfiniteScrolling from '@/components/ui/PageInfiniteScrolling'
 import TogglerBlock from '@/components/pages/friends/TogglerBlock'
 import FriendsList from '@/components/pages/friends/FriendsList'
 import FindNewFriendList from '@/components/pages/friends/FindNewFriendList'
 import SearchField from '@/components/pages/friends/SearchField/SearchField'
-const debounce = (f: any, ms: number) => {
-  let timer: any = null
-  return function (...args: any) {
-    const onComplete = () => {
-      f.apply(args)
-      timer = null
-    }
-    if (timer) {
-      clearTimeout(timer)
-    }
-    timer = setTimeout(onComplete, ms)
-  }
-}
+
 const WrapperContentStyled = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,40 +20,37 @@ const WrapperContentStyled = styled.div`
   margin: 0 auto;
 `
 export const FriendsPage: React.FC = () => {
-  const friendsPage = useRef(null)
-  const scrollHelper = useRef(null)
-
   const [isShowShadow, setIsShowShadow] = useState(false)
   const typePage = useStore($typePage)
   const canLoadMore = useStore($canLoadMore)
-  const changePageState = () => {
-    const wrapperContent = friendsPage?.current as HTMLDivElement | null
-    const test = scrollHelper?.current as HTMLDivElement | null
-    if (wrapperContent) {
-      if (wrapperContent.scrollTop > 87 && !isShowShadow) setIsShowShadow(true)
-      if (wrapperContent.scrollTop < 88 && isShowShadow) setIsShowShadow(false)
+  const loadListUsers = () => {
+    if (canLoadMore) {
+      switch(typePage) {
+        case 'friends': 
+          loadLists.friends()
+          break
+        case 'online':
+          loadLists.online()
+          break
+        case 'friendship':
+          loadLists.friendShip()
+          break
+        case 'find-friend':
+          loadLists.users()
+          break
+        default: loadLists.friends()
+      }
     }
-    if (test && isVisible(test) && canLoadMore) loadLists.users()
   }
-  const handlerScrolling = debounce(() => {
-    changePageState()
-  }, 300)
+  const handlerChangeStateField = (count: number) => {
+    if (count > 87 && !isShowShadow) setIsShowShadow(true)
+    if (count < 88 && isShowShadow) setIsShowShadow(false)
+  }
   useEffect(() => {
-    const page = friendsPage?.current as HTMLDivElement | null
-    if (page) page.addEventListener('scroll', handlerScrolling)
-    return () => {
-      if (page) page.removeEventListener('scroll', handlerScrolling)
-    }
-  })
-  useEffect(() => {
-    usersChanged([])
-    if (typePage === 'all') loadLists.all()
-    if (typePage === 'online') loadLists.online()
-    if (typePage === 'friendship') loadLists.friendShip()
-    if (typePage === 'find-friend') loadLists.users()
+    loadListUsers()
   }, [typePage])
   return (
-    <PageStyled ref={friendsPage}>
+    <PageInfiniteScrolling callBack={handlerChangeStateField} callBackToLoadMore={loadListUsers}>
       <WrapperContentStyled>
         <TogglerBlock
           activeTab={typePage}
@@ -77,8 +59,7 @@ export const FriendsPage: React.FC = () => {
         <SearchField isShadow={isShowShadow} />
         { typePage !== 'find-friend' ? <FriendsList /> : <FindNewFriendList /> }
       </WrapperContentStyled>
-      <div ref={scrollHelper} />
-    </PageStyled>
+    </PageInfiniteScrolling>
   )
 }
 
