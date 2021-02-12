@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { clickHandlers, friendIdChanged } from '@/components/pages/friends/Friends.Page.models'
+import { friendIdChanged } from '@/App.module'
+import { addToFriendShip } from '@/components/pages/friends/models/Users'
 import Icon from '@/components/ui/Icon'
 import Avatar, { AvatarStyled } from '@/components/ui/Avatar'
 
@@ -50,7 +51,7 @@ const LinkStyled = styled(Link)`
 const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName, isexistInFriendList }) => {
   const addToFriendShipList = (userId: number) => {
     friendIdChanged(userId)
-    clickHandlers.addToFriendShip()
+    addToFriendShip()
   }
   return (
     <CardUserStyled>

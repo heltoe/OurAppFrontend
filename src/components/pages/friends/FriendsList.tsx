@@ -1,6 +1,8 @@
 import React from 'react'
 import { useStore } from 'effector-react'
-import { $typePage, $friendsGrid } from '@/components/pages/friends/Friends.Page.models'
+import { $typePage } from '@/App.module'
+import { $friendShips } from '@/components/pages/friends/models/FriendShip'
+import { $allFriends, $onlineFriends } from '@/components/pages/friends/models/Friends'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
 import CardFriend, { CardFriendStyled } from '@/components/pages/friends/cards/CardFriend'
@@ -51,12 +53,12 @@ const FriendsListStyled = styled(BlockStyled)`
 `
 const FriendsList: React.FC = () => {
   const typePage = useStore($typePage)
-  const listUsers = useStore($friendsGrid)
+  const listUsers = useStore($friendShips)
   return (
     <FriendsListStyled>
       {
         // @ts-ignore
-        listUsers[typePage] && listUsers[typePage].length ? listUsers[typePage].map((card: any) => (
+        listUsers && listUsers.length ? listUsers.map((card: any) => (
           <CardFriend
             key={card.id}
             id={card.id}

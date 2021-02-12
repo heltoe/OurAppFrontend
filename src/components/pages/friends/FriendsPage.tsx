@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
-import {
-  loadLists,
-  $typePage,
-  typePageChanged, 
-  $canLoadMore
-} from '@/components/pages/friends/Friends.Page.models'
+import { $typePage, typePageChanged, $canLoadMore } from '@/App.module'
+import { loadListFriendShip } from '@/components/pages/friends/models/FriendShip'
+import { loadAllFriends, loadOnlineFriends } from '@/components/pages/friends/models/Friends'
+import { loadListUsers } from '@/components/pages/friends/models/Users'
 import PageInfiniteScrolling from '@/components/ui/PageInfiniteScrolling'
 import TogglerBlock from '@/components/pages/friends/TogglerBlock'
 import FriendsList from '@/components/pages/friends/FriendsList'
@@ -23,22 +21,22 @@ export const FriendsPage: React.FC = () => {
   const [isShowShadow, setIsShowShadow] = useState(false)
   const typePage = useStore($typePage)
   const canLoadMore = useStore($canLoadMore)
-  const loadListUsers = () => {
+  const loadLists = () => {
     if (canLoadMore) {
       switch(typePage) {
         case 'friends': 
-          loadLists.friends()
+          loadAllFriends()
           break
         case 'online':
-          loadLists.online()
+          loadOnlineFriends()
           break
         case 'friendship':
-          loadLists.friendShip()
+          loadListFriendShip()
           break
         case 'find-friend':
-          loadLists.users()
+          loadListUsers()
           break
-        default: loadLists.friends()
+        default: loadAllFriends()
       }
     }
   }
@@ -47,10 +45,10 @@ export const FriendsPage: React.FC = () => {
     if (count < 88 && isShowShadow) setIsShowShadow(false)
   }
   useEffect(() => {
-    loadListUsers()
+    loadLists()
   }, [typePage])
   return (
-    <PageInfiniteScrolling callBack={handlerChangeStateField} callBackToLoadMore={loadListUsers}>
+    <PageInfiniteScrolling callBack={handlerChangeStateField} callBackToLoadMore={loadLists}>
       <WrapperContentStyled>
         <TogglerBlock
           activeTab={typePage}

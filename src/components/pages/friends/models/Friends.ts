@@ -2,8 +2,7 @@ import { attach, createEvent, combine, sample, forward, guard } from 'effector-r
 import { createEffectorField } from '@/helpers/effector-field'
 import { User, UserId, CommonFxParams } from '@/api/types'
 import { RemoveFromFriendsFx, ListFriendsFx } from '@/api/Friends'
-import { $friendData, $canLoadMore } from '@/components/pages/friends/Friends.Page.models'
-import { $prepareUserDataId } from '@/App.module'
+import { $friendData, $prepareUserDataId, $canLoadMore } from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты

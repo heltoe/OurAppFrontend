@@ -2,10 +2,10 @@ import { attach, createEvent, createEffect, combine, sample, forward, guard } fr
 import { createEffectorField } from '@/helpers/effector-field'
 import { CommonFxParams, UserId, User } from '@/api/types'
 import { AddToFriendsFx } from '@/api/Friends'
+import { loadAllFriends, loadOnlineFriends } from '@/components/pages/friends/models/Friends'
 import { ListFriendShipFx, RemoveFromFriendShipFx } from '@/api/FriendShip'
-import { $friendId, $friendData, $canLoadMore, loadLists } from '@/components/pages/friends/Friends.Page.models'
 import { $token } from '@/api/common/AuthorizedRequest'
-import { $prepareUserDataId } from '@/App.module'
+import { $friendData, $prepareUserDataId, $friendId, $canLoadMore } from '@/App.module'
 
 // эффекты
 // получить список предложений в друзья
@@ -81,7 +81,7 @@ sample({
 })
 forward({
   from: submitRequestAddToFriendsFx.doneData,
-  to: [loadLists.friends, loadLists.online]
+  to: [loadAllFriends, loadOnlineFriends]
 })
 // удалить из предложений в друзья
 sample({

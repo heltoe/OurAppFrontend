@@ -2,7 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
-import { $typePage, clickHandlers, friendIdChanged } from '@/components/pages/friends/Friends.Page.models'
+import { $typePage, friendIdChanged } from '@/App.module'
+import { removeFromFriends } from '@/components/pages/friends/models/Friends'
+import { addToFriends, removeFromFriendShip } from '@/components/pages/friends/models/FriendShip'
 import Avatar from '@/components/ui/Avatar'
 import { BlockStyled } from '@/components/ui/Block'
 import Icon, { IconStyled } from '@/components/ui/Icon'
@@ -128,9 +130,9 @@ const CardFriend: React.FC<CardFriend> = ({ id, image, firstName, lastName }) =>
   const typePage = useStore($typePage)
   const clickHandler = (userId: number, type: string) => {
     friendIdChanged(userId)
-    if (type === 'remove-from-friend') clickHandlers.removeFromFriends()
-    if (type === 'add-to-friends') clickHandlers.addToFriends()
-    if (type === 'remove-from-friendship') clickHandlers.removeFromFriendShip()
+    if (type === 'remove-from-friend') removeFromFriends()
+    if (type === 'add-to-friends') addToFriends()
+    if (type === 'remove-from-friendship') removeFromFriendShip()
   }
   return (
     <CardFriendStyled>

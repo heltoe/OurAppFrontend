@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
-import { $counter } from '@/components/pages/friends/Friends.Page.models'
+import { $countFriendsShip } from '@/components/pages/friends/models/FriendShip'
+import { $countAllFriends, $countOnlineFriends } from '@/components/pages/friends/models/Friends'
 import { BaseButtonStyled } from '@/components/ui/BaseButton'
 import { BlockStyled } from '@/components/ui/Block'
 
@@ -28,7 +29,9 @@ const FindFriendStyled = styled(BaseButtonStyled)`
   margin-left: auto;
 `
 export const TogglerBlock: React.FC<ToggleBlockType> = ({ activeTab, setActiveTab }) => {
-  const counter = useStore($counter)
+  const countFriendsShip = useStore($countFriendsShip)
+  const countAllFriends = useStore($countAllFriends)
+  const countOnlineFriends = useStore($countOnlineFriends)
   return (
     <TogglerWrapperStyled>
       <ToggleItemStyled
@@ -36,21 +39,21 @@ export const TogglerBlock: React.FC<ToggleBlockType> = ({ activeTab, setActiveTa
         onClick={() => setActiveTab('friends')}
         className="no-select"
       >
-        Все друзья {counter.friends}
+        Все друзья {countAllFriends}
       </ToggleItemStyled>
       <ToggleItemStyled
         active={activeTab === 'online'}
         onClick={() => setActiveTab('online')}
         className="no-select"
       >
-        Друзья онлайн {counter.online}
+        Друзья онлайн {countOnlineFriends}
       </ToggleItemStyled>
       <ToggleItemStyled
         active={activeTab === 'friendship'}
         onClick={() => setActiveTab('friendship')}
         className="no-select"
       >
-        Заявки в друзья {counter.friendship}
+        Заявки в друзья {countFriendsShip}
       </ToggleItemStyled>
       <FindFriendStyled onClick={() => setActiveTab('find-friend')}>
         Найти друзей

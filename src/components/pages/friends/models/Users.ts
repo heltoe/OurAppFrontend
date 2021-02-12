@@ -3,15 +3,7 @@ import { createEffectorField } from '@/helpers/effector-field'
 import { UserInGrid, CommonFxParams } from '@/api/types'
 import { ListUsersFx } from '@/api/Friends'
 import { AddToFriendShipFx } from '@/api/FriendShip'
-import {
-  $friendId,
-  $friendData,
-  $canLoadMore,
-  canLoadMoreChanged,
-  $page,
-  pageChanged,
-  $prepareDataGetRequest
-} from '@/components/pages/friends/Friends.Page.models'
+import { $friendData, $page, pageChanged, $friendId, $prepareDataGetRequest, $canLoadMore, canLoadMoreChanged } from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты
