@@ -3,7 +3,7 @@ import { createEffectorField } from '@/helpers/effector-field'
 import { UserInGrid, CommonFxParams } from '@/api/types'
 import { ListUsersFx } from '@/api/Friends'
 import { AddToFriendShipFx } from '@/api/FriendShip'
-import { $friendData, $page, pageChanged, $friendId, $prepareDataGetRequest, $canLoadMore, canLoadMoreChanged } from '@/App.module'
+import { $friendData, $friendId, $prepareDataGetRequest, $canLoadMore, canLoadMoreChanged, $page } from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты
@@ -11,7 +11,7 @@ import { $token } from '@/api/common/AuthorizedRequest'
 export const submitRequestUsersListFx = attach({
   effect: ListUsersFx,
   mapParams: (params: { userId: number, page: number }) => {
-    const query = `page=${params.page}&limit=9`
+    const query = `page=${$page.getState()}&limit=9`
     return { ...params, query }
   }
 })
@@ -32,9 +32,10 @@ const changeListUsersFx = createEffect(({ userId, userList }: { userId: number, 
 // события
 export const loadListUsers = createEvent()
 export const addToFriendShip = createEvent()
+export const resetUsers = createEvent()
 
 // сторы
-export const [$users, usersChanged] = createEffectorField<UserInGrid[]>({ defaultValue: [] })
+export const [$users, usersChanged] = createEffectorField<UserInGrid[]>({ defaultValue: [], reset: resetUsers })
 export const $canSendUserRequest = combine(
   $token,
   $canLoadMore,
@@ -56,16 +57,13 @@ sample({
 })
 forward({
   from: loadListUsers,
-  to: [
-    canLoadMoreChanged.prepend(() => false),
-    pageChanged.prepend(() => $page.getState() + 1)
-  ]
+  to: canLoadMoreChanged.prepend(() => false)
 })
 forward({
   from: submitRequestUsersListFx.doneData,
   to: [
-    usersChanged.prepend(({ body }: any) => [...$users.getState(), ...body.users]),
-    canLoadMoreChanged.prepend(() => true)
+    usersChanged.prepend(({ body }) => [...$users.getState(), ...body.results]),
+    canLoadMoreChanged.prepend(({ body }) => body.next)
   ]
 })
 // добавить предложение в друзья

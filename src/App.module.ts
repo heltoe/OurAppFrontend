@@ -1,6 +1,9 @@
-import { combine } from 'effector-root'
+import { combine, createEvent } from 'effector-root'
 import { createEffectorField } from '@/helpers/effector-field'
 import { $token } from '@/api/common/AuthorizedRequest'
+
+// события
+export const resetPage = createEvent()
 
 // сторы
 export const [$idUser, setIdUser] = createEffectorField({ defaultValue: 0 })
@@ -23,4 +26,4 @@ export const $friendData = combine({
   friendId: $friendId
 })
 
-export const [$typePage, typePageChanged] = createEffectorField({ defaultValue: 'all' })
+export const [$typePage, typePageChanged] = createEffectorField({ defaultValue: 'friends' })

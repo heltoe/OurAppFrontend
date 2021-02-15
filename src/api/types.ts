@@ -68,10 +68,14 @@ export interface UserInGrid extends User {
   existInFriendList: boolean
 }
 export type ListFriendsFxResponse = {
-  friends: User[]
+  count: number
+  next: boolean
+  results: User[]
 }
 export type ListUsersFxResponse = {
-  users: UserInGrid[]
+  count: number
+  next: boolean
+  results: UserInGrid[]
 }
 // common response
 export type CommonResponse = {

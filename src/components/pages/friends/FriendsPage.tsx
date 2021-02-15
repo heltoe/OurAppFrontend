@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
-import { $typePage, typePageChanged, $canLoadMore } from '@/App.module'
-import { loadListFriendShip } from '@/components/pages/friends/models/FriendShip'
-import { loadAllFriends, loadOnlineFriends } from '@/components/pages/friends/models/Friends'
-import { loadListUsers } from '@/components/pages/friends/models/Users'
+import { $typePage, typePageChanged, $canLoadMore, $page, pageChanged, resetPage } from '@/App.module'
+import { loadListFriendShip, resetFriendShip } from '@/components/pages/friends/models/FriendShip'
+import { loadAllFriends, loadOnlineFriends, resetAllFriends, resetOnlineFriends } from '@/components/pages/friends/models/Friends'
+import { loadListUsers, resetUsers } from '@/components/pages/friends/models/Users'
 import PageInfiniteScrolling from '@/components/ui/PageInfiniteScrolling'
 import TogglerBlock from '@/components/pages/friends/TogglerBlock'
 import FriendsList from '@/components/pages/friends/FriendsList'
@@ -21,41 +21,67 @@ export const FriendsPage: React.FC = () => {
   const [isShowShadow, setIsShowShadow] = useState(false)
   const typePage = useStore($typePage)
   const canLoadMore = useStore($canLoadMore)
-  const loadLists = () => {
-    if (canLoadMore) {
-      switch(typePage) {
-        case 'friends': 
-          loadAllFriends()
-          break
-        case 'online':
-          loadOnlineFriends()
-          break
-        case 'friendship':
-          loadListFriendShip()
-          break
-        case 'find-friend':
-          loadListUsers()
-          break
-        default: loadAllFriends()
-      }
-    }
-  }
+  const page = useStore($page)
   const handlerChangeStateField = (count: number) => {
     if (count > 87 && !isShowShadow) setIsShowShadow(true)
     if (count < 88 && isShowShadow) setIsShowShadow(false)
   }
+  const loadLists = (type: string) => {
+    switch (type) {
+      case 'friends':
+        loadAllFriends()
+        break
+      case 'online':
+        loadOnlineFriends()
+        break
+      case 'friendship':
+        loadListFriendShip()
+        break
+      case 'findFriend':
+        loadListUsers()
+        break
+      default:
+        loadAllFriends()
+    }
+  }
+  const loadMore = () => {
+    pageChanged(page + 1)
+    loadLists(typePage)
+  }
+  const callRestFields = (type: string) => {
+    const resetMethods = {
+      friends: resetAllFriends,
+      online: resetOnlineFriends,
+      friendship: resetFriendShip,
+      findFriend: resetUsers
+    }
+    Object.keys(resetMethods).forEach((item) => {
+      // @ts-ignore
+      if (item !== type) resetMethods[item]()
+    })
+    pageChanged(1)
+  }
+  const setTypePage = (type: string) => {
+    callRestFields(type)
+    typePageChanged(type)
+    loadLists(type)
+  }
   useEffect(() => {
-    loadLists()
-  }, [typePage])
+    loadLists(typePage)
+  }, [])
   return (
-    <PageInfiniteScrolling callBack={handlerChangeStateField} callBackToLoadMore={loadLists}>
+    <PageInfiniteScrolling
+      callBack={handlerChangeStateField}
+      callBackToLoadMore={loadMore}
+      canLoadMore={canLoadMore}
+    >
       <WrapperContentStyled>
         <TogglerBlock
           activeTab={typePage}
-          setActiveTab={(type) => typePageChanged(type)}
+          setActiveTab={(type) => setTypePage(type)}
         />
         <SearchField isShadow={isShowShadow} />
-        { typePage !== 'find-friend' ? <FriendsList /> : <FindNewFriendList /> }
+        { typePage !== 'findFriend' ? <FriendsList /> : <FindNewFriendList /> }
       </WrapperContentStyled>
     </PageInfiniteScrolling>
   )

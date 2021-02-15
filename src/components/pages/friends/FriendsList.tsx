@@ -53,12 +53,19 @@ const FriendsListStyled = styled(BlockStyled)`
 `
 const FriendsList: React.FC = () => {
   const typePage = useStore($typePage)
-  const listUsers = useStore($friendShips)
+  const listFriendShips = useStore($friendShips)
+  const allFriends = useStore($allFriends)
+  const onlineFriends = useStore($onlineFriends)
+  const listUsers = {
+    friends: allFriends,
+    online: onlineFriends,
+    friendship: listFriendShips
+  }
   return (
     <FriendsListStyled>
       {
         // @ts-ignore
-        listUsers && listUsers.length ? listUsers.map((card: any) => (
+        listUsers[typePage] && listUsers[typePage].length ? listUsers[typePage].map((card: any) => (
           <CardFriend
             key={card.id}
             id={card.id}

@@ -55,7 +55,7 @@ export const TogglerBlock: React.FC<ToggleBlockType> = ({ activeTab, setActiveTa
       >
         Заявки в друзья {countFriendsShip}
       </ToggleItemStyled>
-      <FindFriendStyled onClick={() => setActiveTab('find-friend')}>
+      <FindFriendStyled onClick={() => setActiveTab('findFriend')}>
         Найти друзей
       </FindFriendStyled>
     </TogglerWrapperStyled>

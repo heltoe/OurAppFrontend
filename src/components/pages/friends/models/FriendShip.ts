@@ -1,17 +1,20 @@
 import { attach, createEvent, createEffect, combine, sample, forward, guard } from 'effector-root'
 import { createEffectorField } from '@/helpers/effector-field'
-import { CommonFxParams, UserId, User } from '@/api/types'
+import { CommonFxParams, User } from '@/api/types'
 import { AddToFriendsFx } from '@/api/Friends'
 import { loadAllFriends, loadOnlineFriends } from '@/components/pages/friends/models/Friends'
 import { ListFriendShipFx, RemoveFromFriendShipFx } from '@/api/FriendShip'
 import { $token } from '@/api/common/AuthorizedRequest'
-import { $friendData, $prepareUserDataId, $friendId, $canLoadMore } from '@/App.module'
+import { $friendData, $prepareDataGetRequest, $friendId, $canLoadMore, $page } from '@/App.module'
 
 // эффекты
 // получить список предложений в друзья
 export const submitRequestFriendShipListFx = attach({
   effect: ListFriendShipFx,
-  mapParams: (params: UserId) => params
+  mapParams: (params: { userId: number, page: number }) => {
+    const query = `page=${$page.getState()}&limit=9`
+    return { ...params, query }
+  }
 })
 // добавить в друзья
 export const submitRequestAddToFriendsFx = attach({
@@ -26,16 +29,17 @@ export const submitRequestRemoveFromFriendShipFx = attach({
 const changeListFriendShipFx = createEffect(({ userId, userList }: { userId: number, userList: User[] }) => {
   const newList = userList.filter(item => item.id !== userId)
   friendShipsChanged(newList)
-  countFriendsShipChanged(newList.length)
+  // countFriendsShipChanged(newList.length)
 })
 
 // события
 export const loadListFriendShip = createEvent()
 export const removeFromFriendShip = createEvent()
 export const addToFriends = createEvent()
+export const resetFriendShip = createEvent()
 
 // сторы
-export const [$friendShips, friendShipsChanged] = createEffectorField<User[]>({ defaultValue: [] })
+export const [$friendShips, friendShipsChanged] = createEffectorField<User[]>({ defaultValue: [], reset: resetFriendShip })
 export const [$countFriendsShip, countFriendsShipChanged] = createEffectorField({ defaultValue: 0 })
 export const $canSendFriendShipRequest = combine(
   $token,
@@ -58,14 +62,14 @@ export const $canSendRemoveFromFriendShipRequest = combine(
 // загрузка и запись предложений в друзья
 sample({
   clock: loadListFriendShip,
-  source: guard({ source: $prepareUserDataId, filter: $canSendFriendShipRequest }),
+  source: guard({ source: $prepareDataGetRequest, filter: $canSendFriendShipRequest }),
   target: submitRequestFriendShipListFx
 })
 forward({
   from: submitRequestFriendShipListFx.doneData,
   to: [
-    friendShipsChanged.prepend(({ body }: any) => body.users),
-    countFriendsShipChanged.prepend(({ body }: any) => body.users.length)
+    friendShipsChanged.prepend(({ body }) => [...$friendShips.getState(), ...body.results]),
+    countFriendsShipChanged.prepend(({ body }) => body.count)
   ]
 })
 // добавить из друзья
