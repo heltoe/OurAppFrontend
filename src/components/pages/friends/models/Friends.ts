@@ -1,4 +1,4 @@
-import { attach, createEvent, combine, sample, forward, guard } from 'effector-root'
+import { attach, createEvent, combine, sample, forward, guard, createStore } from 'effector-root'
 import { createEffectorField } from '@/helpers/effector-field'
 import { User, CommonFxParams } from '@/api/types'
 import { RemoveFromFriendsFx, ListFriendsFx } from '@/api/Friends'
@@ -8,9 +8,10 @@ import { $token } from '@/api/common/AuthorizedRequest'
 // эффекты
 // получить список друзей
 export const submitRequestFriendsListFx = attach({
+  source: $page,
   effect: ListFriendsFx,
-  mapParams: (params: { userId: number, page: number }) => {
-    const query = `page=${$page.getState()}&limit=9`
+  mapParams: (params: { userId: number }, page: number) => {
+    const query = `page=${page}&limit=9`
     return { ...params, query }
   }
 })
@@ -28,17 +29,31 @@ export const resetAllFriends = createEvent()
 export const resetOnlineFriends = createEvent()
 
 // сторы
-export const [$allFriends, allFriendsChanged] = createEffectorField<User[]>({ defaultValue: [], reset: resetAllFriends })
-export const [$onlineFriends, onlineFriendsChanged] = createEffectorField<User[]>({ defaultValue: [], reset: resetOnlineFriends })
-export const [$countAllFriends, countAllFriendsChanged] = createEffectorField({ defaultValue: 0 })
-export const [$countOnlineFriends, countOnlineFriendsChanged] = createEffectorField({ defaultValue: 0 })
-export const $canSendFriendRequest = combine(
+export const $allFriends = createStore<User[]>([])
+$allFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => [...state, ...payload.body.results])
+$allFriends.on(submitRequestRemoveFromFriendsFx.doneData, (state, payload) => state.filter(item => item.id !== payload.body.userId))
+$allFriends.on(resetAllFriends, () => [])
+
+export const $onlineFriends = createStore<User[]>([])
+$onlineFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => [...state, ...payload.body.results])
+$onlineFriends.on(submitRequestRemoveFromFriendsFx.doneData, (state, payload) => state.filter(item => item.id !== payload.body.userId))
+$onlineFriends.on(resetOnlineFriends, () => [])
+
+$canLoadMore.on(submitRequestFriendsListFx.doneData, (state, payload) => payload.body.next)
+
+export const $countAllFriends = createStore(0)
+$countAllFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => payload.body.count)
+
+export const $countOnlineFriends = createStore(0)
+$countAllFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => payload.body.count)
+
+const $canSendFriendRequest = combine(
   $token,
   $canLoadMore,
   submitRequestFriendsListFx.pending,
   (token, canLoadMore, sendRequestPending) => token.length > 0 && canLoadMore && !sendRequestPending
 )
-export const $canSendRemoveFromFriendRequest = combine(
+const $canSendRemoveFromFriendRequest = combine(
   $token,
   submitRequestRemoveFromFriendsFx.pending,
   (token, sendRequestPending) => token.length > 0 && !sendRequestPending
@@ -51,32 +66,14 @@ sample({
   source: guard({ source: $prepareDataGetRequest, filter: $canSendFriendRequest }),
   target: submitRequestFriendsListFx
 })
-forward({
-  from: submitRequestFriendsListFx.doneData,
-  to: [
-    allFriendsChanged.prepend(({ body }) => [...$allFriends.getState(), ...body.results]),
-    countAllFriendsChanged.prepend(({ body }) => body.count)
-  ]
-})
 sample({
   clock: loadOnlineFriends,
   source: guard({ source: $prepareDataGetRequest, filter: $canSendFriendRequest }),
   target: submitRequestFriendsListFx
-})
-forward({
-  from: submitRequestFriendsListFx.doneData,
-  to: [
-    allFriendsChanged.prepend(({ body }) => [...$onlineFriends.getState(), ...body.results]),
-    countOnlineFriendsChanged.prepend(({ body }) => body.count)
-  ]
 })
 // удалить из друзей
 sample({
   clock: removeFromFriends,
   source: guard({ source: $friendData, filter: $canSendRemoveFromFriendRequest }),
   target: submitRequestRemoveFromFriendsFx
-})
-forward({
-  from: submitRequestRemoveFromFriendsFx.doneData,
-  to: [loadAllFriends, loadOnlineFriends]
 })

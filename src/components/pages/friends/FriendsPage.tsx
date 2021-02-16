@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
-import { $typePage, typePageChanged, $canLoadMore, $page, pageChanged, resetPage } from '@/App.module'
+import { $typePage, typePageChanged, $canLoadMore, $page, pageChanged } from '@/App.module'
 import { loadListFriendShip, resetFriendShip } from '@/components/pages/friends/models/FriendShip'
 import { loadAllFriends, loadOnlineFriends, resetAllFriends, resetOnlineFriends } from '@/components/pages/friends/models/Friends'
 import { loadListUsers, resetUsers } from '@/components/pages/friends/models/Users'
