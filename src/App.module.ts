@@ -1,4 +1,4 @@
-import { combine, createEvent, restore } from 'effector-root'
+import { combine, createEffect, createEvent, restore, split, sample } from 'effector-root'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 export const setIdUser = createEvent<number>()
@@ -34,4 +34,55 @@ export const $canLoadMore = restore(canLoadMoreChanged, true)
 export const $prepareDataToInfinityScroll = combine({
   page: $page,
   typePage: $typePage
+})
+
+export const loadListUsers = createEvent()
+export const resetUsers = createEvent()
+
+export const loadListFriendShip = createEvent()
+export const resetFriendShip = createEvent()
+
+export const loadAllFriends = createEvent()
+export const resetAllFriends = createEvent()
+
+export const loadOnlineFriends = createEvent()
+export const resetOnlineFriends = createEvent()
+
+export const resetListsUsers = createEvent()
+
+const callRestFieldsFx = createEffect((type: string) => {
+  const resetMethods = {
+    friends: resetAllFriends,
+    online: resetOnlineFriends,
+    friendship: resetFriendShip,
+    findFriend: resetUsers
+  }
+  Object.keys(resetMethods).forEach((item) => {
+    // @ts-ignore
+    if (item !== type && resetMethods[item]) resetMethods[item]()
+  })
+})
+sample({
+  clock: resetListsUsers,
+  source: $typePage,
+  target: callRestFieldsFx
+})
+split({
+  source: $prepareDataToInfinityScroll,
+  match: {
+    users: ({ typePage }) => typePage === typePages.findFriend,
+    friendShips: ({ typePage }) => typePage === typePages.friendship,
+    allFriends: ({ typePage }) => typePage === typePages.friends,
+    onlineFriends: ({ typePage }) => typePage === typePages.online
+  },
+  cases: {
+    // @ts-ignore
+    users: [loadListUsers, resetListsUsers],
+    // @ts-ignore
+    friendShips: [loadListFriendShip, resetListsUsers],
+    // @ts-ignore
+    allFriends: [loadAllFriends, resetListsUsers],
+    // @ts-ignore
+    onlineFriends: [loadOnlineFriends, resetListsUsers]
+  }
 })

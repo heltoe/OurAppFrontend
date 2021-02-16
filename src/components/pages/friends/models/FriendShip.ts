@@ -1,10 +1,18 @@
-import { attach, createEvent, combine, sample, forward, guard, createStore, split } from 'effector-root'
+import { attach, createEvent, combine, sample, forward, guard, createStore } from 'effector-root'
 import { UserId, CommonFxParams, User } from '@/api/types'
 import { AddToFriendsFx } from '@/api/Friends'
-import { loadAllFriends, loadOnlineFriends } from '@/components/pages/friends/models/Friends'
 import { ListFriendShipFx, RemoveFromFriendShipFx } from '@/api/FriendShip'
 import { $token } from '@/api/common/AuthorizedRequest'
-import { $friendData, $prepareUserDataId, $canLoadMore, $page, typePages, $prepareDataToInfinityScroll } from '@/App.module'
+import {
+  $friendData,
+  $prepareUserDataId,
+  $canLoadMore,
+  $page,
+  loadListFriendShip,
+  loadAllFriends,
+  loadOnlineFriends,
+  resetFriendShip
+} from '@/App.module'
 
 // эффекты
 // получить список предложений в друзья
@@ -28,10 +36,9 @@ export const submitRequestRemoveFromFriendShipFx = attach({
 })
 
 // события
-export const loadListFriendShip = createEvent()
 export const removeFromFriendShip = createEvent()
 export const addToFriends = createEvent()
-export const resetFriendShip = createEvent()
+
 // сторы
 export const $friendShips = createStore<User[]>([])
 $friendShips.on(submitRequestFriendShipListFx.doneData, (state, payload) => [...state, ...payload.body.results])
@@ -62,12 +69,6 @@ const $canSendRemoveFromFriendShipRequest = combine(
 
 // методы
 // загрузка и запись предложений в друзья
-split({
-  source: $prepareDataToInfinityScroll,
-  match: { friendShips: ({ typePage }) => typePage === typePages.friendship },
-  // @ts-ignore
-  cases: { friendShips: loadListFriendShip }
-})
 sample({
   clock: loadListFriendShip,
   source: guard({ source: $prepareUserDataId, filter: $canSendFriendShipRequest }),

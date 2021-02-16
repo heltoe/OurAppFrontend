@@ -1,7 +1,16 @@
-import { attach, createEvent, combine, sample, guard, createStore, split } from 'effector-root'
+import { attach, createEvent, combine, sample, guard, createStore } from 'effector-root'
 import { UserId, User, CommonFxParams } from '@/api/types'
 import { RemoveFromFriendsFx, ListFriendsFx } from '@/api/Friends'
-import { $friendData, $prepareUserDataId, $canLoadMore, $page, typePages, $prepareDataToInfinityScroll } from '@/App.module'
+import {
+  $friendData,
+  $prepareUserDataId,
+  $canLoadMore,
+  $page,
+  loadAllFriends,
+  loadOnlineFriends,
+  resetAllFriends,
+  resetOnlineFriends
+} from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты
@@ -21,11 +30,7 @@ export const submitRequestRemoveFromFriendsFx = attach({
 })
 
 // события
-export const loadAllFriends = createEvent()
-export const loadOnlineFriends = createEvent()
 export const removeFromFriends = createEvent()
-export const resetAllFriends = createEvent()
-export const resetOnlineFriends = createEvent()
 
 // сторы
 export const $allFriends = createStore<User[]>([])
@@ -60,19 +65,6 @@ const $canSendRemoveFromFriendRequest = combine(
 
 // методы
 // загрузка и запись друзей
-split({
-  source: $prepareDataToInfinityScroll,
-  match: {
-    allFriends: ({ typePage }) => typePage === typePages.friends,
-    onlineFriends: ({ typePage }) => typePage === typePages.online,
-  },
-  cases: {
-    // @ts-ignore
-    allFriends: loadAllFriends,
-    // @ts-ignore
-    onlineFriends: loadOnlineFriends
-  }
-})
 sample({
   clock: loadAllFriends,
   source: guard({ source: $prepareUserDataId, filter: $canSendFriendRequest }),

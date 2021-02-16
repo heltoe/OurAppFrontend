@@ -1,8 +1,8 @@
-import { attach, createEvent, sample, guard, combine, createStore, split } from 'effector-root'
+import { attach, createEvent, sample, guard, combine, createStore } from 'effector-root'
 import { UserId, UserInGrid, CommonFxParams } from '@/api/types'
 import { ListUsersFx } from '@/api/Friends'
 import { AddToFriendShipFx } from '@/api/FriendShip'
-import { $friendData, $prepareUserDataId, $canLoadMore, $page, typePages, $prepareDataToInfinityScroll } from '@/App.module'
+import { $friendData, $prepareUserDataId, $canLoadMore, $page, loadListUsers, resetUsers } from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты
@@ -22,9 +22,7 @@ export const submitRequestAddToFriendShipFx = attach({
 })
 
 // события
-export const loadListUsers = createEvent()
 export const addToFriendShip = createEvent()
-export const resetUsers = createEvent()
 
 // сторы
 export const $users = createStore<UserInGrid[]>([])
@@ -55,12 +53,6 @@ const $canSendAddToFriendShipRequest = combine(
 
 // методы
 // загрузка и запись всех пользователей
-split({
-  source: $prepareDataToInfinityScroll,
-  match: { users: ({ typePage }) => typePage === typePages.findFriend },
-  // @ts-ignore
-  cases: { users: loadListUsers }
-})
 sample({
   clock: loadListUsers,
   source: guard({ source: $prepareUserDataId, filter: $canSendUserRequest }),
