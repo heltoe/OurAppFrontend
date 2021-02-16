@@ -5,7 +5,6 @@ export type LoginFxParams = {
 export type IntroFxResponse = {
   accessToken: string
   refreshToken: string
-  userId: string
 }
 //
 export type RegistrationFxParams = {
@@ -39,7 +38,7 @@ export type ProfileFxResponse = {
 //
 export type RemoveAccountFxParams = {
   token: string
-  id: string
+  idUser: string
 }
 //
 export type Message = {

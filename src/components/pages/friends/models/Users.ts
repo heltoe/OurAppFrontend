@@ -1,8 +1,8 @@
-import { attach, createEvent, sample, guard, combine, createStore } from 'effector-root'
-import { UserInGrid, CommonFxParams } from '@/api/types'
+import { attach, createEvent, sample, guard, combine, createStore, split } from 'effector-root'
+import { UserId, UserInGrid, CommonFxParams } from '@/api/types'
 import { ListUsersFx } from '@/api/Friends'
 import { AddToFriendShipFx } from '@/api/FriendShip'
-import { $friendData, $prepareUserDataId, $canLoadMore, $page } from '@/App.module'
+import { $friendData, $prepareUserDataId, $canLoadMore, $page, typePages, $prepareDataToInfinityScroll } from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты
@@ -10,7 +10,7 @@ import { $token } from '@/api/common/AuthorizedRequest'
 export const submitRequestUsersListFx = attach({
   source: $page,
   effect: ListUsersFx,
-  mapParams: (params: { userId: number }, page: number) => {
+  mapParams: (params: UserId, page: number) => {
     const query = `page=${page}&limit=9`
     return { ...params, query }
   }
@@ -34,8 +34,9 @@ $users.on(submitRequestAddToFriendShipFx.doneData, (state, payload) => {
   if (elementId > -1) {
     const element = state[elementId]
     state.splice(elementId, 1, { ...element, existInFriendList: true })
-    return state
+    return [...state]
   }
+  return state
 })
 $users.on(resetUsers, () => [])
 $canLoadMore.on(submitRequestUsersListFx.doneData, (state, payload) => payload.body.next)
@@ -54,6 +55,12 @@ const $canSendAddToFriendShipRequest = combine(
 
 // методы
 // загрузка и запись всех пользователей
+split({
+  source: $prepareDataToInfinityScroll,
+  match: { users: ({ typePage }) => typePage === typePages.findFriend },
+  // @ts-ignore
+  cases: { users: loadListUsers }
+})
 sample({
   clock: loadListUsers,
   source: guard({ source: $prepareUserDataId, filter: $canSendUserRequest }),

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useStore } from 'effector-react'
-import { $typePage } from '@/App.module'
+import { typePages, $typePage } from '@/App.module'
 import { $friendShips } from '@/components/pages/friends/models/FriendShip'
 import { $allFriends, $onlineFriends } from '@/components/pages/friends/models/Friends'
 import styled from 'styled-components'
@@ -74,7 +74,7 @@ const FriendsList: React.FC = () => {
             status={card.status}
             image={card.image}
           />
-        )) : <EmptyPlaceholder>{typePage !== 'friendship' ? 'Список друзей пуст' : 'Список заявок в друзья пуст'}</EmptyPlaceholder>
+        )) : <EmptyPlaceholder>{typePage !== typePages.friendship ? 'Список друзей пуст' : 'Список заявок в друзья пуст'}</EmptyPlaceholder>
       }
     </FriendsListStyled>
   )

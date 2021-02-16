@@ -37,7 +37,7 @@ const PageInfiniteScrolling: React.FC<PageInfiniteScrollig> = ({
   return (
     <PageStyled ref={scrolledPage}>
       {children}
-      {canLoadMore && <div ref={loadMoreElement} />}
+      {canLoadMore && callBackToLoadMore && <div ref={loadMoreElement} className="no-select" onClick={() => callBackToLoadMore()}>Показать больше</div>}
     </PageStyled>
   )
 }

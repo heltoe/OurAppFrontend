@@ -1,29 +1,37 @@
-import { combine, createEvent } from 'effector-root'
-import { createEffectorField } from '@/helpers/effector-field'
+import { combine, createEvent, restore } from 'effector-root'
 import { $token } from '@/api/common/AuthorizedRequest'
 
-// события
-export const resetPage = createEvent()
+export const setIdUser = createEvent<number>()
+export const $idUser = restore(setIdUser, 0)
+export const friendIdChanged = createEvent<number>()
+export const $friendId = restore(friendIdChanged, 0)
 
-// сторы
-export const [$idUser, setIdUser] = createEffectorField({ defaultValue: 0 })
 export const $preparePersonDataId = combine({ id: $idUser })
 export const $preparePersonalDataToken = combine({ token: $token })
 export const $combinePersonalData = combine({ id: $idUser, token: $token })
 export const $prepareUserDataId = combine({ userId: $idUser })
-
-export const [$friendId, friendIdChanged] = createEffectorField({ defaultValue: 0 })
-
-export const [$page, pageChanged] = createEffectorField({ defaultValue: 1 })
-export const [$canLoadMore, canLoadMoreChanged] = createEffectorField({ defaultValue: true })
-
-export const $prepareDataGetRequest = combine({
-  userId: $idUser,
-  page: $page
-})
 export const $friendData = combine({
   userId: $idUser,
   friendId: $friendId
 })
 
-export const [$typePage, typePageChanged] = createEffectorField({ defaultValue: 'friends' })
+export const typePages = {
+  friends: 'friends',
+  online: 'online',
+  friendship: 'friendship',
+  findFriend: 'findFriend'
+}
+export const typePageChanged = createEvent<string>()
+export const $typePage = restore(typePageChanged, typePages.friends)
+
+export const pageChanged = createEvent<number>()
+export const $page = restore(pageChanged, 0)
+$page.on(typePageChanged, () => 1)
+
+export const canLoadMoreChanged = createEvent<boolean>()
+export const $canLoadMore = restore(canLoadMoreChanged, true)
+
+export const $prepareDataToInfinityScroll = combine({
+  page: $page,
+  typePage: $typePage
+})

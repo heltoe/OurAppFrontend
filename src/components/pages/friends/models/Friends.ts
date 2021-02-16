@@ -1,8 +1,7 @@
-import { attach, createEvent, combine, sample, forward, guard, createStore } from 'effector-root'
-import { createEffectorField } from '@/helpers/effector-field'
-import { User, CommonFxParams } from '@/api/types'
+import { attach, createEvent, combine, sample, guard, createStore, split } from 'effector-root'
+import { UserId, User, CommonFxParams } from '@/api/types'
 import { RemoveFromFriendsFx, ListFriendsFx } from '@/api/Friends'
-import { $friendData, $prepareDataGetRequest, $canLoadMore, $page } from '@/App.module'
+import { $friendData, $prepareUserDataId, $canLoadMore, $page, typePages, $prepareDataToInfinityScroll } from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
 
 // эффекты
@@ -10,7 +9,7 @@ import { $token } from '@/api/common/AuthorizedRequest'
 export const submitRequestFriendsListFx = attach({
   source: $page,
   effect: ListFriendsFx,
-  mapParams: (params: { userId: number }, page: number) => {
+  mapParams: (params: UserId, page: number) => {
     const query = `page=${page}&limit=9`
     return { ...params, query }
   }
@@ -45,7 +44,7 @@ export const $countAllFriends = createStore(0)
 $countAllFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => payload.body.count)
 
 export const $countOnlineFriends = createStore(0)
-$countAllFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => payload.body.count)
+$countOnlineFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => payload.body.count)
 
 const $canSendFriendRequest = combine(
   $token,
@@ -61,14 +60,27 @@ const $canSendRemoveFromFriendRequest = combine(
 
 // методы
 // загрузка и запись друзей
+split({
+  source: $prepareDataToInfinityScroll,
+  match: {
+    allFriends: ({ typePage }) => typePage === typePages.friends,
+    onlineFriends: ({ typePage }) => typePage === typePages.online,
+  },
+  cases: {
+    // @ts-ignore
+    allFriends: loadAllFriends,
+    // @ts-ignore
+    onlineFriends: loadOnlineFriends
+  }
+})
 sample({
   clock: loadAllFriends,
-  source: guard({ source: $prepareDataGetRequest, filter: $canSendFriendRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendFriendRequest }),
   target: submitRequestFriendsListFx
 })
 sample({
   clock: loadOnlineFriends,
-  source: guard({ source: $prepareDataGetRequest, filter: $canSendFriendRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendFriendRequest }),
   target: submitRequestFriendsListFx
 })
 // удалить из друзей

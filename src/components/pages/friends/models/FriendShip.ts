@@ -1,17 +1,17 @@
-import { attach, createEvent, combine, sample, forward, guard, createStore } from 'effector-root'
-import { CommonFxParams, User } from '@/api/types'
+import { attach, createEvent, combine, sample, forward, guard, createStore, split } from 'effector-root'
+import { UserId, CommonFxParams, User } from '@/api/types'
 import { AddToFriendsFx } from '@/api/Friends'
 import { loadAllFriends, loadOnlineFriends } from '@/components/pages/friends/models/Friends'
 import { ListFriendShipFx, RemoveFromFriendShipFx } from '@/api/FriendShip'
 import { $token } from '@/api/common/AuthorizedRequest'
-import { $friendData, $prepareDataGetRequest, $canLoadMore, $page } from '@/App.module'
+import { $friendData, $prepareUserDataId, $canLoadMore, $page, typePages, $prepareDataToInfinityScroll } from '@/App.module'
 
 // эффекты
 // получить список предложений в друзья
 export const submitRequestFriendShipListFx = attach({
   source: $page,
   effect: ListFriendShipFx,
-  mapParams: (params: { userId: number }, page: number) => {
+  mapParams: (params: UserId, page: number) => {
     const query = `page=${page}&limit=9`
     return { ...params, query }
   }
@@ -62,9 +62,15 @@ const $canSendRemoveFromFriendShipRequest = combine(
 
 // методы
 // загрузка и запись предложений в друзья
+split({
+  source: $prepareDataToInfinityScroll,
+  match: { friendShips: ({ typePage }) => typePage === typePages.friendship },
+  // @ts-ignore
+  cases: { friendShips: loadListFriendShip }
+})
 sample({
   clock: loadListFriendShip,
-  source: guard({ source: $prepareDataGetRequest, filter: $canSendFriendShipRequest }),
+  source: guard({ source: $prepareUserDataId, filter: $canSendFriendShipRequest }),
   target: submitRequestFriendShipListFx
 })
 // добавить в друзья
