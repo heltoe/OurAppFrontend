@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { friendIdChanged } from '@/App.module'
 import { addToFriendShip } from '@/components/pages/friends/models/Users'
@@ -11,7 +10,7 @@ type CardUser = {
   image: string
   firstName: string
   lastName: string
-  isexistInFriendList: boolean
+  isexistInFriendList: boolean,
 }
 
 export const CardUserStyled = styled.div`
@@ -20,6 +19,7 @@ export const CardUserStyled = styled.div`
   width: 160px;
   border-radius: 8px;
   & ${AvatarStyled} {
+    cursor: pointer;
     border-radius: 8px;
   }
 `
@@ -28,6 +28,7 @@ const WrapperContentStyled = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 8px;
+  min-height: 22px;
 `
 const ControllerStyled = styled.div`
   margin-left: auto;
@@ -38,12 +39,13 @@ const ControllerStyled = styled.div`
     }
   }
 `
-const LinkStyled = styled(Link)`
+const NameStyled = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: calc(100% - 30px);
   transition: ${(props) => `color ${props.theme.transition}`};
+  cursor: pointer;
   &:hover {
     color: ${(props) => props.theme.rgb(props.theme.colors.purple1)};
   }
@@ -55,16 +57,16 @@ const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName, isexistI
   }
   return (
     <CardUserStyled>
-      <Link to="/">
+      <div>
         <Avatar
           id={id}
           size="160px"
           image={image}
           fullName={`${firstName} ${lastName}`}
         />
-      </Link>
+      </div>
       <WrapperContentStyled>
-        <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
+        <NameStyled className="middle">{firstName} {lastName}</NameStyled>
         {!isexistInFriendList && <ControllerStyled onClick={() => addToFriendShipList(id)}>
           <Icon type="add-user" color="grey" size="20px" />
         </ControllerStyled>}

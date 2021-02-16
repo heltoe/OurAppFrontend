@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import { loadPersonalInfo } from '@/components/pages/profile/EditProfile.model'
 import { loadListChat } from '@/components/common/sidebar/SideBar.model'
@@ -6,7 +6,6 @@ import { $idUser } from '@/App.module'
 import styled from 'styled-components'
 import Header from '@/components/common/Header'
 import SideBar from '@/components/common/sidebar/SideBar'
-import ProfileWidget from '@/components/pages/profile/widget/ProfileWidget'
 
 const MainLayoutStyled = styled.div<{ isOpen: boolean }>`
   width: ${(props) => `calc(100% - ${props.isOpen ? 290 : 90}px);`};
@@ -27,45 +26,9 @@ const ContentStyled = styled.div`
   overflow: hidden;
   position: relative;
 `
-const WrapperSearchField = styled.div`
-  position: sticky;
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-  width: 560px;
-  z-index: 100;
-  margin: 0 auto;
-`
 export const MainLayout: React.FC = ({ children }) => {
   const idProfile = useStore($idUser)
-  const ref = useRef(null)
   const [isOpenSideBar, setIsOpenSideBar] = useState(true)
-  const [isShowWidget, setIsShowWidget] = useState(false)
-  // const [offsetLeft, setOffsetLeft] = useState(0)
-  const [scrollTop, setScrollTop] = useState(0)
-  const listener = () => {
-    const el = ref?.current
-    if (el) {
-      const { scrollTop } = el
-      setScrollTop(scrollTop)
-    }
-  }
-  // const handleResize = () => {
-  //   if (document.body.clientWidth < 801 && isOpenSideBar) setIsOpenSideBar(false)
-  //   if (document.body.clientWidth > 800 && !isOpenSideBar) setIsOpenSideBar(true)
-  // }
-  // useEffect(() => {
-  //   handleResize()
-  //   window.addEventListener('resize', handleResize)
-  //   // const el = ref?.current
-  //   // if (el) {
-  //   //   // const { clientWidth, offsetWidth  } = el
-  //   //   const { offsetWidth  } = el
-  //   //   setOffsetLeft(offsetWidth)
-  //   //   console.log(offsetWidth)
-  //   // }
-  //   return () => window.removeEventListener('resize', handleResize)
-  // })
   useEffect(() => {
     loadPersonalInfo()
   }, [])
@@ -77,11 +40,10 @@ export const MainLayout: React.FC = ({ children }) => {
       <SideBar isOpen={isOpenSideBar} setIsOpenSideBar={(value) => setIsOpenSideBar(value)}/>
       <ContentContainerStyled>
         <Header />
-        <ContentStyled id="content-container" ref={ref} onScroll={() => listener()}>
+        <ContentStyled>
           {children}
         </ContentStyled>
       </ContentContainerStyled>
-      <ProfileWidget isOpen={isShowWidget} closeWidget={() => setIsShowWidget(false)} />
     </MainLayoutStyled>
   )
 }

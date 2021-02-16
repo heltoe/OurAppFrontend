@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { getRouterByName } from '@/routes'
 import { $photo } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
+import { $idUser } from '@/App.module'
 import { getRouterByPath } from '@/routes'
 import Avatar from '@/components/ui/Avatar'
 
@@ -41,6 +42,7 @@ const PersonInfoStyled = styled(Link)`
 export const Header: React.FC = () => {
   const photo = useStore($photo)
   const mainInfoForm = useStore($mainInfoForm)
+  const idProfile = useStore($idUser)
   const location = useLocation()
   return (
     <HeaderStyled>
@@ -49,7 +51,7 @@ export const Header: React.FC = () => {
       </LogoStyled>
       {getRouterByPath(location.pathname).name !== 'profile-page' && <PersonInfoStyled to={getRouterByName('profile-page').path}>
         <Avatar
-          id={mainInfoForm.id}
+          id={idProfile}
           image={photo}
           fullName={mainInfoForm.fullName}
           isRound size="40px"

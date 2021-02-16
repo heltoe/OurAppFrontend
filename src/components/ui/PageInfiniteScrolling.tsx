@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react'
+import styled from 'styled-components'
 import { debounce, isVisible } from '@/helpers/utils'
 import { PageStyled } from '@/components/common/Page'
 
@@ -7,7 +8,25 @@ type PageInfiniteScrollig = {
   callBackToLoadMore?(): void
   canLoadMore?: boolean
 }
-
+const ScrollingHelperStyled = styled.div`
+  width: 560px;
+  margin: 0 auto;
+  background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
+  text-align: center;
+  padding: 15px;
+  border-radius: 0 0 8px 8px;
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateY(-100%);
+    width: 100%;
+    height: 5px;
+    background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
+  }
+`
 const PageInfiniteScrolling: React.FC<PageInfiniteScrollig> = ({
   children,
   callBack,
@@ -37,7 +56,15 @@ const PageInfiniteScrolling: React.FC<PageInfiniteScrollig> = ({
   return (
     <PageStyled ref={scrolledPage}>
       {children}
-      {canLoadMore && callBackToLoadMore && <div ref={loadMoreElement} className="no-select" onClick={() => callBackToLoadMore()}>Показать больше</div>}
+      {canLoadMore && callBackToLoadMore &&
+        <ScrollingHelperStyled
+          ref={loadMoreElement}
+          className="no-select"
+          onClick={() => callBackToLoadMore()}
+        >
+          Показать больше
+        </ScrollingHelperStyled>
+      }
     </PageStyled>
   )
 }

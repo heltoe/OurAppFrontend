@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { logout } from '@/api/common/AuthorizedRequest'
 import { $photo, removeAccount } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
+import { $idUser } from '@/App.module'
 import { device } from '@/Theme'
 import Avatar from '@/components/ui/Avatar'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
@@ -93,6 +94,7 @@ const RedButtonStyled = styled(BaseButtonStyled)`
 `
 export const PhotoBlock: React.FC = () => {
   const photo = useStore($photo)
+  const idProfile = useStore($idUser)
   const mainInfoForm = useStore($mainInfoForm)
   const color = '#fff'
   return (
@@ -101,7 +103,7 @@ export const PhotoBlock: React.FC = () => {
       <OverlayPhotoStyled backgroundImage={photo} />
       <p className="middle">Фото профиля</p>
       <WrapperImageStyled>
-        <Avatar id={mainInfoForm.id} image={photo} fullName={mainInfoForm.fullName} isRound size="180px" />
+        <Avatar id={idProfile} image={photo} fullName={mainInfoForm.fullName} isRound size="180px" />
       </WrapperImageStyled>
       <ControllerBoxStyled>
         <BaseButton>

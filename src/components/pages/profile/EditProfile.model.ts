@@ -22,7 +22,6 @@ export const submitRequestUserInfoFx = attach({
 })
 const setPersonalDataFx = createEffect(({ body }: Response<ProfileFxResponse>) => {
   setIdUser(body.id)
-  mainInfoFormChanged.id(body.id)
   mainInfoFormChanged.firstName(body.firstName || '')
   mainInfoFormChanged.lastName(body.lastName || '')
   mainInfoFormChanged.fullName(body.firstName && body.lastName ? `${body.firstName} ${body.lastName}` : '')

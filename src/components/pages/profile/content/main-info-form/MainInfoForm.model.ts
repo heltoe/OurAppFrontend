@@ -2,7 +2,6 @@ import { combine } from 'effector-root'
 import { createEffectorField } from '@/helpers/effector-field'
 
 // сторы
-export const [$id, idChanged] = createEffectorField({ defaultValue: 0 })
 export const [$firstName, firstNameChanged] = createEffectorField({ defaultValue: '' })
 export const [$lastName, lastNameChanged] = createEffectorField({ defaultValue: '' })
 export const [$email, emailChanged] = createEffectorField({ defaultValue: '' })
@@ -13,14 +12,12 @@ export const [$lastNameError, lastNameErrorChanged] = createEffectorField({ defa
 export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '' })
 
 export const $mainInfoForm = combine({
-  id: $id,
   firstName: $firstName,
   lastName: $lastName,
   email: $email,
   fullName: $fullName
 })
 export const mainInfoFormChanged = {
-  id: idChanged,
   firstName: firstNameChanged,
   lastName: lastNameChanged,
   email: emailChanged,

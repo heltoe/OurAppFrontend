@@ -25,6 +25,7 @@ export const AvatarStyled = styled.div<{ size: string, image: string, isRound: b
   background-image: ${(props) => `url(${props.image})`};
   background-color: ${(props) => props.color};
   border-radius: ${(props) => (props.isRound ? '50%' : '0')};
+  transition: ${(props) => props.theme.transition};
 `
 const InitialsStyled = styled.p<{ size: string }>`
   position: relative;
