@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { device } from '@/Theme'
 import { PageStyled } from '@/components/common/Page'
 import MainInfoForm from '@/components/pages/profile/content/main-info-form/MainInfoForm'
-import LocationMap from '@/components/pages/profile/content/location-map/LocationMap'
 import ChangePass from '@/components/pages/profile/content/change-pass/ChangePass'
 import PhotoBlock from '@/components/pages/profile/content/photo-block/PhotoBlock'
 
@@ -37,7 +36,6 @@ export const EditProfilePage: React.FC = () => {
       <WrapperStyled className="wrapper">
         <BlockInfoStyled>
           <MainInfoForm />
-          <LocationMap />
           <ChangePass />
         </BlockInfoStyled>
         <PhotoBlock />

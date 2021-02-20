@@ -56,7 +56,7 @@ export const RegistrationPage: React.FC = () => {
     },
     {
       id: 3,
-      value: form.repeatPassword,
+      value: form.repeat_password,
       placeholder: 'Повторите пароль*',
       error: errors.repeatPasswordError,
       onChange: (e: string) => formChanged.repeatPassword(e),
@@ -64,7 +64,7 @@ export const RegistrationPage: React.FC = () => {
     },
     {
       id: 4,
-      value: form.firstName,
+      value: form.first_name,
       placeholder: 'Имя*',
       error: errors.firstNameError,
       onChange: (e: string) => formChanged.firstName(e),
@@ -72,7 +72,7 @@ export const RegistrationPage: React.FC = () => {
     },
     {
       id: 5,
-      value: form.lastName,
+      value: form.last_name,
       placeholder: 'Фамилия*',
       error: errors.lastNameError,
       onChange: (e: string) => formChanged.lastName(e),
@@ -80,11 +80,19 @@ export const RegistrationPage: React.FC = () => {
     },
     {
       id: 6,
-      value: form.birthDate,
+      value: form.birth_date,
       placeholder: 'Дата рождения*',
       error: errors.lastNameError,
       onChange: (e: string) => formChanged.birthDate(e),
       onFocus: () => formChanged.birthDateError('')
+    },
+    {
+      id: 7,
+      value: form.phone,
+      placeholder: 'Телефон*',
+      error: errors.phoneError,
+      onChange: (e: string) => formChanged.phone(e),
+      onFocus: () => formChanged.phoneError('')
     }
   ]
   return (

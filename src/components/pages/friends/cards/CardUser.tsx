@@ -66,7 +66,7 @@ const CardUser: React.FC<CardUser> = ({ id, image, firstName, lastName, isexistI
         />
       </div>
       <WrapperContentStyled>
-        <NameStyled className="middle">{firstName} {lastName}</NameStyled>
+        <NameStyled className="middle no-select">{firstName} {lastName}</NameStyled>
         {!isexistInFriendList && <ControllerStyled onClick={() => addToFriendShipList(id)}>
           <Icon type="add-user" color="grey" size="20px" />
         </ControllerStyled>}

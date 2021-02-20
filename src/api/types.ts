@@ -3,18 +3,19 @@ export type LoginFxParams = {
   password: string
 }
 export type IntroFxResponse = {
-  accessToken: string
-  refreshToken: string
+  access_token: string
+  refresh_token: string
 }
 //
 export type RegistrationFxParams = {
   email: string
   password: string
-  repeatPassword: string
-  firstName: string
-  lastName: string
+  repeat_password: string
+  first_name: string
+  last_name: string
   gender: string
-  birthDate: string
+  birth_date: string
+  phone: string
 }
 //
 export type RestorePasswordFxParams = {
@@ -24,28 +25,12 @@ export type RestorePasswordFxParams = {
 export type PersonalInfoFxParams = {
   token: string
 }
-export type ProfileFxResponse = {
-  id: number
-  email: string
-  firstName: string
-  lastName: string
-  birthDate: string
-  gender: string
-  role: string
-  location: string
-  photo: string
-}
-//
-export type RemoveAccountFxParams = {
-  token: string
-  idUser: string
-}
 //
 export type Message = {
   id: number
-  firstName: string
-  lastName: string
-  image: string
+  first_name: string
+  last_name: string
+  photo: string
   status: string
   time: string
   message: string
@@ -54,17 +39,32 @@ export type ListMessagesFxResponse = {
   messages: Message[]
 }
 //
-export type User = {
+export interface User {
   id: number
-  firstName: string
-  lastName: string
-  image: string
-  status?: string
+  first_name: string
+  last_name: string
   gender: string
-  birthDate: string
+  birth_date: string
+  phone: string
+  photo: string | null
 }
-export interface UserInGrid extends User {
-  existInFriendList: boolean
+export interface Profile extends User {
+  email: string
+}
+export interface AllUsers extends User {
+  exist_in_friend_list: boolean
+}
+export type UserInGrid = {
+  id: number
+  first_name: string
+  last_name: string
+  gender: string
+  birth_date: string
+  phone: string
+  photo: string
+}
+export interface AllUsersInGrid extends UserInGrid {
+  exist_in_friend_list: boolean
 }
 export type ListFriendsFxResponse = {
   count: number
@@ -74,16 +74,13 @@ export type ListFriendsFxResponse = {
 export type ListUsersFxResponse = {
   count: number
   next: boolean
-  results: UserInGrid[]
+  results: AllUsers[]
 }
-// common response
-export type CommonResponse = {
-  status: string
-}
+// // common response
 export type CommonFxParams = {
-  userId: number
-  friendId: number
+  user_id: number
+  friend_id: number
 }
 export type UserId = {
-  userId: number
+  user_id: number
 }

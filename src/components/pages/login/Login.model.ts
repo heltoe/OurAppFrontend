@@ -67,8 +67,8 @@ forward({
 forward({
   from: submitFormFx.doneData,
   to: [
-    setTokenForRequest.prepend(({ body }: any) => body.accessToken),
-    setRefreshTokenForRequest.prepend(({ body }: any) => body.refreshToken),
+    setTokenForRequest.prepend(({ body }: any) => body.access_token),
+    setRefreshTokenForRequest.prepend(({ body }: any) => body.refresh_token),
     navigatePush.prepend(() => ({ pathname: getRouterByName('profile-page').path })),
     resetFields
   ]

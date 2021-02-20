@@ -1,5 +1,5 @@
 import { attach, createEvent, sample, guard, combine, createStore } from 'effector-root'
-import { UserId, UserInGrid, CommonFxParams } from '@/api/types'
+import { UserId, AllUsersInGrid, CommonFxParams } from '@/api/types'
 import { ListUsersFx } from '@/api/Friends'
 import { AddToFriendShipFx } from '@/api/FriendShip'
 import { $friendData, $prepareUserDataId, $canLoadMore, $page, loadListUsers, resetUsers } from '@/App.module'
@@ -25,13 +25,13 @@ export const submitRequestAddToFriendShipFx = attach({
 export const addToFriendShip = createEvent()
 
 // сторы
-export const $users = createStore<UserInGrid[]>([])
-$users.on(submitRequestUsersListFx.doneData, (state, payload) => [...state, ...payload.body.results])
+export const $users = createStore<AllUsersInGrid[]>([])
+$users.on(submitRequestUsersListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.photo || '' }))])
 $users.on(submitRequestAddToFriendShipFx.doneData, (state, payload) => {
-  const elementId = state.findIndex(item => item.id === payload.body.userId)
+  const elementId = state.findIndex(item => item.id === payload.body.user_id)
   if (elementId > -1) {
     const element = state[elementId]
-    state.splice(elementId, 1, { ...element, existInFriendList: true })
+    state.splice(elementId, 1, { ...element, exist_in_friend_list: true })
     return [...state]
   }
   return state

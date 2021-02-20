@@ -9,10 +9,10 @@ export const $friendId = restore(friendIdChanged, 0)
 export const $preparePersonDataId = combine({ id: $idUser })
 export const $preparePersonalDataToken = combine({ token: $token })
 export const $combinePersonalData = combine({ id: $idUser, token: $token })
-export const $prepareUserDataId = combine({ userId: $idUser })
+export const $prepareUserDataId = combine({ user_id: $idUser })
 export const $friendData = combine({
-  userId: $idUser,
-  friendId: $friendId
+  user_id: $idUser,
+  friend_id: $friendId
 })
 
 export const typePages = {

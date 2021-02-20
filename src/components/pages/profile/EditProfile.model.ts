@@ -1,10 +1,9 @@
 import { attach, createEvent, createEffect, restore, sample, guard, combine, forward } from 'effector-root'
 import { ProfileFx, PersonalInfoFx } from '@/api/Profile'
 import { Response } from '@/api/common/Request'
-import { PersonalInfoFxParams, UserId, ProfileFxResponse } from '@/api/types'
+import { PersonalInfoFxParams, UserId, User, Profile } from '@/api/types'
 import { $token } from '@/api/common/AuthorizedRequest'
 import { mainInfoFormChanged } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
-import { locationFormChanged } from '@/components/pages/profile/content/location-map/LocationMap.model'
 import { photoChanged } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $idUser, $prepareUserDataId, $preparePersonalDataToken } from '@/App.module'
 import { setIdUser } from '@/App.module'
@@ -20,32 +19,31 @@ export const submitRequestUserInfoFx = attach({
   effect: ProfileFx,
   mapParams: (params: UserId) => params
 })
-const setPersonalDataFx = createEffect(({ body }: Response<ProfileFxResponse>) => {
+const setPersonalDataFx = createEffect(({ body }: Response<Profile>) => {
+  console.log(body)
   setIdUser(body.id)
-  mainInfoFormChanged.firstName(body.firstName || '')
-  mainInfoFormChanged.lastName(body.lastName || '')
-  mainInfoFormChanged.fullName(body.firstName && body.lastName ? `${body.firstName} ${body.lastName}` : '')
+  mainInfoFormChanged.firstName(body.first_name || '')
+  mainInfoFormChanged.lastName(body.last_name || '')
+  mainInfoFormChanged.fullName(body.first_name && body.last_name ? `${body.first_name} ${body.last_name}` : '')
   mainInfoFormChanged.email(body.email || '')
-  locationFormChanged.location(body.location || '')
-  photoChanged(body.photo)
+  photoChanged(body.photo || '')
 })
 
 // события
 export const loadPersonalInfo = createEvent()
 export const loadUser = createEvent()
-const changeProfile = createEvent<ProfileFxResponse>()
+const changeProfile = createEvent<User>()
 
 // сторы
 export const $profileUser = restore(changeProfile, {
   id: 0,
-  email: '',
-  firstName: '',
-  lastName: '',
-  role: '',
-  location: '',
-  photo: '',
+  // email: '',
+  first_name: '',
+  last_name: '',
   gender: '',
-  birthDate: ''
+  birth_date: '',
+  photo: '',
+  phone: ''
 })
 export const $canSendPersonalRequest = combine(
   $token,

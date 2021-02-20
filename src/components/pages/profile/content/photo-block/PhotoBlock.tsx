@@ -2,7 +2,7 @@ import React from 'react'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import { logout } from '@/api/common/AuthorizedRequest'
-import { $photo, removeAccount } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { $photo } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { $idUser } from '@/App.module'
 import { device } from '@/Theme'
@@ -113,10 +113,6 @@ export const PhotoBlock: React.FC = () => {
         <RedButtonStyled onClick={() => logout()}>
           Выйти
           <Icon type="exit" color={color} size="18px" />
-        </RedButtonStyled>
-        <RedButtonStyled onClick={() => removeAccount()}>
-          Удалить аккаунт
-          <Icon type="remove-user" color={color} size="18px" />
         </RedButtonStyled>
       </ControllerBoxStyled>
     </BlockPhotoStyled>

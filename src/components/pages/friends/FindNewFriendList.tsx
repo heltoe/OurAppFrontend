@@ -26,10 +26,10 @@ const FindNewFriendList: React.FC = () => {
           <CardUser
             key={card.id}
             id={card.id}
-            image={card.image}
-            firstName={card.firstName}
-            lastName={card.lastName}
-            isexistInFriendList={card.existInFriendList}
+            image={card.photo}
+            firstName={card.first_name}
+            lastName={card.last_name}
+            isexistInFriendList={card.exist_in_friend_list}
           />
         )) : <EmptyPlaceholder>Список пользователей пуст</EmptyPlaceholder>
       }

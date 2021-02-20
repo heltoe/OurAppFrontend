@@ -4,7 +4,7 @@ import { UserId, ListMessagesFxResponse } from '@/api/types'
 export const ListMessagesFx = createApiEffect<UserId, ListMessagesFxResponse>({
   requestMapper: (params: any) => ({
     method: 'GET',
-    url: `/api/list-chat/${params.userId}`
+    url: `/api/list-chat/${params.user_id}`
   })
 })
 

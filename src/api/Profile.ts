@@ -1,30 +1,17 @@
 import { createApiEffect } from '@/api/common/CreateApiEffect'
-import {
-  PersonalInfoFxParams,
-  ProfileFxResponse,
-  RemoveAccountFxParams,
-  CommonResponse
-} from '@/api/types'
+import { PersonalInfoFxParams, User, Profile } from '@/api/types'
 
-export const ProfileFx = createApiEffect<void, ProfileFxResponse>({
+export const ProfileFx = createApiEffect<void, User>({
   requestMapper: (params: any) => ({
     method: 'GET',
-    url: `/api/user-data/${params.idUser}`
+    url: `/api/user-data/${params.id_user}`
   })
 })
 
-export const PersonalInfoFx = createApiEffect<PersonalInfoFxParams, ProfileFxResponse>({
+export const PersonalInfoFx = createApiEffect<PersonalInfoFxParams, Profile>({
   requestMapper: (params: any) => ({
     method: 'POST',
     url: '/api/personal-info',
-    body: params
-  })
-})
-
-export const RemoveAccountFx = createApiEffect<RemoveAccountFxParams, CommonResponse>({
-  requestMapper: (params: any) => ({
-    method: 'POST',
-    url: '/api/remove-account',
     body: params
   })
 })
