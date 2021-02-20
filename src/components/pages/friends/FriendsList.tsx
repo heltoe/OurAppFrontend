@@ -69,8 +69,8 @@ const FriendsList: React.FC = () => {
           <CardFriend
             key={card.id}
             id={card.id}
-            firstName={card.firstName}
-            lastName={card.lastName}
+            firstName={card.first_name}
+            lastName={card.last_name}
             status={card.status}
             image={card.image}
           />

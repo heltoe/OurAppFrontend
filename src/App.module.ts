@@ -10,6 +10,7 @@ export const $preparePersonDataId = combine({ id: $idUser })
 export const $preparePersonalDataToken = combine({ token: $token })
 export const $combinePersonalData = combine({ id: $idUser, token: $token })
 export const $prepareUserDataId = combine({ user_id: $idUser })
+export const $prepareFriendDataId = combine({ friend_id: $friendId })
 export const $friendData = combine({
   user_id: $idUser,
   friend_id: $friendId

@@ -11,7 +11,7 @@ export const submitRequestUsersListFx = attach({
   source: $page,
   effect: ListUsersFx,
   mapParams: (params: UserId, page: number) => {
-    const query = `page=${page}&limit=9`
+    const query = `offset=${page}&limit=9`
     return { ...params, query }
   }
 })

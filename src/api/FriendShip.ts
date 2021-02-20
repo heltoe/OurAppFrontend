@@ -1,5 +1,5 @@
 import { createApiEffect } from '@/api/common/CreateApiEffect'
-import { CommonFxParams, ListUsersFxResponse, UserId } from '@/api/types'
+import { CommonFxParams, ListUsersFxResponse, UserId, FriendId } from '@/api/types'
 
 export const ListFriendShipFx = createApiEffect<void, ListUsersFxResponse>({
   requestMapper: (params: any) => ({
@@ -15,7 +15,7 @@ export const AddToFriendShipFx = createApiEffect<CommonFxParams, UserId>({
   })
 })
 
-export const RemoveFromFriendShipFx = createApiEffect<CommonFxParams, UserId>({
+export const RemoveFromFriendShipFx = createApiEffect<FriendId, UserId>({
   requestMapper: (params: any) => ({
     method: 'DELETE',
     url: '/api/remove-from-friendship',

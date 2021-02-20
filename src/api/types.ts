@@ -84,3 +84,6 @@ export type CommonFxParams = {
 export type UserId = {
   user_id: number
 }
+export type FriendId = {
+  friend_id: number
+}
