@@ -8,7 +8,7 @@ import { getRouterByName } from '@/routes'
 
 // эффекты
 const validateFormFx = createEffect((params: RestorePasswordFxParams) => {
-  const errorEmail = validatorForm(params.email, true)
+  const errorEmail = validatorForm({ value: params.email, isEmail: true })
   !errorEmail.length ? submitForm() : emailErrorChanged(errorEmail)
 })
 const submitFormFx = attach({

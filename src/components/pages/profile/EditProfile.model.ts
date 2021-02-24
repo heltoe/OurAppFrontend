@@ -1,10 +1,10 @@
-import { attach, createEvent, createEffect, restore, sample, guard, combine, forward } from 'effector-root'
+import { attach, createEvent, restore, sample, guard, combine, forward } from 'effector-root'
 import { ProfileFx, PersonalInfoFx } from '@/api/Profile'
-import { Response } from '@/api/common/Request'
-import { PersonalInfoFxParams, UserId, User, Profile } from '@/api/types'
+import { PersonalInfoFxParams, UserId, User } from '@/api/types'
 import { $token } from '@/api/common/AuthorizedRequest'
 import { mainInfoFormChanged } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { photoChanged } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { logout } from '@/api/common/AuthorizedRequest'
 import { $idUser, $prepareUserDataId, $preparePersonalDataToken } from '@/App.module'
 import { setIdUser } from '@/App.module'
 
@@ -19,15 +19,6 @@ export const submitRequestUserInfoFx = attach({
   effect: ProfileFx,
   mapParams: (params: UserId) => params
 })
-const setPersonalDataFx = createEffect(({ body }: Response<Profile>) => {
-  console.log(body)
-  setIdUser(body.id)
-  mainInfoFormChanged.firstName(body.first_name || '')
-  mainInfoFormChanged.lastName(body.last_name || '')
-  mainInfoFormChanged.fullName(body.first_name && body.last_name ? `${body.first_name} ${body.last_name}` : '')
-  mainInfoFormChanged.email(body.email || '')
-  photoChanged(body.photo || '')
-})
 
 // события
 export const loadPersonalInfo = createEvent()
@@ -37,11 +28,10 @@ const changeProfile = createEvent<User>()
 // сторы
 export const $profileUser = restore(changeProfile, {
   id: 0,
-  // email: '',
   first_name: '',
   last_name: '',
   gender: '',
-  birth_date: '',
+  birth_date: new Date(),
   photo: '',
   phone: ''
 })
@@ -68,11 +58,20 @@ sample({
   target: submitRequestUserInfoFx
 })
 
-// forward({
-//   from: submitRequestPersonalInfoFx.failData,
-//   to: setErrorFx
-// })
+forward({
+  from: submitRequestPersonalInfoFx.failData,
+  to: logout
+})
 forward({
   from: submitRequestPersonalInfoFx.doneData,
-  to: setPersonalDataFx
+  to: [
+    setIdUser.prepend(({ body }) => body.id),
+    mainInfoFormChanged.firstName.prepend(({ body }) => body.first_name || ''),
+    mainInfoFormChanged.lastName.prepend(({ body }) => body.last_name || ''),
+    mainInfoFormChanged.fullName.prepend(({ body }) => body.first_name && body.last_name ? `${body.first_name} ${body.last_name}` : ''),
+    mainInfoFormChanged.email.prepend(({ body }) => body.email || ''),
+    mainInfoFormChanged.phone.prepend(({ body }) => body.phone || ''),
+    mainInfoFormChanged.birthDate.prepend(({ body }) => body.birth_date || ''),
+    photoChanged.prepend(({ body }) => body.photo || '')
+  ]
 })

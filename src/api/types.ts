@@ -14,7 +14,7 @@ export type RegistrationFxParams = {
   first_name: string
   last_name: string
   gender: string
-  birth_date: string
+  birth_date: Date
   phone: string
 }
 //
@@ -44,7 +44,7 @@ export interface User {
   first_name: string
   last_name: string
   gender: string
-  birth_date: string
+  birth_date: Date
   phone: string
   photo: string | null
 }
@@ -59,7 +59,7 @@ export type UserInGrid = {
   first_name: string
   last_name: string
   gender: string
-  birth_date: string
+  birth_date: Date
   phone: string
   photo: string
 }

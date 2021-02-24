@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components'
 
 const ldsRing = keyframes`
   0% { color: transparent; }
-  100% { color: radboats; }
+  100% { color: rgb(116, 129, 235); }
 `
 const BaseButtonStyled = styled.div`
   display: flex;

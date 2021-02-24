@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { IBaseInput, BaseInputStyled } from '@/components/ui/BaseInput'
 import FadeInOut from '@/components/ui/FadeInOut'
+import InputMask from "react-input-mask";
 
 interface IFormInput extends IBaseInput {
   error?: string
@@ -79,11 +80,18 @@ export const FormInput: React.FC<IFormInput> = ({
     onChange(`${str}`)
   }
   const handlerFocus = (e: HTMLInputElement) => {
-    if (typeof value === 'string' && !value.length) setActiveInput(true)
+    if (!activeInput) setActiveInput(true)
     onFocus(e)
   }
   const handlerBlur = (e: HTMLInputElement) => {
-    if (typeof value === 'string' && !value.length) setActiveInput(false)
+    if (typeof value === 'string' && type === 'tel') {
+      let counter = 0
+      value.split('').forEach(item => {
+        if (item === '_') counter++
+      })
+      if (counter === 10) setActiveInput(false)
+    }
+    else if (typeof value === 'string' && !value.length) setActiveInput(false)
     onBlur(e)
   }
   useEffect(() => {
@@ -92,7 +100,22 @@ export const FormInput: React.FC<IFormInput> = ({
   return (
     <LabelStyled error={error}>
       <PlaceholderStyled filled={activeInput}>{placeholder}</PlaceholderStyled>
-      <FormInputStyled
+      {type === 'tel' &&
+      <InputMask
+        mask="+7 (999) 999-99-99"
+        value={value}
+        onChange={(e) => handlerChange(e.target.value)}
+        onFocus={(e) => handlerFocus(e.target)}
+        onBlur={(e) => handlerBlur(e.target)}
+      >
+        <FormInputStyled
+          type={type}
+          value={value}
+          placeholder=""
+          filled={activeInput}
+        />
+      </InputMask>}
+      {type !== 'tel' && <FormInputStyled
         type={type}
         value={value}
         placeholder=""
@@ -101,7 +124,7 @@ export const FormInput: React.FC<IFormInput> = ({
         onChange={(e) => handlerChange(e.target.value)}
         onFocus={(e) => handlerFocus(e.target)}
         onBlur={(e) => handlerBlur(e.target)}
-      />
+      />}
       {error && error.length && <FadeInOut><ErrorMessageStyled>{error}</ErrorMessageStyled></FadeInOut>}
     </LabelStyled>
   )

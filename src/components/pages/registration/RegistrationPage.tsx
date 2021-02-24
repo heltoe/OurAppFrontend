@@ -16,6 +16,7 @@ import FormInput, { ErrorMessageStyled } from '@/components/ui/FormInput'
 import BaseButton from '@/components/ui/BaseButton'
 import FadeInOut from '@/components/ui/FadeInOut'
 import RadioButton, { LabelRadioStyled } from '@/components/ui/RadioButton'
+import DatePicker from '@/components/ui/DatePicker'
 
 export const RequiredDescriptionStyled = styled.p`
   font-size: 12px;
@@ -42,6 +43,7 @@ export const RegistrationPage: React.FC = () => {
       id: 1,
       value: form.email,
       placeholder: 'Ваш e-mail*',
+      type: 'email',
       error: errors.emailError,
       onChange: (e: string) => formChanged.email(e),
       onFocus: () => formChanged.emailError('')
@@ -50,6 +52,7 @@ export const RegistrationPage: React.FC = () => {
       id: 2,
       value: form.password,
       placeholder: 'Пароль*',
+      type: 'password',
       error: errors.passwordError,
       onChange: (e: string) => formChanged.password(e),
       onFocus: () => formChanged.passwordError('')
@@ -58,6 +61,7 @@ export const RegistrationPage: React.FC = () => {
       id: 3,
       value: form.repeat_password,
       placeholder: 'Повторите пароль*',
+      type: 'password',
       error: errors.repeatPasswordError,
       onChange: (e: string) => formChanged.repeatPassword(e),
       onFocus: () => formChanged.repeatPasswordError('')
@@ -66,6 +70,7 @@ export const RegistrationPage: React.FC = () => {
       id: 4,
       value: form.first_name,
       placeholder: 'Имя*',
+      type: 'text',
       error: errors.firstNameError,
       onChange: (e: string) => formChanged.firstName(e),
       onFocus: () => formChanged.firstNameError('')
@@ -74,22 +79,16 @@ export const RegistrationPage: React.FC = () => {
       id: 5,
       value: form.last_name,
       placeholder: 'Фамилия*',
+      type: 'text',
       error: errors.lastNameError,
       onChange: (e: string) => formChanged.lastName(e),
       onFocus: () => formChanged.lastNameError('')
     },
     {
       id: 6,
-      value: form.birth_date,
-      placeholder: 'Дата рождения*',
-      error: errors.lastNameError,
-      onChange: (e: string) => formChanged.birthDate(e),
-      onFocus: () => formChanged.birthDateError('')
-    },
-    {
-      id: 7,
       value: form.phone,
       placeholder: 'Телефон*',
+      type: 'tel',
       error: errors.phoneError,
       onChange: (e: string) => formChanged.phone(e),
       onFocus: () => formChanged.phoneError('')
@@ -101,6 +100,7 @@ export const RegistrationPage: React.FC = () => {
         {settingsFields.map(item => 
           <FormInput
             key={item.id}
+            type={item.type}
             value={item.value}
             placeholder={item.placeholder}
             error={item.error}
@@ -108,16 +108,12 @@ export const RegistrationPage: React.FC = () => {
             onFocus={() => item.onFocus()}
           />
         )}
-        {/* <GenderRowStyled> */}
-        {/* <p>Дата рождения*:</p> */}
-        {/* <FormInput
-          value={form.birthDate}
-          placeholder="Дата рождения"
+        <DatePicker
+          value={form.birth_date}
+          placeholder={'Дата рождения'}
           error={errors.birthDateError}
           onChange={(e) => formChanged.birthDate(e)}
-          onFocus={() => formChanged.birthDateError('')}
-        /> */}
-        {/* </GenderRowStyled> */}
+        />
         <GenderRowStyled>
           <p>Пол*:</p>
           <RadioButton

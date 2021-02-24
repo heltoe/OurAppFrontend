@@ -6,30 +6,43 @@ export const [$firstName, firstNameChanged] = createEffectorField({ defaultValue
 export const [$lastName, lastNameChanged] = createEffectorField({ defaultValue: '' })
 export const [$email, emailChanged] = createEffectorField({ defaultValue: '' })
 export const [$fullName, fullNameChanged] = createEffectorField({ defaultValue: '' })
+export const [$phone, phoneChanged] = createEffectorField({ defaultValue: '' })
+export const [$birth_date, birthDateChanged] = createEffectorField<Date | null>({ defaultValue: null })
+
 
 export const [$firstNameError, firstNameErrorChanged] = createEffectorField({ defaultValue: '' })
 export const [$lastNameError, lastNameErrorChanged] = createEffectorField({ defaultValue: '' })
 export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '' })
+export const [$phoneError, phoneErrorChanged] = createEffectorField({ defaultValue: '' })
+export const [$birthDateError, birthDateErrorChanged] = createEffectorField({ defaultValue: '' })
 
 export const $mainInfoForm = combine({
-  firstName: $firstName,
-  lastName: $lastName,
+  first_name: $firstName,
+  last_name: $lastName,
   email: $email,
-  fullName: $fullName
+  full_name: $fullName,
+  phone: $phone,
+  birth_date: $birth_date
 })
 export const mainInfoFormChanged = {
   firstName: firstNameChanged,
   lastName: lastNameChanged,
   email: emailChanged,
-  fullName: fullNameChanged
+  fullName: fullNameChanged,
+  phone: phoneChanged,
+  birthDate: birthDateChanged
 }
 export const $mainInfoFormErrors = combine({
   firstNameError: $firstNameError,
   lastNameError: $lastNameError,
-  emailError: $emailError
+  emailError: $emailError,
+  phoneError: $phoneError,
+  birthDateError: $birthDateError
 })
 export const mainInfoFormErrorsChanged = {
   firstNameError: firstNameErrorChanged,
   lastNameError: lastNameErrorChanged,
-  emailError: emailErrorChanged
+  emailError: emailErrorChanged,
+  phoneError: phoneErrorChanged,
+  birthDateError: birthDateErrorChanged
 }

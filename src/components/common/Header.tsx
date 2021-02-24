@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
         <Avatar
           id={idProfile}
           image={photo}
-          fullName={mainInfoForm.fullName}
+          fullName={mainInfoForm.full_name}
           isRound size="40px"
         />
       </PersonInfoStyled>}

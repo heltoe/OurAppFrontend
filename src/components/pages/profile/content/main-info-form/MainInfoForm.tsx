@@ -10,6 +10,7 @@ import {
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import FormInput, { LabelStyled, FormInputStyled } from '@/components/ui/FormInput'
 import Loader from '@/components/ui/Loader'
+import DatePicker from '@/components/ui/DatePicker'
 
 export const FormStyled = styled.div`
   display: flex;
@@ -37,14 +38,14 @@ export const MainInfoForm: React.FC = () => {
     <FormStyled>
       <p className="middle">Основная информация</p>
       <FormInput
-        value={form.firstName}
+        value={form.first_name}
         error={errors.firstNameError}
         placeholder="Вашe имя"
         onChange={(e) => mainInfoFormChanged.firstName(e)}
         onFocus={() => mainInfoFormErrorsChanged.firstNameError('')}
       />
       <FormInput
-        value={form.lastName}
+        value={form.last_name}
         error={errors.lastNameError}
         placeholder="Ваша фамилия"
         onChange={(e) => mainInfoFormChanged.lastName(e)}
@@ -57,7 +58,21 @@ export const MainInfoForm: React.FC = () => {
         onChange={(e) => mainInfoFormChanged.email(e)}
         onFocus={() => mainInfoFormErrorsChanged.emailError('')}
       />
-      {/* birthday */}
+      <FormInput
+        type={'tel'}
+        value={form.phone}
+        error={errors.phoneError}
+        placeholder="Ваш номер телефона"
+        onChange={(e) => mainInfoFormChanged.phone(e)}
+        onFocus={() => mainInfoFormErrorsChanged.phoneError('')}
+      />
+      <DatePicker
+        value={form.birth_date}
+        placeholder={'Дата рождения'}
+        error={errors.birthDateError}
+        onChange={(e) => mainInfoFormChanged.birthDate(e)}
+      />
+        {/* onFocus={() => mainInfoFormErrorsChanged.birthDateError('')} */}
       <BaseButton>Сохранить</BaseButton>
       {false ? <Loader /> : ''}
     </FormStyled>

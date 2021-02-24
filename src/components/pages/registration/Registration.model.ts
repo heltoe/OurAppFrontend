@@ -1,23 +1,32 @@
 import { createEvent, createEffect, attach, combine, sample, guard, forward } from 'effector-root'
 import { RegistrationFx } from '@/api/Registration'
-import { RegistrationFxParams } from '@/api/types'
 import { createEffectorField } from '@/helpers/effector-field'
 import { navigatePush } from '@/helpers/navigation'
 import { validatorForm } from '@/helpers/validator'
 import { getRouterByName } from '@/routes'
 import { setTokenForRequest, setRefreshTokenForRequest } from '@/api/common/AuthorizedRequest'
 
+type IncommingData = {
+  email: string
+  password: string
+  repeat_password: string
+  first_name: string
+  last_name: string
+  gender: string
+  birth_date: Date | null
+  phone: string
+}
 // эффекты
-const validateFormFx = createEffect((params: RegistrationFxParams) => {
-  const emailErr = validatorForm(params.email, true)
-  const passErr = validatorForm(params.password, false, 6)
-  let repeatPasswordErr = validatorForm(params.repeat_password, false)
+const validateFormFx = createEffect((params: IncommingData) => {
+  const emailErr = validatorForm({ value: params.email, isEmail: true })
+  const passErr = validatorForm({ value: params.password, minSize: 6 })
+  let repeatPasswordErr = validatorForm({ value: params.repeat_password })
   if (!repeatPasswordErr.length) repeatPasswordErr = params.password === params.repeat_password ? '' : 'Пароли не совпадают'
-  const firstNameErr = validatorForm(params.first_name, false, 2)
-  const lastNameErr = validatorForm(params.last_name, false, 2)
-  const genderErr = validatorForm(params.gender, false)
-  const birthDateErr = validatorForm(params.birth_date, false)
-  const phoneErr = validatorForm(params.phone, false)
+  const firstNameErr = validatorForm({ value: params.first_name, minSize: 2 })
+  const lastNameErr = validatorForm({ value: params.last_name, minSize: 2 })
+  const genderErr = validatorForm({ value: params.gender })
+  const birthDateErr = validatorForm({ value: params.birth_date })
+  const phoneErr = validatorForm({ value: params.phone, isPhone: true })
   if (
     !emailErr.length
     && !passErr.length
@@ -39,9 +48,9 @@ const validateFormFx = createEffect((params: RegistrationFxParams) => {
 })
 const submitFormFx = attach({
   effect: RegistrationFx,
-  mapParams: (params: RegistrationFxParams) => {
+  mapParams: (params: IncommingData) => {
     feedBackChanged('')
-    return params
+    return { ...params, birth_date: params.birth_date || new Date() }
   }
 })
 const setErrorFx = createEffect((data: any) => {
@@ -58,7 +67,7 @@ export const [$repeatPassword, repeatPasswordChanged] = createEffectorField({ de
 export const [$firstName, firstNameChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$lastName, lastNameChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$gender, genderChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
-export const [$birthDate, birthDateChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$birthDate, birthDateChanged] = createEffectorField<Date | null>({ defaultValue: null, reset: resetFields })
 export const [$phone, phoneChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$feedBack, feedBackChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 
@@ -117,7 +126,7 @@ const $isFormValid = combine(
     && form.first_name.length > 0
     && form.last_name.length > 0
     && form.gender.length > 0
-    && form.birth_date.length > 0
+    && form.birth_date instanceof Date
     && form.phone.length > 0
 )
 const $validErrors = combine(

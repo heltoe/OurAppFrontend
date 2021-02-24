@@ -9,8 +9,8 @@ import { setTokenForRequest, setRefreshTokenForRequest } from '@/api/common/Auth
 
 // эффекты
 const validateFormFx = createEffect((params: LoginFxParams) => {
-  const emailErr = validatorForm(params.email, true)
-  const passErr = validatorForm(params.password, false, 6)
+  const emailErr = validatorForm({ value: params.email, isEmail: true })
+  const passErr = validatorForm({ value: params.password, minSize: 6 })
   if (!emailErr.length && !passErr.length ) return submitForm()
   emailErrorChanged(emailErr)
   passwordErrorChanged(passErr)

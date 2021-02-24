@@ -81,7 +81,7 @@ const BlockPhotoStyled = styled.div`
     & ${OverlayPhotoStyled} {
       display: flex;
     }
-    & p {
+    & .label {
       display: none;
     }
     & ${ControllerBoxStyled} {
@@ -101,9 +101,9 @@ export const PhotoBlock: React.FC = () => {
     <BlockPhotoStyled>
       <OverlayStyled />
       <OverlayPhotoStyled backgroundImage={photo} />
-      <p className="middle">Фото профиля</p>
+      <p className="label middle">Фото профиля</p>
       <WrapperImageStyled>
-        <Avatar id={idProfile} image={photo} fullName={mainInfoForm.fullName} isRound size="180px" />
+        <Avatar id={idProfile} image={photo} fullName={mainInfoForm.full_name} isRound size="180px" />
       </WrapperImageStyled>
       <ControllerBoxStyled>
         <BaseButton>
