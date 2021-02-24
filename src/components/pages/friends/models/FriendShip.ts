@@ -1,11 +1,10 @@
 import { attach, createEvent, combine, sample, forward, guard, createStore } from 'effector-root'
-import { UserId, FriendId, CommonFxParams, User } from '@/api/types'
+import { UserId, CommonFxParams, User } from '@/api/types'
 import { AddToFriendsFx } from '@/api/Friends'
 import { ListFriendShipFx, RemoveFromFriendShipFx } from '@/api/FriendShip'
 import { $token } from '@/api/common/AuthorizedRequest'
 import {
   $friendData,
-  $prepareFriendDataId,
   $prepareUserDataId,
   $canLoadMore,
   $page,
@@ -33,7 +32,7 @@ export const submitRequestAddToFriendsFx = attach({
 // удалить из предложений в друзья
 export const submitRequestRemoveFromFriendShipFx = attach({
   effect: RemoveFromFriendShipFx,
-  mapParams: (params: FriendId) => params
+  mapParams: (params: CommonFxParams) => params
 })
 
 // события
@@ -88,6 +87,6 @@ sample({
 // удалить из предложений в друзья
 sample({
   clock: removeFromFriendShip,
-  source: guard({ source: $prepareFriendDataId, filter: $canSendRemoveFromFriendShipRequest }),
+  source: guard({ source: $friendData, filter: $canSendRemoveFromFriendShipRequest }),
   target: submitRequestRemoveFromFriendShipFx
 })

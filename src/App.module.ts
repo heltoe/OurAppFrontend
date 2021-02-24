@@ -27,7 +27,7 @@ export const $typePage = restore(typePageChanged, typePages.friends)
 
 export const pageChanged = createEvent<number>()
 export const $page = restore(pageChanged, 0)
-$page.on(typePageChanged, () => 1)
+$page.on(typePageChanged, () => 0)
 
 export const canLoadMoreChanged = createEvent<boolean>()
 export const $canLoadMore = restore(canLoadMoreChanged, true)
