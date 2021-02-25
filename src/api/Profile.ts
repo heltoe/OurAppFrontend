@@ -9,9 +9,17 @@ export const ProfileFx = createApiEffect<void, User>({
 })
 
 export const PersonalInfoFx = createApiEffect<PersonalInfoFxParams, Profile>({
-  requestMapper: (params: any) => ({
+  requestMapper: (params) => ({
     method: 'POST',
     url: '/api/personal-info',
+    body: params
+  })
+})
+
+export const UpdatePersonalInfoFx = createApiEffect<PersonalInfoFxParams, Profile>({
+  requestMapper: (params) => ({
+    method: 'PUT',
+    url: '/api/update-user-data',
     body: params
   })
 })

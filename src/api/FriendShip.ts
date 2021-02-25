@@ -8,7 +8,7 @@ export const ListFriendShipFx = createApiEffect<void, ListUsersFxResponse>({
   })
 })
 export const AddToFriendShipFx = createApiEffect<CommonFxParams, UserId>({
-  requestMapper: (params: any) => ({
+  requestMapper: (params) => ({
     method: 'PUT',
     url: '/api/add-to-friendship',
     body: params
@@ -16,7 +16,7 @@ export const AddToFriendShipFx = createApiEffect<CommonFxParams, UserId>({
 })
 
 export const RemoveFromFriendShipFx = createApiEffect<FriendId, UserId>({
-  requestMapper: (params: any) => ({
+  requestMapper: (params) => ({
     method: 'DELETE',
     url: '/api/remove-from-friendship',
     body: params

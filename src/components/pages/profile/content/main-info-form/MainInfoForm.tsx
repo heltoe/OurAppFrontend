@@ -5,7 +5,8 @@ import {
   $mainInfoForm,
   $mainInfoFormErrors,
   mainInfoFormChanged,
-  mainInfoFormErrorsChanged
+  mainInfoFormErrorsChanged,
+  $isChanged
 } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import FormInput, { LabelStyled, FormInputStyled } from '@/components/ui/FormInput'
@@ -34,6 +35,7 @@ export const FormStyled = styled.div`
 export const MainInfoForm: React.FC = () => {
   const form = useStore($mainInfoForm)
   const errors = useStore($mainInfoFormErrors)
+  const isChanged = useStore($isChanged)
   return (
     <FormStyled>
       <p className="middle">Основная информация</p>
@@ -73,7 +75,7 @@ export const MainInfoForm: React.FC = () => {
         onChange={(e) => mainInfoFormChanged.birthDate(e)}
       />
         {/* onFocus={() => mainInfoFormErrorsChanged.birthDateError('')} */}
-      <BaseButton>Сохранить</BaseButton>
+      {isChanged && <BaseButton>Сохранить</BaseButton>}
       {false ? <Loader /> : ''}
     </FormStyled>
   )

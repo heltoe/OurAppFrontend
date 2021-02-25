@@ -2,7 +2,7 @@ import { attach, createEvent, restore, sample, guard, combine, forward } from 'e
 import { ProfileFx, PersonalInfoFx } from '@/api/Profile'
 import { PersonalInfoFxParams, UserId, User } from '@/api/types'
 import { $token } from '@/api/common/AuthorizedRequest'
-import { mainInfoFormChanged } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
+import { mainInfoFormChanged, oldValueFormChanged } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { photoChanged } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { logout } from '@/api/common/AuthorizedRequest'
 import { $idUser, $prepareUserDataId, $preparePersonalDataToken } from '@/App.module'
@@ -65,6 +65,13 @@ forward({
 forward({
   from: submitRequestPersonalInfoFx.doneData,
   to: [
+    oldValueFormChanged.prepend(({ body }) => ({
+      first_name: body.first_name,
+      last_name: body.last_name,
+      email: body.email,
+      phone: body.phone,
+      birth_date: body.birth_date
+    })),
     setIdUser.prepend(({ body }) => body.id),
     mainInfoFormChanged.firstName.prepend(({ body }) => body.first_name || ''),
     mainInfoFormChanged.lastName.prepend(({ body }) => body.last_name || ''),
