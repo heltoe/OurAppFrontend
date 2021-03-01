@@ -1,9 +1,13 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
+// const ldsRing = keyframes`
+//   0% { color: transparent; }
+//   100% { color: rgb(116, 129, 235); }
+// `
 const ldsRing = keyframes`
-  0% { color: transparent; }
-  100% { color: rgb(116, 129, 235); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 `
 const BaseButtonStyled = styled.div`
   display: flex;
@@ -15,7 +19,7 @@ const BaseButtonStyled = styled.div`
   width: 100%;
   height: 100%;
   z-index: 10;
-  background-color: ${(props) => props.theme.rgb(props.theme.colors.grey4)};
+  background-color: ${(props) => props.theme.rgba(props.theme.colors.grey4, 0.4)};
   & div {
     box-sizing: border-box;
     display: block;

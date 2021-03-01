@@ -15,7 +15,7 @@ const WrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  max-width: 1440px;
+  max-width: 700px;
   color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   @media ${device.tabletL} {
     flex-direction: column;

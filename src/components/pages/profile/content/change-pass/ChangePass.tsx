@@ -1,37 +1,46 @@
 import React from 'react'
 import { useStore } from 'effector-react'
 import {
-  $password,
-  $repassword,
-  passwordChanged,
-  repasswordChanged,
-  $isChanged
+  $form,
+  $errorsForm,
+  formMethods,
+  $isChanged,
+  $disabledBtn,
+  submitRequestPersonalInfoFx,
+  validateForm
 } from '@/components/pages/profile/content/change-pass/ChangePass.model'
 import BaseButton from '@/components/ui/BaseButton'
 import FormInput from '@/components/ui/FormInput'
 import Loader from '@/components/ui/Loader'
 import { FormStyled } from '@/components/pages/profile/content/main-info-form/MainInfoForm'
+import { FeedBackMessageStyled } from '@/components/common/form-intro/FormIntro'
 
 export const ChangePass: React.FC = () => {
-  const isLoading = false
-  const password = useStore($password)
-  const repassword = useStore($repassword)
+  const form = useStore($form)
+  const formErrors = useStore($errorsForm)
   const isChanged = useStore($isChanged)
+  const isDisabled = useStore($disabledBtn)
+  const isPending = useStore(submitRequestPersonalInfoFx.pending)
   return (
     <FormStyled>
       <p className="middle">Изменить пароль</p>
       <FormInput
-        value={password}
+        value={form.password}
+        error={formErrors.password}
         placeholder="Новый пароль"
-        onChange={(e) => passwordChanged(e)}
+        onChange={(e) => formMethods.password(e)}
+        onFocus={() => formMethods.passwordErr('')}
       />
       <FormInput
-        value={repassword}
+        value={form.repassword}
+        error={formErrors.repassword}
         placeholder="Повторите новый пароль"
-        onChange={(e) => repasswordChanged(e)}
+        onChange={(e) => formMethods.repassword(e)}
+        onFocus={() => formMethods.repasswordErr('')}
       />
-      {isChanged && <BaseButton>Сохранить</BaseButton>}
-      {isLoading ? <Loader /> : ''}
+      {formErrors.errorFrom && formErrors.errorFrom.length && <FeedBackMessageStyled>{formErrors.errorFrom}</FeedBackMessageStyled>}
+      {isChanged && <BaseButton disabled={isDisabled} onClick={() => validateForm()}>Сохранить</BaseButton>}
+      {isPending ? <Loader /> : ''}
     </FormStyled>
   )
 }

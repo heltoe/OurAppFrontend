@@ -27,7 +27,7 @@ export const FormIntroStyled = styled.form`
     padding: 20px;
   }
 `
-const FeedBackMessageStyled = styled.p`
+export const FeedBackMessageStyled = styled.p`
   margin-top: 20px;
   color: ${(props) => props.theme.rgb(props.theme.colors.red)};
   font-weight: ${(props) => props.theme.fontWeight.middle};

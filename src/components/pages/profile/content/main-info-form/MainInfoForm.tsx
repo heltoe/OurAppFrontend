@@ -6,12 +6,16 @@ import {
   $mainInfoFormErrors,
   mainInfoFormChanged,
   mainInfoFormErrorsChanged,
-  $isChanged
+  $isChanged,
+  $disabledBtn,
+  submitUpdatePersonalInfoFx,
+  validateForm
 } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import FormInput, { LabelStyled, FormInputStyled } from '@/components/ui/FormInput'
 import Loader from '@/components/ui/Loader'
 import DatePicker from '@/components/ui/DatePicker'
+import { FeedBackMessageStyled } from '@/components/common/form-intro/FormIntro'
 
 export const FormStyled = styled.div`
   display: flex;
@@ -35,7 +39,9 @@ export const FormStyled = styled.div`
 export const MainInfoForm: React.FC = () => {
   const form = useStore($mainInfoForm)
   const errors = useStore($mainInfoFormErrors)
+  const isDisabled = useStore($disabledBtn)
   const isChanged = useStore($isChanged)
+  const isPending = useStore(submitUpdatePersonalInfoFx.pending)
   return (
     <FormStyled>
       <p className="middle">Основная информация</p>
@@ -75,8 +81,9 @@ export const MainInfoForm: React.FC = () => {
         onChange={(e) => mainInfoFormChanged.birthDate(e)}
       />
         {/* onFocus={() => mainInfoFormErrorsChanged.birthDateError('')} */}
-      {isChanged && <BaseButton>Сохранить</BaseButton>}
-      {false ? <Loader /> : ''}
+      {errors.errorForm && errors.errorForm.length && <FeedBackMessageStyled>{errors.errorForm}</FeedBackMessageStyled>}
+      {isChanged && <BaseButton disabled={isDisabled} onClick={() => validateForm()}>Сохранить</BaseButton>}
+      {isPending ? <Loader /> : ''}
     </FormStyled>
   )
 }

@@ -1,5 +1,5 @@
 import { createApiEffect } from '@/api/common/CreateApiEffect'
-import { PersonalInfoFxParams, User, Profile } from '@/api/types'
+import { PersonalInfoFxParams, User, Profile, ChangePasswordFxParams, CommonStatusAnswer } from '@/api/types'
 
 export const ProfileFx = createApiEffect<void, User>({
   requestMapper: (params: any) => ({
@@ -20,6 +20,14 @@ export const UpdatePersonalInfoFx = createApiEffect<PersonalInfoFxParams, Profil
   requestMapper: (params) => ({
     method: 'PUT',
     url: '/api/update-user-data',
+    body: params
+  })
+})
+
+export const ChangePasswordFx = createApiEffect<ChangePasswordFxParams, CommonStatusAnswer>({
+  requestMapper: (params) => ({
+    method: 'PUT',
+    url: '/api/change-password',
     body: params
   })
 })
