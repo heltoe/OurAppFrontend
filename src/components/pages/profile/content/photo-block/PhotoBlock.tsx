@@ -2,13 +2,16 @@ import React from 'react'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import { logout } from '@/api/common/AuthorizedRequest'
-import { $photo } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { $photo, fileChanged, $isShowModal, changeIsShowModal } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { $idUser } from '@/App.module'
 import { device } from '@/Theme'
 import Avatar from '@/components/ui/Avatar'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import Icon, { IconStyled } from '@/components/ui/Icon'
+import Modal from '@/components/common/modal/Modal'
+import ModalBox from '@/components/common/modal/ModalBox'
+import CropPhoto from '@/components/pages/profile/content/photo-block/CropPhoto'
 
 const OverlayPhotoStyled = styled.div<{ backgroundImage: string }>`
   position: absolute;
@@ -44,6 +47,7 @@ const ControllerBoxStyled = styled.div`
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+    position: relative;
     & ${IconStyled} {
       margin-left: 10px;
     }
@@ -96,7 +100,12 @@ export const PhotoBlock: React.FC = () => {
   const photo = useStore($photo)
   const idProfile = useStore($idUser)
   const mainInfoForm = useStore($mainInfoForm)
+  const isShowModal = useStore($isShowModal)
   const color = '#fff'
+  const testMethod = (input: HTMLInputElement) => {
+    if (input.files) fileChanged(input.files[0])
+    input.value = ''
+  }
   return (
     <BlockPhotoStyled>
       <OverlayStyled />
@@ -106,8 +115,8 @@ export const PhotoBlock: React.FC = () => {
         <Avatar id={idProfile} image={photo} fullName={mainInfoForm.full_name} isRound size="180px" />
       </WrapperImageStyled>
       <ControllerBoxStyled>
-        <BaseButton>
-          Загрузить фото
+        <BaseButton onClick={() => changeIsShowModal(true)}>
+          Сменить аватар
           <Icon type="upload" color={color} size="18px" />
         </BaseButton>
         <RedButtonStyled onClick={() => logout()}>
@@ -115,6 +124,11 @@ export const PhotoBlock: React.FC = () => {
           <Icon type="exit" color={color} size="18px" />
         </RedButtonStyled>
       </ControllerBoxStyled>
+      {isShowModal && <Modal>
+        <ModalBox closeModal={() => changeIsShowModal(false)}>
+          <CropPhoto image={photo} />
+        </ModalBox>
+      </Modal>}
     </BlockPhotoStyled>
   )
 }

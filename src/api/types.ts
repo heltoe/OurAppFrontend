@@ -25,10 +25,27 @@ export type RestorePasswordFxParams = {
 export type PersonalInfoFxParams = {
   token: string
 }
+export type UpdatePersonalInfoParams = {
+  user_id: number
+  token: string
+  first_name?: string,
+  last_name?: string,
+  email?: string,
+  birth_date?: Date,
+  phone?: string
+}
 export type ChangePasswordFxParams = {
   user_id: number
   token: string
   password: string
+}
+export type AvatarFxParams = {
+  user_id: number
+  token: string
+  photo: File | null
+}
+export type AvatarFxResponse = {
+  result: string
 }
 //
 export type Message = {
