@@ -41,7 +41,7 @@ export const addToFriends = createEvent()
 
 // сторы
 export const $friendShips = createStore<User[]>([])
-$friendShips.on(submitRequestFriendShipListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.photo || '' }))])
+$friendShips.on(submitRequestFriendShipListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.croped_photo || '' }))])
 $friendShips.on(submitRequestAddToFriendsFx.doneData, (state, payload) => state.filter(item => item.id !== payload.body.user_id))
 $friendShips.on(submitRequestRemoveFromFriendShipFx.doneData, (state, payload) => state.filter(item => item.id !== payload.body.user_id))
 $friendShips.on(resetFriendShip, () => [])

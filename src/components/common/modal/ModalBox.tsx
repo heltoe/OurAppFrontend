@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
 import Icon, { IconStyled } from '@/components/ui/Icon'
 
-type ModalBox = {
+export type ModalBoxType = {
   closeModal?(): void
 }
 const ModalBoxStyled = styled(BlockStyled)`
@@ -27,7 +27,7 @@ const ModalBoxStyled = styled(BlockStyled)`
     }
   }
 `
-const ModalBox: React.FC<ModalBox> = ({ children, closeModal = () => {} }) => {
+const ModalBox: React.FC<ModalBoxType> = ({ children, closeModal = () => {} }) => {
   return (
     <ModalBoxStyled>
       {children}

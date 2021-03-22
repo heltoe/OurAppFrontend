@@ -11,33 +11,66 @@ const uploadAvatarFx = attach({
     formData.append('user_id', params.user_id)
     formData.append('token', params.token)
     // @ts-ignore
-    formData.append('photo', params.photo)
+    formData.append('original_photo', params.original_photo)
+    // @ts-ignore
+    formData.append('croped_photo', params.croped_photo)
+    // @ts-ignore
+    if (params.original_photo_name) formData.append('original_photo_name', params.original_photo_name)
+    // @ts-ignore
+    if (params.croped_photo_name) formData.append('croped_photo_name', params.croped_photo_name)
     return formData
   }
 })
 
+export const changeAvatar = createEvent()
+
 export const changeIsShowModal = createEvent<boolean>()
 export const $isShowModal = restore(changeIsShowModal, false)
 
-export const photoChanged = createEvent<string>()
-export const $photo = restore(photoChanged, '')
+export const originalPhotoChanged = createEvent<string>()
+export const $originalPhoto = restore(originalPhotoChanged, '')
 
-export const fileChanged = createEvent<File | null>()
-const $file = restore(fileChanged, null)
+export const cropedPhotoChanged = createEvent<string>()
+export const $cropedPhoto = restore(cropedPhotoChanged, '')
+
+export const originalFileChanged = createEvent<File | null>()
+const $originalFile = restore(originalFileChanged, null)
+export const cropedFileChanged = createEvent<File | null>()
+const $cropedFile = restore(cropedFileChanged, null)
+
 const $sendForm = combine(
-  $file,
+  $originalFile,
+  $cropedFile,
   $combinePersonalData,
-  (file, combinePersonalData) => ({ user_id: combinePersonalData.id, token: combinePersonalData.token, photo: file })
+  $originalPhoto,
+  $cropedPhoto,
+  (originalFile, cropedFile, combinePersonalData, originalPhoto, cropedPhoto) => ({
+    user_id: combinePersonalData.id,
+    token: combinePersonalData.token,
+    original_photo: originalFile,
+    croped_photo: cropedFile,
+    original_photo_name: originalPhoto,
+    croped_photo_name: cropedPhoto,
+  })
 )
-const $canSubmit = combine(uploadAvatarFx.pending, $file, (pending, file) => !pending && file !== null)
+export const $canSubmit = combine(
+  uploadAvatarFx.pending,
+  $originalFile,
+  $cropedFile,
+  (pending, originalFile, cropedFile) => !pending && originalFile !== null && cropedFile !== null
+)
 
 sample({
-  clock: fileChanged,
+  clock: changeAvatar,
   source: guard({ source: $sendForm, filter: $canSubmit }),
   target: uploadAvatarFx
 })
 
 forward({
   from: uploadAvatarFx.doneData,
-  to: photoChanged.prepend(({ body }) => body.result),
+  to: [
+    changeIsShowModal.prepend(() => false),
+    originalPhotoChanged.prepend(({ body }) => body.original_photo),
+    cropedPhotoChanged.prepend(({ body }) => body.croped_photo),
+  ]
 })

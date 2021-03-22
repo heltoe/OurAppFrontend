@@ -2,7 +2,7 @@ import React from 'react'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import { logout } from '@/api/common/AuthorizedRequest'
-import { $photo, fileChanged, $isShowModal, changeIsShowModal } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { $originalPhoto, $cropedPhoto, $isShowModal, changeIsShowModal } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { $idUser } from '@/App.module'
 import { device } from '@/Theme'
@@ -97,22 +97,19 @@ const RedButtonStyled = styled(BaseButtonStyled)`
   background-color: ${(props) => props.theme.rgb(props.theme.colors.red)};
 `
 export const PhotoBlock: React.FC = () => {
-  const photo = useStore($photo)
+  const originalPhoto = useStore($originalPhoto)
+  const cropedPhoto = useStore($cropedPhoto)
   const idProfile = useStore($idUser)
   const mainInfoForm = useStore($mainInfoForm)
   const isShowModal = useStore($isShowModal)
   const color = '#fff'
-  const testMethod = (input: HTMLInputElement) => {
-    if (input.files) fileChanged(input.files[0])
-    input.value = ''
-  }
   return (
     <BlockPhotoStyled>
       <OverlayStyled />
-      <OverlayPhotoStyled backgroundImage={photo} />
+      <OverlayPhotoStyled backgroundImage={originalPhoto} />
       <p className="label middle">Фото профиля</p>
       <WrapperImageStyled>
-        <Avatar id={idProfile} image={photo} fullName={mainInfoForm.full_name} isRound size="180px" />
+        <Avatar id={idProfile} image={cropedPhoto} fullName={mainInfoForm.full_name} isRound size="180px" />
       </WrapperImageStyled>
       <ControllerBoxStyled>
         <BaseButton onClick={() => changeIsShowModal(true)}>
@@ -126,7 +123,7 @@ export const PhotoBlock: React.FC = () => {
       </ControllerBoxStyled>
       {isShowModal && <Modal>
         <ModalBox closeModal={() => changeIsShowModal(false)}>
-          <CropPhoto image={photo} />
+          <CropPhoto />
         </ModalBox>
       </Modal>}
     </BlockPhotoStyled>

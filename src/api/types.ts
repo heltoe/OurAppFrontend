@@ -42,10 +42,14 @@ export type ChangePasswordFxParams = {
 export type AvatarFxParams = {
   user_id: number
   token: string
-  photo: File | null
+  original_photo: File | null
+  croped_photo: File | null
 }
 export type AvatarFxResponse = {
-  result: string
+  original_photo: string
+  croped_photo: string
+  original_photo_name?: string
+  croped_photo_name?: string
 }
 //
 export type Message = {
@@ -68,7 +72,8 @@ export interface User {
   gender: string
   birth_date: Date
   phone: string
-  photo: string | null
+  original_photo: string | null
+  croped_photo: string | null
 }
 export interface Profile extends User {
   email: string

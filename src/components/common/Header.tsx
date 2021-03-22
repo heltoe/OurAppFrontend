@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { getRouterByName } from '@/routes'
-import { $photo } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { $cropedPhoto } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { $idUser } from '@/App.module'
 import { getRouterByPath } from '@/routes'
@@ -40,7 +40,7 @@ const PersonInfoStyled = styled(Link)`
   }
 `
 export const Header: React.FC = () => {
-  const photo = useStore($photo)
+  const photo = useStore($cropedPhoto)
   const mainInfoForm = useStore($mainInfoForm)
   const idProfile = useStore($idUser)
   const location = useLocation()

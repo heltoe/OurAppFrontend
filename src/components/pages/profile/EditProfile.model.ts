@@ -3,7 +3,7 @@ import { ProfileFx, PersonalInfoFx } from '@/api/Profile'
 import { PersonalInfoFxParams, UserId, User } from '@/api/types'
 import { $token } from '@/api/common/AuthorizedRequest'
 import { mainInfoFormChanged, oldValueFormChanged } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
-import { photoChanged } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { originalPhotoChanged, cropedPhotoChanged } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { logout } from '@/api/common/AuthorizedRequest'
 import { $idUser, $prepareUserDataId, $preparePersonalDataToken } from '@/App.module'
 import { setIdUser } from '@/App.module'
@@ -32,7 +32,8 @@ export const $profileUser = restore(changeProfile, {
   last_name: '',
   gender: '',
   birth_date: new Date(),
-  photo: '',
+  original_photo: '',
+  croped_photo: '',
   phone: ''
 })
 export const $canSendPersonalRequest = combine(
@@ -79,6 +80,7 @@ forward({
     mainInfoFormChanged.email.prepend(({ body }) => body.email || ''),
     mainInfoFormChanged.phone.prepend(({ body }) => body.phone || ''),
     mainInfoFormChanged.birthDate.prepend(({ body }) => body.birth_date || ''),
-    photoChanged.prepend(({ body }) => body.photo || '')
+    originalPhotoChanged.prepend(({ body }) => body.original_photo || ''),
+    cropedPhotoChanged.prepend(({ body }) => body.croped_photo || '')
   ]
 })

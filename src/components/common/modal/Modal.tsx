@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { ModalBoxType } from '@/components/common/modal/ModalBox'
 
 const ModalWindowSwtyled = styled.div`
   display: flex;
@@ -12,9 +13,9 @@ const ModalWindowSwtyled = styled.div`
   background-color: ${(props) => props.theme.rgba(props.theme.colors.black, 0.4)};
   z-index: 999;
 `
-const ModalWindow: React.FC = ({ children }) => {
+const ModalWindow: React.FC<ModalBoxType> = ({ children, closeModal = () => {} }) => {
   return (
-    <ModalWindowSwtyled>{children}</ModalWindowSwtyled>
+    <ModalWindowSwtyled onClick={() => closeModal()}>{children}</ModalWindowSwtyled>
   )
 }
 

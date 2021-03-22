@@ -26,7 +26,7 @@ export const addToFriendShip = createEvent()
 
 // сторы
 export const $users = createStore<AllUsersInGrid[]>([])
-$users.on(submitRequestUsersListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.photo || '' }))])
+$users.on(submitRequestUsersListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.original_photo || '' }))])
 $users.on(submitRequestAddToFriendShipFx.doneData, (state, payload) => {
   const elementId = state.findIndex(item => item.id === payload.body.user_id)
   if (elementId > -1) {
