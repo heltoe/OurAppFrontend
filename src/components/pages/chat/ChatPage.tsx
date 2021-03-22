@@ -7,6 +7,7 @@ import Message, { MessageType } from '@/components/pages/chat/Message'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 import Icon from '@/components/ui/Icon'
 import { ElementFileType } from '@/components/pages/chat/BindFile'
+import { changeRecipmentId } from '@/components/pages/chat/ChatPage.model'
 
 type SendMessageType = {
   text: string
@@ -78,6 +79,9 @@ const ChatPage: React.FC = () => {
   }
   useEffect(() => {
     goToLastMessage('auto')
+    const params = new URLSearchParams(window.location.search)
+    const id = params.get('recipment')
+    if (id) changeRecipmentId(parseInt(id))
   }, [])
   useEffect(() => {
     const page = chatPage?.current as HTMLDivElement | null

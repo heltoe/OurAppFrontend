@@ -1,6 +1,6 @@
 import { attach, createEffect, createEvent, sample, guard, combine, forward } from 'effector-root'
 import { Response } from '@/api/common/Request'
-import { ListMessagesFx } from '@/api/Chat'
+import { ListChatsFx } from '@/api/Chat'
 import { createEffectorField } from '@/helpers/effector-field'
 import { $token } from '@/api/common/AuthorizedRequest'
 import { UserId, ListMessagesFxResponse, Message } from '@/api/types'
@@ -9,11 +9,11 @@ import { $prepareUserDataId } from '@/App.module'
 // эффекты
 // инфо сообщений пользователя
 export const submitRequestListChatFx = attach({
-  effect: ListMessagesFx,
+  effect: ListChatsFx,
   mapParams: (params: UserId) => params
 })
 const setListChatFx = createEffect(({ body }: Response<ListMessagesFxResponse>) => {
-  listChatChanged(body.messages.map(item => ({ ...item, photo: item.photo || '' })))
+  listChatChanged(body.results.map(item => ({ ...item, photo: item.photo || '' })))
 })
 
 // события

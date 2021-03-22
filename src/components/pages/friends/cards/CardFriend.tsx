@@ -8,6 +8,7 @@ import { addToFriends, removeFromFriendShip } from '@/components/pages/friends/m
 import Avatar from '@/components/ui/Avatar'
 import { BlockStyled } from '@/components/ui/Block'
 import Icon, { IconStyled } from '@/components/ui/Icon'
+import { getRouterByName } from '@/routes'
 
 type CardFriend = {
   id: number
@@ -81,10 +82,11 @@ const ContentWrapperStyled = styled.div`
   flex-grow: 1;
   padding: 10px;
 `
-const WriteMessageStyled = styled.p`
+const WriteMessageStyled = styled(Link)`
   margin-top: 10px;
   transition: ${(props) => `color ${props.theme.transition}`};
   cursor: pointer;
+  user-select: none;
   &:hover {
     color: ${(props) => props.theme.rgb(props.theme.colors.purple1)};
   }
@@ -150,7 +152,7 @@ const CardFriend: React.FC<CardFriend> = ({ id, image, firstName, lastName }) =>
       </CardAvatarOverlay>
       <ContentWrapperStyled>
         <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
-        <WriteMessageStyled className="middle">Написать сообщение</WriteMessageStyled>
+        <WriteMessageStyled to={`${getRouterByName('chat-page').path}?recipment=${id}`} className="middle">Написать сообщение</WriteMessageStyled>
         <WrapperIconsStyled>
           {typePage !== 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(id, 'remove-from-friend')}>
             <Icon type="remove-user" color="grey" size="20px" />

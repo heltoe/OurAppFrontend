@@ -52,19 +52,6 @@ export type AvatarFxResponse = {
   croped_photo_name?: string
 }
 //
-export type Message = {
-  id: number
-  first_name: string
-  last_name: string
-  photo: string
-  status: string
-  time: string
-  message: string
-}
-export type ListMessagesFxResponse = {
-  messages: Message[]
-}
-//
 export interface User {
   id: number
   first_name: string
@@ -102,6 +89,27 @@ export type ListUsersFxResponse = {
   count: number
   next: boolean
   results: AllUsers[]
+}
+//
+export type Message = {
+  id: number
+  first_name: string
+  last_name: string
+  photo: string
+  status: string
+  time: string
+  message: string
+}
+export type ListChatParams = {
+  user_id: number
+  recipment_id: number
+  offset?: number
+  limit?: number
+}
+export type ListMessagesFxResponse = {
+  count: number
+  next: boolean
+  results: Message[]
 }
 // common response
 export type CommonFxParams = {
