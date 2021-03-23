@@ -13,7 +13,7 @@ export const submitRequestListChatFx = attach({
   mapParams: (params: UserId) => params
 })
 const setListChatFx = createEffect(({ body }: Response<ListMessagesFxResponse>) => {
-  listChatChanged(body.results.map(item => ({ ...item, photo: item.photo || '' })))
+  listChatChanged(body.results.messages.map(item => ({ ...item, photo: '' })))
 })
 
 // события

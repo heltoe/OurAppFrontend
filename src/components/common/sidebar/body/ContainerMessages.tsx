@@ -25,18 +25,17 @@ export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
     <WrapperCardsStyled>
       {
         messages.length ? messages.map((item) => (
-          <Link to={`${getRouterByName('chat-page').path}`} key={item.id}>
+          <Link to={`${getRouterByName('chat-page').path}`} key={item.message_id}>
             <Card
-              id={item.id}
-              image={item.photo}
-              status={item.status}
-              time={item.time}
-              fullName={`${item.first_name} ${item.last_name}`}
+              id={item.author}
+              image=""
+              time={item.date}
+              fullName=""
               message={item.message}
               isOpen={isOpen}
             />
           </Link>
-        )) : <EmptyPlaceholder>Список сообщений пуст</EmptyPlaceholder>
+        )) : <EmptyPlaceholder>Список чатов пуст</EmptyPlaceholder>
       }
     </WrapperCardsStyled>
   )

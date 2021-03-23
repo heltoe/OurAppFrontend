@@ -92,15 +92,13 @@ export type ListUsersFxResponse = {
 }
 //
 export type Message = {
-  id: number
-  first_name: string
-  last_name: string
-  photo: string
-  status: string
-  time: string
-  message: string
+  message_id: number,
+  chat_id: number,
+  author: number,
+  message: string,
+  date: string,
 }
-export type ListChatParams = {
+export type ListChatFxParams = {
   user_id: number
   recipment_id: number
   offset?: number
@@ -109,7 +107,21 @@ export type ListChatParams = {
 export type ListMessagesFxResponse = {
   count: number
   next: boolean
-  results: Message[]
+  results: {
+    messages: Message[],
+    chat_id: number | null
+  }
+}
+export type SendMessageFxParams = {
+  chat_id?: number
+  author: number
+  recipient?: number
+  message: string
+  date: Date
+}
+export type SendMessageFxResponse = {
+  chat_id: number
+  message: Message
 }
 // common response
 export type CommonFxParams = {

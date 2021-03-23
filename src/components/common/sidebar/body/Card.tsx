@@ -5,7 +5,6 @@ import styled from 'styled-components'
 type CardType = {
   id: number
   image: string
-  status: string
   time: string
   fullName: string
   message: string
@@ -81,7 +80,6 @@ const MessageStyled = styled.div`
 export const Card: React.FC<CardType> = ({
   id,
   image,
-  status,
   time,
   fullName,
   message,

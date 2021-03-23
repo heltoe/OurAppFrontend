@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { useStore } from 'effector-react'
 import styled from 'styled-components'
-import Icon, { IconStyled } from '@/components/ui/Icon'
+import Icon from '@/components/ui/Icon'
 import Editor from '@/components/ui/Editor'
 import BindFile, { ElementFileType } from '@/components/pages/chat/BindFile'
+import {
+  $textMessage,
+  textMessageChanged,
+  changeListFiles,
+  $listFiles,
+  $triggerClean,
+  sendMessage
+} from '@/components/pages/chat/ChatPage.model'
 
-type Message = {
-  text: string
-  photos: ElementFileType[]
-}
 type MessageController = {
-  sendMessage(mesage: Message): void
+  sendMessageEmit(): void
 }
 export const IconWrapperStyled = styled.div`
   display: flex;
@@ -107,36 +112,32 @@ const MessageWrapperStyled = styled.div`
     right: 20px;
   }
 `
-const MessageController: React.FC<MessageController> = ({ children, sendMessage }) => {
-  const [message, setMessage] = useState('')
-  const [triggerClean, setTriggerClean] = useState(false)
-  const [fileList, setFileList] = useState<ElementFileType[]>([])
+const MessageController: React.FC<MessageController> = ({ children, sendMessageEmit }) => {
+  const text = useStore($textMessage)
+  const fileList = useStore($listFiles)
+  const triggerClean = useStore($triggerClean)
   const settingsForUploadPhoto = {
     multiple: true,
     limit: 10,
     accept: 'image/png, image/jpeg',
   }
   const emitMessage = () => {
-    if (message.length || fileList.length) {
-      sendMessage({ text: message, photos: fileList })
-      setMessage('')
-      setFileList([])
-      setTriggerClean(!triggerClean)
+    if (text.length || fileList.length) {
+      sendMessage()
+      sendMessageEmit()
     }
   }
   const addPhoto = (arr: ElementFileType[]) => {
     const newFileList = [...fileList, ...arr]
-    setFileList(newFileList.length > settingsForUploadPhoto.limit ? newFileList.slice(0, settingsForUploadPhoto.limit) : newFileList)
+    changeListFiles(newFileList.length > settingsForUploadPhoto.limit ? newFileList.slice(0, settingsForUploadPhoto.limit) : newFileList)
     if (newFileList.length > settingsForUploadPhoto.limit) alert(`Максимальное количество файлов не должно превышать ${settingsForUploadPhoto.limit} единиц`)
   }
   const removePhoto = (id: number) => {
-    setFileList(oldFileList => {
-      const newFileList = oldFileList.filter(element => {
-        if (element.id === id) URL.revokeObjectURL(element.preview as string)
-        return element.id !== id
-      })
-      return newFileList
+    const newFileList = fileList.filter(element => {
+      if (element.id === id) URL.revokeObjectURL(element.preview as string)
+      return element.id !== id
     })
+    changeListFiles(newFileList)
   }
   const handlerBtn = (e: KeyboardEvent) => {
     if (e.ctrlKey && e.keyCode == 13) emitMessage()
@@ -151,7 +152,7 @@ const MessageController: React.FC<MessageController> = ({ children, sendMessage 
       <MainLineStyled>
         <BindFile settings={settingsForUploadPhoto} callBack={(arr) => addPhoto(arr)}/>
         <MessageWrapperStyled>
-          <Editor value={message} triggerClean={triggerClean} onChange={(msg) => setMessage(msg)} />
+          <Editor value={text} triggerClean={triggerClean} onChange={(msg) => textMessageChanged(msg)} />
           <IconWrapperStyled>
             <Icon
               type="smile"

@@ -1,18 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import { PageStyled } from '@/components/common/Page'
 import { BlockStyled } from '@/components/ui/Block'
 import MessageController from '@/components/pages/chat/MessageController'
-import Message, { MessageType } from '@/components/pages/chat/Message'
+import Message from '@/components/pages/chat/Message'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 import Icon from '@/components/ui/Icon'
-import { ElementFileType } from '@/components/pages/chat/BindFile'
-import { changeRecipmentId } from '@/components/pages/chat/ChatPage.model'
-
-type SendMessageType = {
-  text: string
-  photos: ElementFileType[]
-}
+import { changeRecipmentId, fetchListMessages } from '@/components/pages/chat/ChatPage.model'
+import { $listMessages } from '@/components/pages/chat/ChatPage.model'
 
 const ChatPageStyled = styled(PageStyled)`
   display: flex;
@@ -46,25 +42,8 @@ const ButtonGoToLastMessage = styled.div<{ isShow: boolean }>`
 `
 const ChatPage: React.FC = () => {
   const chatPage = useRef(null)
-  const [messages, setMessages] = useState<MessageType[]>([])
+  const messages = useStore($listMessages)
   const [isShow, setIsShow] = useState(false)
-  const sendMessage = (message: SendMessageType) => {
-    // TODO send message
-    const modifyMessage = {
-      ...message,
-      photos: message.photos.map(item => item.preview),
-      messageId: 1,
-      senderId: 1,
-      image: 'https://st.depositphotos.com/2000885/1902/i/450/depositphotos_19021343-stock-photo-red-heart.jpg',
-      name: 'Влад',
-      time: '24.05.1995'
-    }
-    console.log(message)
-    setMessages((oldMessages: any) => {
-      return [...oldMessages, modifyMessage]
-    })
-    goToLastMessage()
-  }
   const goToLastMessage = (typeScrolling: 'auto' | 'smooth' | undefined = 'smooth'): void => {
     const page = chatPage?.current as HTMLDivElement | null
     if (page) page.scrollTo({ top: page.scrollHeight, behavior: typeScrolling })
@@ -81,7 +60,10 @@ const ChatPage: React.FC = () => {
     goToLastMessage('auto')
     const params = new URLSearchParams(window.location.search)
     const id = params.get('recipment')
-    if (id) changeRecipmentId(parseInt(id))
+    if (id) {
+      changeRecipmentId(parseInt(id))
+      fetchListMessages()
+    }
   }, [])
   useEffect(() => {
     const page = chatPage?.current as HTMLDivElement | null
@@ -96,19 +78,19 @@ const ChatPage: React.FC = () => {
         {
           messages.length ? messages.map(item => 
             <Message
-              key={item.messageId}
-              messageId={item.messageId}
-              senderId={item.senderId}
-              image={item.image}
-              name={item.name}
-              time={item.time}
-              text={item.text}
-              photos={item.photos}
+              key={item.message_id}
+              messageId={item.message_id}
+              senderId={item.author}
+              image=""
+              name=""
+              time={item.date}
+              text={item.message}
+              photos={[]}
             />
           ) : <EmptyPlaceholder>Список сообщений пуст</EmptyPlaceholder>
         }
       </BLockContainer>
-      <MessageController sendMessage={(message) => sendMessage(message)}>
+      <MessageController sendMessageEmit={() => goToLastMessage()}>
         <ButtonGoToLastMessage isShow={isShow} onClick={() => goToLastMessage('smooth')}>
           <Icon type="arrow-down" color="#343753" />
         </ButtonGoToLastMessage>
