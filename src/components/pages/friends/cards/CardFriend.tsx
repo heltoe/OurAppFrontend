@@ -2,21 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
-import { $typePage, friendIdChanged } from '@/App.module'
+import { $typePage, friendIdChanged, changeActiveUser } from '@/App.module'
 import { removeFromFriends } from '@/components/pages/friends/models/Friends'
 import { addToFriends, removeFromFriendShip } from '@/components/pages/friends/models/FriendShip'
 import Avatar from '@/components/ui/Avatar'
 import { BlockStyled } from '@/components/ui/Block'
 import Icon, { IconStyled } from '@/components/ui/Icon'
 import { getRouterByName } from '@/routes'
-
-type CardFriend = {
-  id: number
-  image: string
-  status?: string
-  firstName: string
-  lastName: string
-}
+import { User } from '@/api/types'
 
 const ShowPhotoStyled = styled.div`
   display: flex;
@@ -128,13 +121,35 @@ const WrapperIconsStyled = styled.div`
     }
   }
 `
-const CardFriend: React.FC<CardFriend> = ({ id, image, firstName, lastName }) => {
+
+const CardFriend: React.FC<User> = ({
+  id,
+  first_name,
+  last_name,
+  gender,
+  birth_date,
+  phone,
+  original_photo,
+  croped_photo
+}) => {
   const typePage = useStore($typePage)
   const clickHandler = (userId: number, type: string) => {
     friendIdChanged(userId)
     if (type === 'remove-from-friend') removeFromFriends()
     if (type === 'add-to-friends') addToFriends()
     if (type === 'remove-from-friendship') removeFromFriendShip()
+  }
+  const setActiveUser = () => {
+    changeActiveUser({
+      id,
+      first_name,
+      last_name,
+      gender,
+      birth_date,
+      phone,
+      original_photo,
+      croped_photo
+    })
   }
   return (
     <CardFriendStyled>
@@ -143,16 +158,22 @@ const CardFriend: React.FC<CardFriend> = ({ id, image, firstName, lastName }) =>
           id={id}
           size="70px"
           isRound
-          image={image}
-          fullName={`${firstName} ${lastName}`}
+          image={croped_photo || ''}
+          fullName={`${first_name} ${last_name}`}
         />
-        {image && <ShowPhotoStyled>
+        {croped_photo && <ShowPhotoStyled>
           <Icon type="search-plus" color="#fff" size="18px" />
         </ShowPhotoStyled>}
       </CardAvatarOverlay>
-      <ContentWrapperStyled>
-        <LinkStyled to="/" className="middle">{firstName} {lastName}</LinkStyled>
-        <WriteMessageStyled to={`${getRouterByName('chat-page').path}?recipment=${id}`} className="middle">Написать сообщение</WriteMessageStyled>
+      <ContentWrapperStyled onClick={() => setActiveUser()}>
+        <LinkStyled to="/" className="middle">{first_name} {last_name}</LinkStyled>
+        <WriteMessageStyled
+          to={`${getRouterByName('chat-page').path}?recipment=${id}`}
+          className="middle"
+          onClick={() => setActiveUser()}
+        >
+          Написать сообщение
+        </WriteMessageStyled>
         <WrapperIconsStyled>
           {typePage !== 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(id, 'remove-from-friend')}>
             <Icon type="remove-user" color="grey" size="20px" />

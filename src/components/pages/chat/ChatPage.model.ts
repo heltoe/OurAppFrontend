@@ -1,4 +1,4 @@
-import { createEvent, attach, combine, sample, guard, restore, forward } from 'effector-root'
+import { createEvent, attach, combine, sample, guard, restore, forward, createStore } from 'effector-root'
 import { ListChatFxParams, Message, SendMessageFxParams } from '@/api/types'
 import { ListMessagesFx, SendMessagesFx } from '@/api/Chat'
 import { ElementFileType } from '@/components/pages/chat/BindFile'
@@ -29,6 +29,12 @@ export const submitRequestSendMessagesFx = attach({
 
 // сторы
 export const fetchListMessages = createEvent()
+export const fetchMoreMessages = createEvent()
+$page.on(fetchListMessages, () => 0)
+$page.on(fetchMoreMessages, (state) => state + 1)
+
+export const $canLoadMore = createStore(false)
+$canLoadMore.on(submitRequestListMessagesFx.doneData, (state, payload) => payload.body.next)
 
 export const changeChatId = createEvent<number>()
 const $chat_id = restore(changeChatId, -1)
@@ -43,6 +49,7 @@ $listMessages.on(submitRequestSendMessagesFx.doneData, (state, payload) => [...s
 
 export const changeTriggerClean = createEvent<boolean>()
 export const $triggerClean = restore(changeTriggerClean, false)
+$triggerClean.on(submitRequestSendMessagesFx.doneData, (state) => !state)
 
 // Поле ввода ссобщения
 export const sendMessage = createEvent()
@@ -82,7 +89,7 @@ const $prepareMessageData = combine(
 
 // методы
 sample({
-  clock: fetchListMessages,
+  clock: [fetchListMessages, fetchMoreMessages],
   source: guard({ source: $prepareUserChatData, filter: $canSendChatRequest }),
   target: submitRequestListMessagesFx
 })
@@ -100,7 +107,6 @@ forward({
   to: [
     textMessageChanged.prepend(() => ''),
     changeListFiles.prepend(() => []),
-    changeTriggerClean.prepend(() => false),
     changeChatId.prepend(({ body }) => body.chat_id || -1),
   ]
 })

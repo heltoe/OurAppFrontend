@@ -5,12 +5,13 @@ import { getRouterByName } from '@/routes'
 import Avatar from '@/components/ui/Avatar'
 import GridImages from '@/components/pages/chat/GridImages'
 import { BlockStyled } from '@/components/ui/Block'
+import { useStore } from 'effector-react'
+import { $idUser, $activeUser } from '@/App.module'
+import { $profileUser } from '@/components/pages/profile/EditProfile.model'
 
 export type MessageType = {
   messageId: number
-  senderId: number
-  image: string
-  name: string
+  author: number
   time: string
   text: string
   photos: string[]
@@ -107,21 +108,34 @@ const MessageTextStyled = styled.div`
   word-break: break-all;
   line-height: 1.2;
 `
-const Message: React.FC<MessageType> = ({ image, name, time, text, messageId, senderId, photos }) => {
+const Message: React.FC<MessageType> = ({ time, text, messageId, author, photos }) => {
   const linkMessage = 'profile-page'
+  const idProfile = useStore($idUser)
+  const authorInfo = useStore(author === idProfile ? $profileUser : $activeUser)
   return (
     <MessageStyled>
       <Link to={`${getRouterByName(linkMessage).path}`}>
         <AvatarOvarlay>
-          <Avatar id={3} size="50px" isRound image={image} />
+          <Avatar
+            id={authorInfo.id} size="50px"
+            image={authorInfo.croped_photo || ''}
+            fullName={`${authorInfo.first_name || ''} ${authorInfo.last_name || ''}`}
+            isRound
+          />
         </AvatarOvarlay>
       </Link>
       <BlockColumnStyled>
         <MessageDataStyled>
           <WrapperAuthorTextStyled>
-            {name.length && <Link to={`${getRouterByName(linkMessage).path}`}>
-              <AuthorMessageStyled>{name}</AuthorMessageStyled>
-            </Link>}
+            {
+              authorInfo.first_name.length &&
+              authorInfo.last_name.length &&
+              <Link to={`${getRouterByName(linkMessage).path}`}>
+                <AuthorMessageStyled>
+                  {authorInfo.first_name} {authorInfo.last_name}
+                </AuthorMessageStyled>
+              </Link>
+            }
           </WrapperAuthorTextStyled>
           <WrapperDataTextStyled>
             {time.length && <DataMessageStyled>{time}</DataMessageStyled>}

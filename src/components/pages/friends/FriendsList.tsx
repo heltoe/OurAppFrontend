@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
 import CardFriend, { CardFriendStyled } from '@/components/pages/friends/cards/CardFriend'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
+import { User } from '@/api/types'
 
 const FriendsListStyled = styled(BlockStyled)`
   display: flex;
@@ -65,14 +66,17 @@ const FriendsList: React.FC = () => {
     <FriendsListStyled>
       {
         // @ts-ignore
-        listUsers[typePage] && listUsers[typePage].length ? listUsers[typePage].map((card: any) => (
+        listUsers[typePage] && listUsers[typePage].length ? listUsers[typePage].map((card: User) => (
           <CardFriend
             key={card.id}
             id={card.id}
-            firstName={card.first_name}
-            lastName={card.last_name}
-            status={card.status}
-            image={card.image}
+            first_name={card.first_name}
+            last_name={card.last_name}
+            birth_date={card.birth_date}
+            phone={card.phone}
+            gender={card.gender}
+            original_photo={card.original_photo}
+            croped_photo={card.original_photo}
           />
         )) : <EmptyPlaceholder>{typePage !== typePages.friendship ? 'Список друзей пуст' : 'Список заявок в друзья пуст'}</EmptyPlaceholder>
       }

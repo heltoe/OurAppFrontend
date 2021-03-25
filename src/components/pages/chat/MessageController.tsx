@@ -122,7 +122,7 @@ const MessageController: React.FC<MessageController> = ({ children, sendMessageE
     accept: 'image/png, image/jpeg',
   }
   const emitMessage = () => {
-    if (text.length || fileList.length) {
+    if (text.length > 18 || fileList.length) {
       sendMessage()
       sendMessageEmit()
     }

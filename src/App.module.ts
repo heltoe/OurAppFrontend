@@ -1,10 +1,23 @@
 import { combine, createEffect, createEvent, restore, split, sample } from 'effector-root'
 import { $token } from '@/api/common/AuthorizedRequest'
+import { User } from '@/api/types'
 
 export const setIdUser = createEvent<number>()
 export const $idUser = restore(setIdUser, 0)
 export const friendIdChanged = createEvent<number>()
 export const $friendId = restore(friendIdChanged, 0)
+
+export const changeActiveUser = createEvent<User>()
+export const $activeUser = restore(changeActiveUser, {
+  id: 0,
+  first_name: '',
+  last_name: '',
+  gender: '',
+  birth_date: new Date(),
+  original_photo: '',
+  croped_photo: '',
+  phone: ''
+})
 
 export const $preparePersonDataId = combine({ id: $idUser })
 export const $preparePersonalDataToken = combine({ token: $token })

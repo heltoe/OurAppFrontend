@@ -66,6 +66,16 @@ forward({
 forward({
   from: submitRequestPersonalInfoFx.doneData,
   to: [
+    changeProfile.prepend(({ body }) => ({
+      id: body.id,
+      first_name: body.first_name,
+      last_name: body.last_name,
+      gender: body.gender,
+      birth_date: body.birth_date,
+      original_photo: body.original_photo,
+      croped_photo: body.croped_photo,
+      phone: body.phone
+    })),
     oldValueFormChanged.prepend(({ body }) => ({
       first_name: body.first_name,
       last_name: body.last_name,
