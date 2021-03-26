@@ -3,13 +3,13 @@ import { $token } from '@/api/common/AuthorizedRequest'
 import { User } from '@/api/types'
 
 export const setIdUser = createEvent<number>()
-export const $idUser = restore(setIdUser, 0)
+export const $userId = restore(setIdUser, 0)
 export const friendIdChanged = createEvent<number>()
 export const $friendId = restore(friendIdChanged, 0)
 
 export const changeActiveUser = createEvent<User>()
 export const $activeUser = restore(changeActiveUser, {
-  id: 0,
+  user_id: 0,
   first_name: '',
   last_name: '',
   gender: '',
@@ -19,13 +19,13 @@ export const $activeUser = restore(changeActiveUser, {
   phone: ''
 })
 
-export const $preparePersonDataId = combine({ id: $idUser })
+export const $preparePersonDataId = combine({ id: $userId })
 export const $preparePersonalDataToken = combine({ token: $token })
-export const $combinePersonalData = combine({ id: $idUser, token: $token })
-export const $prepareUserDataId = combine({ user_id: $idUser })
+export const $combinePersonalData = combine({ id: $userId, token: $token })
+export const $prepareUserDataId = combine({ user_id: $userId })
 export const $prepareFriendDataId = combine({ friend_id: $friendId })
 export const $friendData = combine({
-  user_id: $idUser,
+  user_id: $userId,
   friend_id: $friendId
 })
 

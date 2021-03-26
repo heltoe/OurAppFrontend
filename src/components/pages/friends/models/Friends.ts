@@ -35,12 +35,12 @@ export const removeFromFriends = createEvent()
 // сторы
 export const $allFriends = createStore<User[]>([])
 $allFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.croped_photo || '' }))])
-$allFriends.on(submitRequestRemoveFromFriendsFx.doneData, (state, payload) => state.filter(item => item.id !== payload.body.user_id))
+$allFriends.on(submitRequestRemoveFromFriendsFx.doneData, (state, payload) => state.filter(item => item.user_id !== payload.body.user_id))
 $allFriends.on(resetAllFriends, () => [])
 
 export const $onlineFriends = createStore<User[]>([])
 $onlineFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.croped_photo || '' }))])
-$onlineFriends.on(submitRequestRemoveFromFriendsFx.doneData, (state, payload) => state.filter(item => item.id !== payload.body.user_id))
+$onlineFriends.on(submitRequestRemoveFromFriendsFx.doneData, (state, payload) => state.filter(item => item.user_id !== payload.body.user_id))
 $onlineFriends.on(resetOnlineFriends, () => [])
 
 $canLoadMore.on(submitRequestFriendsListFx.doneData, (state, payload) => payload.body.next)

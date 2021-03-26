@@ -10,10 +10,10 @@ import {
   AvatarFxResponse
 } from '@/api/types'
 
-export const ProfileFx = createApiEffect<void, User>({
-  requestMapper: (params: any) => ({
+export const ProfileFx = createApiEffect<{ user_id: number }, User>({
+  requestMapper: (params) => ({
     method: 'GET',
-    url: `/api/user-data/${params.id_user}`
+    url: `/api/user-data/${params.user_id}`
   })
 })
 

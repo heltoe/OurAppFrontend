@@ -11,7 +11,7 @@ import {
   cropedFileChanged,
   changeAvatar
 } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
-import { $idUser } from '@/App.module'
+import { $userId } from '@/App.module'
 
 const WrapperCropPhoto = styled.div`
   display: flex;
@@ -48,7 +48,7 @@ const TitleStyled = styled.p`
 `
 const CropPhoto: React.FC = () => {
   const originalPhoto = useStore($originalPhoto)
-  const idUser = useStore($idUser)
+  const idUser = useStore($userId)
   const [preview, setPreview] = useState('')
   const [test, setTest] = useState('')
   const onBeforeFileLoad = (elem: any) => {

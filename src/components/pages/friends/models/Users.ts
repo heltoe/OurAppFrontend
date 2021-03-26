@@ -28,7 +28,7 @@ export const addToFriendShip = createEvent()
 export const $users = createStore<AllUsersInGrid[]>([])
 $users.on(submitRequestUsersListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.original_photo || '' }))])
 $users.on(submitRequestAddToFriendShipFx.doneData, (state, payload) => {
-  const elementId = state.findIndex(item => item.id === payload.body.user_id)
+  const elementId = state.findIndex(item => item.user_id === payload.body.user_id)
   if (elementId > -1) {
     const element = state[elementId]
     state.splice(elementId, 1, { ...element, exist_in_friend_list: true })

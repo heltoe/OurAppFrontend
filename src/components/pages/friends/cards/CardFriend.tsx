@@ -123,7 +123,7 @@ const WrapperIconsStyled = styled.div`
 `
 
 const CardFriend: React.FC<User> = ({
-  id,
+  user_id,
   first_name,
   last_name,
   gender,
@@ -141,7 +141,7 @@ const CardFriend: React.FC<User> = ({
   }
   const setActiveUser = () => {
     changeActiveUser({
-      id,
+      user_id,
       first_name,
       last_name,
       gender,
@@ -155,7 +155,7 @@ const CardFriend: React.FC<User> = ({
     <CardFriendStyled>
       <CardAvatarOverlay>
         <Avatar
-          id={id}
+          id={user_id}
           size="70px"
           isRound
           image={croped_photo || ''}
@@ -168,20 +168,20 @@ const CardFriend: React.FC<User> = ({
       <ContentWrapperStyled onClick={() => setActiveUser()}>
         <LinkStyled to="/" className="middle">{first_name} {last_name}</LinkStyled>
         <WriteMessageStyled
-          to={`${getRouterByName('chat-page').path}?recipment=${id}`}
+          to={`${getRouterByName('chat-page').path}?recipment=${user_id}`}
           className="middle"
           onClick={() => setActiveUser()}
         >
           Написать сообщение
         </WriteMessageStyled>
         <WrapperIconsStyled>
-          {typePage !== 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(id, 'remove-from-friend')}>
+          {typePage !== 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(user_id, 'remove-from-friend')}>
             <Icon type="remove-user" color="grey" size="20px" />
           </ControllerStyled>}
-          {typePage === 'friendship' && <ControllerStyled className="green" onClick={() => clickHandler(id, 'add-to-friends')}>
+          {typePage === 'friendship' && <ControllerStyled className="green" onClick={() => clickHandler(user_id, 'add-to-friends')}>
             <Icon type="check" color="grey" size="20px" />
           </ControllerStyled>}
-          {typePage === 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(id, 'remove-from-friendship')}>
+          {typePage === 'friendship' && <ControllerStyled className="red" onClick={() => clickHandler(user_id, 'remove-from-friendship')}>
             <Icon type="close" color="grey" size="20px" />
           </ControllerStyled>}
         </WrapperIconsStyled>

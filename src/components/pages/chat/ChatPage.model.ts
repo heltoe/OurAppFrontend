@@ -3,7 +3,7 @@ import { ListChatFxParams, Message, SendMessageFxParams } from '@/api/types'
 import { ListMessagesFx, SendMessagesFx } from '@/api/Chat'
 import { ElementFileType } from '@/components/pages/chat/BindFile'
 import { createEffectorField } from '@/helpers/effector-field'
-import { $idUser } from '@/App.module'
+import { $userId } from '@/App.module'
 
 export const pageChanged = createEvent<number>()
 export const $page = restore(pageChanged, 0)
@@ -63,7 +63,7 @@ const $canSendChatRequest = combine(
   submitRequestListMessagesFx.pending,
   (recipment_id, isPending) => typeof recipment_id === 'number' && recipment_id > 0 && !isPending
 )
-const $prepareUserChatData = combine({ user_id: $idUser, recipment_id: $recipment_id })
+const $prepareUserChatData = combine({ user_id: $userId, recipment_id: $recipment_id })
 const $canSendMessageRequest = combine(
   $textMessage,
   $listFiles,
@@ -74,7 +74,7 @@ const $prepareMessageData = combine(
   $textMessage,
   $listFiles,
   $recipment_id,
-  $idUser,
+  $userId,
   $chat_id,
   (textMessage, listFiles, recipment_id, idUser, chat_id) => {
     const data: SendMessageFxParams = {

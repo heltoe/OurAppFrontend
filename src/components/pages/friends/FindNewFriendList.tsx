@@ -24,8 +24,8 @@ const FindNewFriendList: React.FC = () => {
       {
         usersList.length ? usersList.map((card) => (
           <CardUser
-            key={card.id}
-            id={card.id}
+            key={card.user_id}
+            id={card.user_id}
             image={card.photo}
             firstName={card.first_name}
             lastName={card.last_name}

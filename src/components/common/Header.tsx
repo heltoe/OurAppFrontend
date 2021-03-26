@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { getRouterByName } from '@/routes'
 import { $cropedPhoto } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
-import { $idUser } from '@/App.module'
+import { $userId } from '@/App.module'
 import { getRouterByPath } from '@/routes'
 import Avatar from '@/components/ui/Avatar'
 
@@ -42,7 +42,7 @@ const PersonInfoStyled = styled(Link)`
 export const Header: React.FC = () => {
   const photo = useStore($cropedPhoto)
   const mainInfoForm = useStore($mainInfoForm)
-  const idProfile = useStore($idUser)
+  const idProfile = useStore($userId)
   const location = useLocation()
   return (
     <HeaderStyled>

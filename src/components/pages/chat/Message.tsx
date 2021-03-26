@@ -6,7 +6,7 @@ import Avatar from '@/components/ui/Avatar'
 import GridImages from '@/components/pages/chat/GridImages'
 import { BlockStyled } from '@/components/ui/Block'
 import { useStore } from 'effector-react'
-import { $idUser, $activeUser } from '@/App.module'
+import { $userId, $activeUser } from '@/App.module'
 import { $profileUser } from '@/components/pages/profile/EditProfile.model'
 
 export type MessageType = {
@@ -110,14 +110,14 @@ const MessageTextStyled = styled.div`
 `
 const Message: React.FC<MessageType> = ({ time, text, messageId, author, photos }) => {
   const linkMessage = 'profile-page'
-  const idProfile = useStore($idUser)
+  const idProfile = useStore($userId)
   const authorInfo = useStore(author === idProfile ? $profileUser : $activeUser)
   return (
     <MessageStyled>
       <Link to={`${getRouterByName(linkMessage).path}`}>
         <AvatarOvarlay>
           <Avatar
-            id={authorInfo.id} size="50px"
+            id={authorInfo.user_id} size="50px"
             image={authorInfo.croped_photo || ''}
             fullName={`${authorInfo.first_name || ''} ${authorInfo.last_name || ''}`}
             isRound

@@ -1,8 +1,14 @@
 import { createApiEffect } from '@/api/common/CreateApiEffect'
-import { CommonFxParams, ListUsersFxResponse, UserId, FriendId } from '@/api/types'
+import {
+  CommonFxParams,
+  ListUsersFxResponse,
+  UserId,
+  FriendId,
+  CommonGetParams
+} from '@/api/types'
 
-export const ListFriendShipFx = createApiEffect<void, ListUsersFxResponse>({
-  requestMapper: (params: any) => ({
+export const ListFriendShipFx = createApiEffect<CommonGetParams, ListUsersFxResponse>({
+  requestMapper: (params) => ({
     method: 'GET',
     url: `/api/list-friendship/${params.user_id}${params.query ? `?${params.query}` : ''}`,
   })

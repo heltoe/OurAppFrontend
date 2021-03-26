@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import { loadPersonalInfo } from '@/components/pages/profile/EditProfile.model'
-import { loadListChat } from '@/components/common/sidebar/SideBar.model'
-import { $idUser } from '@/App.module'
+import { fetchListChat } from '@/components/common/sidebar/SideBar.model'
+import { $userId } from '@/App.module'
 import styled from 'styled-components'
 import Header from '@/components/common/Header'
 import SideBar from '@/components/common/sidebar/SideBar'
@@ -27,13 +27,13 @@ const ContentStyled = styled.div`
   position: relative;
 `
 export const MainLayout: React.FC = ({ children }) => {
-  const idProfile = useStore($idUser)
+  const idProfile = useStore($userId)
   const [isOpenSideBar, setIsOpenSideBar] = useState(true)
   useEffect(() => {
     loadPersonalInfo()
   }, [])
   useEffect(() => {
-    loadListChat()
+    fetchListChat()
   }, [idProfile])
   return (
     <MainLayoutStyled isOpen={isOpenSideBar}>

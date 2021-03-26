@@ -53,7 +53,7 @@ export type AvatarFxResponse = {
 }
 //
 export interface User {
-  id: number
+  user_id: number
   first_name: string
   last_name: string
   gender: string
@@ -69,7 +69,7 @@ export interface AllUsers extends User {
   exist_in_friend_list: boolean
 }
 export type UserInGrid = {
-  id: number
+  user_id: number
   first_name: string
   last_name: string
   gender: string
@@ -104,6 +104,16 @@ export type ListChatFxParams = {
   offset?: number
   limit?: number
 }
+export type ChatItem = {
+  chat_id: number
+  last_message: Message
+  recipment: User
+}
+export type ListChatsFxResponse = {
+  count: number
+  next: boolean
+  results: ChatItem[]
+}
 export type ListMessagesFxResponse = {
   count: number
   next: boolean
@@ -136,4 +146,8 @@ export type FriendId = {
 }
 export type CommonStatusAnswer = {
   statys: string
+}
+export type CommonGetParams = {
+  user_id: number,
+  query: string
 }

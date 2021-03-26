@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { logout } from '@/api/common/AuthorizedRequest'
 import { $originalPhoto, $cropedPhoto, $isShowModal, changeIsShowModal } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
-import { $idUser } from '@/App.module'
+import { $userId } from '@/App.module'
 import { device } from '@/Theme'
 import Avatar from '@/components/ui/Avatar'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
@@ -99,7 +99,7 @@ const RedButtonStyled = styled(BaseButtonStyled)`
 export const PhotoBlock: React.FC = () => {
   const originalPhoto = useStore($originalPhoto)
   const cropedPhoto = useStore($cropedPhoto)
-  const idProfile = useStore($idUser)
+  const idProfile = useStore($userId)
   const mainInfoForm = useStore($mainInfoForm)
   const isShowModal = useStore($isShowModal)
   const color = '#fff'

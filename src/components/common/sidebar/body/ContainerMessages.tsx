@@ -20,18 +20,18 @@ const WrapperCardsStyled = styled.div`
   }
 `
 export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
-  const messages = useStore($listChat)
+  const chats = useStore($listChat)
   return (
     <WrapperCardsStyled>
       {
-        messages.length ? messages.map((item) => (
-          <Link to={`${getRouterByName('chat-page').path}`} key={item.message_id}>
+        chats.length ? chats.map((item) => (
+          <Link to={`${getRouterByName('chat-page').path}`} key={item.chat_id}>
             <Card
-              id={item.author}
-              image=""
-              time={item.date}
-              fullName=""
-              message={item.message}
+              author={item.last_message.author}
+              recipment={item.recipment}
+              time={item.last_message.date}
+              text={item.last_message.message}
+              photos={[]}
               isOpen={isOpen}
             />
           </Link>

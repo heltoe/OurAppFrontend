@@ -68,8 +68,8 @@ const FriendsList: React.FC = () => {
         // @ts-ignore
         listUsers[typePage] && listUsers[typePage].length ? listUsers[typePage].map((card: User) => (
           <CardFriend
-            key={card.id}
-            id={card.id}
+            key={card.user_id}
+            user_id={card.user_id}
             first_name={card.first_name}
             last_name={card.last_name}
             birth_date={card.birth_date}
