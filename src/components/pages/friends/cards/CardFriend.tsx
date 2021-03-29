@@ -168,7 +168,7 @@ const CardFriend: React.FC<User> = ({
       <ContentWrapperStyled onClick={() => setActiveUser()}>
         <LinkStyled to="/" className="middle">{first_name} {last_name}</LinkStyled>
         <WriteMessageStyled
-          to={`${getRouterByName('chat-page').path}?recipment=${user_id}`}
+          to={`${getRouterByName('chat-page').path}?recipient=${user_id}`}
           className="middle"
           onClick={() => setActiveUser()}
         >

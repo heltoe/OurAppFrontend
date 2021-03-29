@@ -28,10 +28,10 @@ export type PersonalInfoFxParams = {
 export type UpdatePersonalInfoParams = {
   user_id: number
   token: string
-  first_name?: string,
-  last_name?: string,
-  email?: string,
-  birth_date?: Date,
+  first_name?: string
+  last_name?: string
+  email?: string
+  birth_date?: Date
   phone?: string
 }
 export type ChangePasswordFxParams = {
@@ -92,22 +92,23 @@ export type ListUsersFxResponse = {
 }
 //
 export type Message = {
-  message_id: number,
-  chat_id: number,
-  author: number,
-  message: string,
-  date: string,
+  message_id: number
+  chat_id: number
+  author: number
+  message: string
+  date: string
+  files: string[]
 }
 export type ListChatFxParams = {
   user_id: number
-  recipment_id: number
+  recipient_id: number
   offset?: number
   limit?: number
 }
 export type ChatItem = {
   chat_id: number
   last_message: Message
-  recipment: User
+  recipient: User
 }
 export type ListChatsFxResponse = {
   count: number
@@ -128,6 +129,7 @@ export type SendMessageFxParams = {
   recipient?: number
   message: string
   date: Date
+  files: File[]
 }
 export type SendMessageFxResponse = {
   chat_id: number
@@ -148,6 +150,6 @@ export type CommonStatusAnswer = {
   statys: string
 }
 export type CommonGetParams = {
-  user_id: number,
+  user_id: number
   query: string
 }

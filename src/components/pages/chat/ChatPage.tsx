@@ -7,7 +7,7 @@ import MessageController from '@/components/pages/chat/MessageController'
 import Message from '@/components/pages/chat/Message'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 import Icon from '@/components/ui/Icon'
-import { changeRecipmentId, fetchListMessages, fetchMoreMessages, $canLoadMore } from '@/components/pages/chat/ChatPage.model'
+import { changerecipientId, fetchListMessages, fetchMoreMessages, $canLoadMore } from '@/components/pages/chat/ChatPage.model'
 import { $listMessages } from '@/components/pages/chat/ChatPage.model'
 import { debounce, isVisible } from '@/helpers/utils'
 
@@ -88,9 +88,9 @@ const ChatPage: React.FC = () => {
   }, 300)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    const id = params.get('recipment')
+    const id = params.get('recipient')
     if (id) {
-      changeRecipmentId(parseInt(id))
+      changerecipientId(parseInt(id))
       fetchListMessages()
       goToLastMessage('auto') // TODO page end scrolling on init
     }
@@ -122,7 +122,7 @@ const ChatPage: React.FC = () => {
               author={item.author}
               time={item.date}
               text={item.message}
-              photos={[]}
+              photos={item.files}
             />
           ) : <EmptyPlaceholder>Список сообщений пуст</EmptyPlaceholder>
         }

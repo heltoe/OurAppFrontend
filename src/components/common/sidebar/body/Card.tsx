@@ -10,7 +10,7 @@ import { changeActiveUser } from '@/App.module'
 
 type CardType = {
   author: number
-  recipment: User
+  recipient: User
   time: string
   text: string
   photos: string[]
@@ -85,29 +85,29 @@ const MessageStyled = styled.div`
 `
 export const Card: React.FC<CardType> = ({
   author,
-  recipment,
+  recipient,
   time,
   text,
   photos,
   isOpen
 }) => {
   const prifileInfo = useStore($profileUser)
-  const authorInfo = author === prifileInfo.user_id ? prifileInfo : recipment
+  const authorInfo = author === prifileInfo.user_id ? prifileInfo : recipient
   const setActiveUser = () => {
     changeActiveUser({
-      user_id: recipment.user_id,
-      first_name: recipment.first_name,
-      last_name: recipment.last_name,
-      gender: recipment.gender,
-      birth_date: recipment.birth_date,
-      phone: recipment.phone,
-      original_photo: recipment.original_photo,
-      croped_photo: recipment.croped_photo
+      user_id: recipient.user_id,
+      first_name: recipient.first_name,
+      last_name: recipient.last_name,
+      gender: recipient.gender,
+      birth_date: recipient.birth_date,
+      phone: recipient.phone,
+      original_photo: recipient.original_photo,
+      croped_photo: recipient.croped_photo
     })
   }
   return (
     <CardStyled
-      to={`${getRouterByName('chat-page').path}?recipment=${recipment.user_id}`}
+      to={`${getRouterByName('chat-page').path}?recipient=${recipient.user_id}`}
       shortType={isOpen}
       onClick={() => setActiveUser()}
     >

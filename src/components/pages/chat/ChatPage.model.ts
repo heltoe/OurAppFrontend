@@ -16,7 +16,7 @@ export const submitRequestListMessagesFx = attach({
   mapParams: (params: ListChatFxParams, page: number) => {
     return {
       user_id: params.user_id,
-      recipment_id: params.recipment_id,
+      recipient_id: params.recipient_id,
       offset: page,
       limit: 25
     }
@@ -24,7 +24,23 @@ export const submitRequestListMessagesFx = attach({
 })
 export const submitRequestSendMessagesFx = attach({
   effect: SendMessagesFx,
-  mapParams: (params: SendMessageFxParams) => params
+  mapParams: (params: SendMessageFxParams) => {
+    const formData = new FormData()
+    // @ts-ignore
+    formData.append('author', params.author)
+    formData.append('message', params.message)
+    // @ts-ignore
+    formData.append('date', params.date.toUTCString())
+    params.files.forEach(file => {
+      // @ts-ignore
+      formData.append('file', file);
+    })
+    // @ts-ignore
+    if (params.chat_id) formData.append('chat_id', params.chat_id)
+    // @ts-ignore
+    if (params.recipient) formData.append('recipient', params.recipient)
+    return formData
+  }
 })
 
 // сторы
@@ -39,8 +55,8 @@ $canLoadMore.on(submitRequestListMessagesFx.doneData, (state, payload) => payloa
 export const changeChatId = createEvent<number>()
 const $chat_id = restore(changeChatId, -1)
 
-export const changeRecipmentId = createEvent<number>()
-const $recipment_id = restore(changeRecipmentId, -1)
+export const changerecipientId = createEvent<number>()
+const $recipient_id = restore(changerecipientId, -1)
 
 export const changeListMessages = createEvent<Message[]>()
 export const $listMessages = restore(changeListMessages, [])
@@ -59,11 +75,11 @@ export const $listFiles = restore(changeListFiles, [])
 //
 
 const $canSendChatRequest = combine(
-  $recipment_id,
+  $recipient_id,
   submitRequestListMessagesFx.pending,
-  (recipment_id, isPending) => typeof recipment_id === 'number' && recipment_id > 0 && !isPending
+  (recipient_id, isPending) => typeof recipient_id === 'number' && recipient_id > 0 && !isPending
 )
-const $prepareUserChatData = combine({ user_id: $userId, recipment_id: $recipment_id })
+const $prepareUserChatData = combine({ user_id: $userId, recipient_id: $recipient_id })
 const $canSendMessageRequest = combine(
   $textMessage,
   $listFiles,
@@ -73,16 +89,17 @@ const $canSendMessageRequest = combine(
 const $prepareMessageData = combine(
   $textMessage,
   $listFiles,
-  $recipment_id,
+  $recipient_id,
   $userId,
   $chat_id,
-  (textMessage, listFiles, recipment_id, idUser, chat_id) => {
+  (textMessage, listFiles, recipient_id, idUser, chat_id) => {
     const data: SendMessageFxParams = {
       author: idUser,
       message: textMessage,
-      date: new Date()
+      date: new Date(),
+      files: listFiles.map(item => item.file)
     }
-    chat_id < 0 ? data.recipient = recipment_id : data.chat_id = chat_id
+    chat_id < 0 ? data.recipient = recipient_id : data.chat_id = chat_id
     return data
   }
 )

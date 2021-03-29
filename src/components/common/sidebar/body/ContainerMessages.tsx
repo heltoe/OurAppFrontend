@@ -28,7 +28,7 @@ export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
           <Link to={`${getRouterByName('chat-page').path}`} key={item.chat_id}>
             <Card
               author={item.last_message.author}
-              recipment={item.recipment}
+              recipient={item.recipient}
               time={item.last_message.date}
               text={item.last_message.message}
               photos={[]}
