@@ -1,4 +1,5 @@
 import React from 'react'
+import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { getRouterByName } from '@/routes'
@@ -89,7 +90,8 @@ const AuthorMessageStyled = styled.p`
   }
 `
 const WrapperDataTextStyled = styled.div`
-  width: 20%;
+  width: 100%;
+  max-width: 105px;
   text-align: right;
 `
 const DataMessageStyled = styled.p`
@@ -112,6 +114,12 @@ const Message: React.FC<MessageType> = ({ time, text, messageId, author, photos 
   const linkMessage = 'profile-page'
   const idProfile = useStore($userId)
   const authorInfo = useStore(author === idProfile ? $profileUser : $activeUser)
+  const getCurrentData = () => {
+    const nowDate = dayjs()
+    const diffDay = nowDate.diff(time, 'day')
+    return dayjs(time).format(diffDay > 0 ? 'DD.MM.YYYY HH:mm' : 'HH:mm')
+  }
+
   return (
     <MessageStyled>
       <Link to={`${getRouterByName(linkMessage).path}`}>
@@ -138,7 +146,7 @@ const Message: React.FC<MessageType> = ({ time, text, messageId, author, photos 
             }
           </WrapperAuthorTextStyled>
           <WrapperDataTextStyled>
-            {time.length && <DataMessageStyled>{time}</DataMessageStyled>}
+            {time.length && <DataMessageStyled>{getCurrentData()}</DataMessageStyled>}
           </WrapperDataTextStyled>
         </MessageDataStyled>
         <ContentMessageStyled>

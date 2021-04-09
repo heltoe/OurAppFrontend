@@ -24,6 +24,14 @@ export const submitRequestFriendShipListFx = attach({
     return { ...params, query }
   }
 })
+export const submitRequestFriendShipListCountFx = attach({
+  source: $page,
+  effect: ListFriendShipFx,
+  mapParams: (params: UserId, page: number) => {
+    const query = `offset=${page}&limit=9`
+    return { ...params, query }
+  }
+})
 // добавить в друзья
 export const submitRequestAddToFriendsFx = attach({
   effect: AddToFriendsFx,
@@ -36,24 +44,31 @@ export const submitRequestRemoveFromFriendShipFx = attach({
 })
 
 // события
+export const fetchCountFriendShip = createEvent()
 export const removeFromFriendShip = createEvent()
 export const addToFriends = createEvent()
 
 // сторы
-export const $friendShips = createStore<User[]>([])
+export const $friendShips = createStore<User[]>([]).reset(resetFriendShip)
 $friendShips.on(submitRequestFriendShipListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.croped_photo || '' }))])
 $friendShips.on(submitRequestAddToFriendsFx.doneData, (state, payload) => state.filter(item => item.user_id !== payload.body.user_id))
 $friendShips.on(submitRequestRemoveFromFriendShipFx.doneData, (state, payload) => state.filter(item => item.user_id !== payload.body.user_id))
-$friendShips.on(resetFriendShip, () => [])
 
 export const $countFriendsShip = createStore(0)
 $countFriendsShip.on(submitRequestFriendShipListFx.doneData, (state, payload) => payload.body.count)
+$countFriendsShip.on(submitRequestFriendShipListCountFx.doneData, (state, payload) => payload.body.count)
 $canLoadMore.on(submitRequestFriendShipListFx.doneData, (state, payload) => payload.body.next)
 
 const $canSendFriendShipRequest = combine(
   $token,
   $canLoadMore,
   submitRequestFriendShipListFx.pending,
+  (token, canLoadMore, sendRequestPending) => token.length > 0 && canLoadMore && !sendRequestPending
+)
+const $canSendFriendShipCountRequest = combine(
+  $token,
+  $canLoadMore,
+  submitRequestFriendShipListCountFx.pending,
   (token, canLoadMore, sendRequestPending) => token.length > 0 && canLoadMore && !sendRequestPending
 )
 const $canSendAddToFriendRequest = combine(
@@ -68,6 +83,12 @@ const $canSendRemoveFromFriendShipRequest = combine(
 )
 
 // методы
+// кол-во записей
+sample({
+  clock: fetchCountFriendShip,
+  source: guard({ source: $prepareUserDataId, filter: $canSendFriendShipCountRequest }),
+  target: submitRequestFriendShipListCountFx
+})
 // загрузка и запись предложений в друзья
 sample({
   clock: loadListFriendShip,

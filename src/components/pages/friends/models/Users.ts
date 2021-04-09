@@ -25,7 +25,7 @@ export const submitRequestAddToFriendShipFx = attach({
 export const addToFriendShip = createEvent()
 
 // сторы
-export const $users = createStore<AllUsersInGrid[]>([])
+export const $users = createStore<AllUsersInGrid[]>([]).reset(resetUsers)
 $users.on(submitRequestUsersListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.original_photo || '' }))])
 $users.on(submitRequestAddToFriendShipFx.doneData, (state, payload) => {
   const elementId = state.findIndex(item => item.user_id === payload.body.user_id)
@@ -36,7 +36,6 @@ $users.on(submitRequestAddToFriendShipFx.doneData, (state, payload) => {
   }
   return state
 })
-$users.on(resetUsers, () => [])
 $canLoadMore.on(submitRequestUsersListFx.doneData, (state, payload) => payload.body.next)
 
 const $canSendUserRequest = combine(

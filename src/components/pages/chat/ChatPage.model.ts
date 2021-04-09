@@ -112,7 +112,10 @@ sample({
 })
 forward({
   from: submitRequestListMessagesFx.doneData,
-  to: changeChatId.prepend(({ body }) => body.results.chat_id || -1)
+  to: changeChatId.prepend(({ body }) => {
+    console.log(111)
+    return body.results.chat_id || -1
+  })
 })
 sample({
   clock: sendMessage,

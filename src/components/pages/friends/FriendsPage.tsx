@@ -1,7 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
-import { typePages, $typePage, $canLoadMore, $page, pageChanged, typePageChanged } from '@/App.module'
+import {
+  typePages,
+  $typePage, 
+  $canLoadMore,
+  $page,
+  pageChanged,
+  typePageChanged,
+  loadAllFriends,
+  resetFriendShip,
+  resetAllFriends,
+  resetOnlineFriends
+} from '@/App.module'
+import { fetchCountFriends, fetchCountOnlineFriends } from '@/components/pages/friends/models/Friends'
+import { fetchCountFriendShip } from '@/components/pages/friends/models/FriendShip'
 import PageInfiniteScrolling from '@/components/ui/PageInfiniteScrolling'
 import TogglerBlock from '@/components/pages/friends/TogglerBlock'
 import FriendsList from '@/components/pages/friends/FriendsList'
@@ -27,7 +40,14 @@ export const FriendsPage: React.FC = () => {
     pageChanged(page + 1)
   }
   useEffect(() => {
-    typePageChanged(typePages.friends)
+    resetAllFriends()
+    resetOnlineFriends()
+    resetFriendShip()
+    //
+    if (typePage === typePages.friends) loadAllFriends()
+    else typePageChanged(typePages.friends)
+    fetchCountFriendShip()
+    fetchCountOnlineFriends()
   }, [])
   return (
     <PageInfiniteScrolling

@@ -7,7 +7,12 @@ import MessageController from '@/components/pages/chat/MessageController'
 import Message from '@/components/pages/chat/Message'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 import Icon from '@/components/ui/Icon'
-import { changerecipientId, fetchListMessages, fetchMoreMessages, $canLoadMore } from '@/components/pages/chat/ChatPage.model'
+import {
+  changerecipientId,
+  fetchListMessages,
+  fetchMoreMessages,
+  $canLoadMore
+} from '@/components/pages/chat/ChatPage.model'
 import { $listMessages } from '@/components/pages/chat/ChatPage.model'
 import { debounce, isVisible } from '@/helpers/utils'
 
@@ -85,7 +90,7 @@ const ChatPage: React.FC = () => {
   }
   const handlerScrolling = debounce(() => {
     scrollPage()
-  }, 300)
+  }, 200)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const id = params.get('recipient')

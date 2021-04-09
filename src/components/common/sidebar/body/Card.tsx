@@ -1,4 +1,5 @@
 import React from 'react'
+import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
@@ -117,7 +118,7 @@ export const Card: React.FC<CardType> = ({
       {isOpen && <BlockColumnStyled>
         <BlockStyled>
           <FullNameStyled className="middle">{`${authorInfo.first_name} ${authorInfo.last_name}`}</FullNameStyled>
-          <p>{time}</p>
+          <p>{dayjs(time).format('HH:mm')}</p>
         </BlockStyled>
         <MessageStyled dangerouslySetInnerHTML={{__html: text }} />
       </BlockColumnStyled>}
