@@ -116,8 +116,11 @@ const Message: React.FC<MessageType> = ({ time, text, messageId, author, photos 
   const authorInfo = useStore(author === idProfile ? $profileUser : $activeUser)
   const getCurrentData = () => {
     const nowDate = dayjs()
-    const diffDay = nowDate.diff(time, 'day')
-    return dayjs(time).format(diffDay > 0 ? 'DD.MM.YYYY HH:mm' : 'HH:mm')
+    let isToday = true
+    if (nowDate.get('year') > dayjs(time).get('year')) isToday = false
+    if (isToday && nowDate.get('month') > dayjs(time).get('month')) isToday = false
+    if (isToday && nowDate.get('date') > dayjs(time).get('date')) isToday = false
+    return dayjs(time).format(isToday ? 'HH:mm' : 'DD.MM.YYYY HH:mm')
   }
 
   return (

@@ -31,7 +31,7 @@ export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
               recipient={item.recipient}
               time={item.last_message.date}
               text={item.last_message.message}
-              photos={[]}
+              photos={item.last_message.files}
               isOpen={isOpen}
             />
           </Link>

@@ -120,7 +120,7 @@ export const Card: React.FC<CardType> = ({
           <FullNameStyled className="middle">{`${authorInfo.first_name} ${authorInfo.last_name}`}</FullNameStyled>
           <p>{dayjs(time).format('HH:mm')}</p>
         </BlockStyled>
-        <MessageStyled dangerouslySetInnerHTML={{__html: text }} />
+        <MessageStyled dangerouslySetInnerHTML={{__html: text.length === 18 && photos.length ? '<div>Изображение</div>' : text }} />
       </BlockColumnStyled>}
     </CardStyled>
   )

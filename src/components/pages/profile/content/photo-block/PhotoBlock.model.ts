@@ -3,7 +3,7 @@ import { ChangeAvatarFx } from '@/api/Profile'
 import { AvatarFxParams } from '@/api/types'
 import { $combinePersonalData } from '@/App.module'
 
-const uploadAvatarFx = attach({
+export const uploadAvatarFx = attach({
   effect: ChangeAvatarFx,
   mapParams: (params: AvatarFxParams) => {
     const formData = new FormData()

@@ -54,6 +54,7 @@ $canLoadMore.on(submitRequestListMessagesFx.doneData, (state, payload) => payloa
 
 export const changeChatId = createEvent<number>()
 const $chat_id = restore(changeChatId, -1)
+$chat_id.on(submitRequestListMessagesFx.doneData, (state, payload) => payload.body.results.chat_id || -1)
 
 export const changerecipientId = createEvent<number>()
 const $recipient_id = restore(changerecipientId, -1)
@@ -109,13 +110,6 @@ sample({
   clock: [fetchListMessages, fetchMoreMessages],
   source: guard({ source: $prepareUserChatData, filter: $canSendChatRequest }),
   target: submitRequestListMessagesFx
-})
-forward({
-  from: submitRequestListMessagesFx.doneData,
-  to: changeChatId.prepend(({ body }) => {
-    console.log(111)
-    return body.results.chat_id || -1
-  })
 })
 sample({
   clock: sendMessage,

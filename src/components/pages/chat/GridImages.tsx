@@ -73,8 +73,9 @@ const GridImages: React.FC<GridImagesType> = ({ images }) => {
   }
   return (
     <PhotoWrapperStyled>
-      {builderGrid().map(item => 
+      {builderGrid().map((item, index) => 
         <ImageStyled
+          key={index}
           image={item.image}
           width={item.width}
           height={item.height}

@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useStore } from 'effector-react'
-import Avatar from 'react-avatar-edit'
+import AvatarEditor from 'react-avatar-editor'
 import styled from 'styled-components'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import Icon, { IconStyled } from '@/components/ui/Icon'
-import { b64toBlob } from '@/helpers/utils'
 import {
   $originalPhoto,
   originalFileChanged,
   cropedFileChanged,
-  changeAvatar
+  changeAvatar,
+  uploadAvatarFx
 } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
+import { $profileUser } from '@/components/pages/profile/EditProfile.model'
 import { $userId } from '@/App.module'
+import FemalePlaceholder from '@/assets/images/female-placeholder.jpg'
+import MalePlaceholder from '@/assets/images/male-placeholder.jpg'
 
 const WrapperCropPhoto = styled.div`
   display: flex;
@@ -19,7 +22,7 @@ const WrapperCropPhoto = styled.div`
   & ${BaseButtonStyled} {
     display: flex;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 20px;
   }
   & ${IconStyled} {
     position: static;
@@ -37,8 +40,15 @@ const WrapperCropPhoto = styled.div`
 const WrapperAvataStyled = styled.div`
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
   label {
     width: 100%;
+  }
+  ${IconStyled} {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    margin-left: 0;
   }
 `
 const TitleStyled = styled.p`
@@ -46,67 +56,143 @@ const TitleStyled = styled.p`
   font-weight: ${(props) => props.theme.fontWeight.middle};
   margin-bottom: 10px;
 `
+const LabelStyled = styled.label`
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+`
+const RangeStyled = styled.input`
+  width: 35%;
+  cursor: pointer;
+  margin-left: 10px;
+`
+const WrapperFileInput = styled.div<{ backgroundImage: string}>`
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-image: ${(props) => `url(${props.backgroundImage})`};
+  &:hover {
+    div {
+      background-color: ${(props) => props.theme.rgba(props.theme.colors.black, 0.3)};
+    }
+  }
+  & div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    font-weight: ${(props) => props.theme.fontWeight.bold};
+    background-color: ${(props) => props.theme.rgba(props.theme.colors.black, 0.1)};
+    transition: ${(props) => props.theme.transition};
+    border-radius: 5px;
+  }
+`
+const StyledFileInput = styled.input`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+`
 const CropPhoto: React.FC = () => {
+  const editorRef = useRef(null)
+  const inputFile = useRef<HTMLInputElement>(null)
   const originalPhoto = useStore($originalPhoto)
   const idUser = useStore($userId)
-  const [preview, setPreview] = useState('')
-  const [test, setTest] = useState('')
-  const onBeforeFileLoad = (elem: any) => {
-    if(elem.target.files[0].size > 2097152) {
-      alert('File is too big!')
-      return elem.target.value = ''
+  const isPending = useStore(uploadAvatarFx.pending)
+  const profile = useStore($profileUser)
+  const [scale, setScale] = useState('1')
+  const [localPhoto, setLocalPhoto] = useState('')
+  const FileLoad = (e: any) => {
+    fetch(originalPhoto)
+      .then(res => res.blob())
+      .then(blob => {
+        const photo: File = new File([blob], `avatar-original-photo${idUser}.png`, { lastModified: Math.round(new Date().getTime()/1000) })
+        originalFileChanged(photo)
+      })
+  }
+  const changeImage = () => {
+    const editor = editorRef?.current as any | null
+    if (editor) {
+      const canvas = editor.getImage().toDataURL()
+      fetch(canvas)
+        .then(res => res.blob())
+        .then(blob => {
+          const photo: File = new File([blob], `avatar-croped-photo${idUser}.png`, { lastModified: Math.round(new Date().getTime()/1000) })
+          cropedFileChanged(photo)
+          changeAvatar()
+        })
     }
-    originalFileChanged(elem.target.files[0])
   }
-  const updateAvatar = () => {
-    const photo = new File(
-      [b64toBlob(preview.split(';')[1].split(',')[1], 'image/png')],
-      `avatar-photo${idUser}.png`,
-      { type: 'image/png' },
-    )
-    cropedFileChanged(photo)
-    changeAvatar()
-  }
-  const onClose = () => {
-    setPreview('')
-    originalFileChanged(null)
-    cropedFileChanged(null)
-  }
-  const testov = (image: string) => {
-    console.log(image)
-    setPreview(image)
-  }
-  const loadImage = () => {
-    fetch(originalPhoto, {
-      method: 'GET'
-    })
-    //   .then(res => res)
-    //   .then(res => {
-    //     console.log(res)
-    //     // let objectURL = URL.createObjectURL(blob);
-    //     // console.log(objectURL)
-    //     // setTest(objectURL)
-    // });
+  const selectFile = () => {
+    const el = inputFile?.current
+    if (el?.files) {
+      const filesList = Object.values(el.files).map(file => ({ file, preview: URL.createObjectURL(file) }))
+      originalFileChanged(filesList[0].file)
+      setLocalPhoto(filesList[0].preview)
+      el.value = ''
+      el.blur()
+    }
   }
   useEffect(() => {
-    loadImage()
+    setLocalPhoto(originalPhoto)
   }, [])
   return (
     <WrapperCropPhoto>
       <TitleStyled>Настройте миниатюру</TitleStyled>
       <WrapperAvataStyled>
-        <Avatar
+        <AvatarEditor
+          ref={editorRef}
+          image={localPhoto}
           width={360}
           height={360}
-          imageWidth={360}
-          onCrop={testov}
-          onClose={onClose}
-          onBeforeFileLoad={onBeforeFileLoad}
-          src={originalPhoto}
+          border={0}
+          borderRadius={5}
+          color={[0, 0, 0, 0.4]}
+          scale={Math.ceil(parseInt(scale) / 10)}
+          crossOrigin="anonymous"
+          onLoadSuccess={(e) => FileLoad(e)}
         />
+        {localPhoto.length === 0 && <WrapperFileInput backgroundImage={profile.gender === 'male' ? MalePlaceholder : FemalePlaceholder}>
+          <div>Выбрать фото</div>
+          <StyledFileInput
+            ref={inputFile}
+            type="file"
+            accept="image/png, image/jpeg"
+            onChange={() => selectFile()}
+          />
+        </WrapperFileInput>}
+        {localPhoto.length > 0 && <Icon
+          type="close"
+          size="18px"
+          color="#fff"
+          onClick={() => setLocalPhoto('')}
+        />}
       </WrapperAvataStyled>
-      <img src={preview} alt=""/>
-      <BaseButton disabled={!preview.length} onClick={() => updateAvatar()}>
+      {localPhoto.length > 0 && <LabelStyled>
+        Масштаб:
+        <RangeStyled
+          type="range"
+          min="1"
+          max="60"
+          className="range blue"
+          value={scale} onChange={(e) => setScale(e.target.value)}
+        />
+      </LabelStyled>}
+      <BaseButton disabled={isPending} onClick={() => changeImage()}>
         Сменить аватар
         <Icon type="upload" size="18px" />
       </BaseButton>

@@ -20,7 +20,7 @@ const OverlayPhotoStyled = styled.div<{ backgroundImage: string }>`
   width: 100%;
   height: 100%;
   background-image: ${(props) => `url(${props.backgroundImage})`};
-  background-position: center center;
+  background-position: top left;
   background-repeat: no-repeat;
   background-size: cover;
 `
@@ -106,7 +106,7 @@ export const PhotoBlock: React.FC = () => {
   return (
     <BlockPhotoStyled>
       <OverlayStyled />
-      <OverlayPhotoStyled backgroundImage={originalPhoto} />
+      <OverlayPhotoStyled backgroundImage={cropedPhoto} />
       <p className="label middle">Фото профиля</p>
       <WrapperImageStyled>
         <Avatar id={idProfile} image={cropedPhoto} fullName={mainInfoForm.full_name} isRound size="180px" />

@@ -11,7 +11,8 @@ import {
   changerecipientId,
   fetchListMessages,
   fetchMoreMessages,
-  $canLoadMore
+  $canLoadMore,
+  changeListMessages
 } from '@/components/pages/chat/ChatPage.model'
 import { $listMessages } from '@/components/pages/chat/ChatPage.model'
 import { debounce, isVisible } from '@/helpers/utils'
@@ -72,7 +73,8 @@ const ChatPage: React.FC = () => {
   const chatPage = useRef(null)
   const loadMoreElement = useRef(null)
   const [isShow, setIsShow] = useState(false)
-  const goToLastMessage = (typeScrolling: 'auto' | 'smooth' | undefined = 'smooth'): void => {
+
+  const goToLastMessage = (typeScrolling: 'auto' | 'smooth' | undefined = 'auto'): void => {
     const page = chatPage?.current as HTMLDivElement | null
     if (page) page.scrollTo({ top: page.scrollHeight, behavior: typeScrolling })
   }
@@ -92,14 +94,17 @@ const ChatPage: React.FC = () => {
     scrollPage()
   }, 200)
   useEffect(() => {
+    changeListMessages([])
     const params = new URLSearchParams(window.location.search)
     const id = params.get('recipient')
     if (id) {
       changerecipientId(parseInt(id))
       fetchListMessages()
-      goToLastMessage('auto') // TODO page end scrolling on init
     }
   }, [])
+  useEffect(() => {
+    goToLastMessage()
+  }, [messages])
   useEffect(() => {
     const page = chatPage?.current as HTMLDivElement | null
     if (page) page.addEventListener('scroll', handlerScrolling)
@@ -120,9 +125,9 @@ const ChatPage: React.FC = () => {
       }
       <BLockContainer>
         {
-          messages.length ? messages.map(item => 
+          messages.length ? messages.map((item, index) => 
             <Message
-              key={item.message_id}
+              key={index}
               messageId={item.message_id}
               author={item.author}
               time={item.date}
