@@ -1,9 +1,10 @@
-import { createEvent, attach, combine, sample, guard, restore, forward, createStore } from 'effector-root'
+import { createEvent, attach, combine, sample, guard, restore, forward, createStore, createEffect } from 'effector-root'
 import { ListChatFxParams, Message, SendMessageFxParams } from '@/api/types'
-import { ListMessagesFx, SendMessagesFx } from '@/api/Chat'
+import { ListMessagesFx } from '@/api/Chat'
 import { ElementFileType } from '@/components/pages/chat/BindFile'
 import { createEffectorField } from '@/helpers/effector-field'
 import { $userId } from '@/App.module'
+import socket from '@/api/socket'
 
 export const pageChanged = createEvent<number>()
 export const $page = restore(pageChanged, 0)
@@ -22,24 +23,39 @@ export const submitRequestListMessagesFx = attach({
     }
   }
 })
+export const emitEnterToChatFx = createEffect((chat_id: number) => {
+  socket.enterToChat(chat_id)
+})
+export const SendMessagesFx = createEffect((data: any) => {
+  changeTriggerClean()
+  textMessageChanged('')
+  changeListFiles([])
+  socket.sendMessage(data)
+})
 export const submitRequestSendMessagesFx = attach({
   effect: SendMessagesFx,
   mapParams: (params: SendMessageFxParams) => {
-    const formData = new FormData()
-    // @ts-ignore
-    formData.append('author', params.author)
-    formData.append('message', params.message)
-    // @ts-ignore
-    formData.append('date', params.date.toUTCString())
-    params.files.forEach(file => {
-      // @ts-ignore
-      formData.append('file', file);
-    })
-    // @ts-ignore
-    if (params.chat_id) formData.append('chat_id', params.chat_id)
-    // @ts-ignore
-    if (params.recipient) formData.append('recipient', params.recipient)
-    return formData
+    const data = {
+      ...params,
+      files: [],
+      date: params.date.toUTCString()
+    }
+    return data
+    // const formData = new FormData()
+    // // @ts-ignore
+    // formData.append('author', params.author)
+    // formData.append('message', params.message)
+    // // @ts-ignore
+    // formData.append('date', params.date.toUTCString())
+    // params.files.forEach(file => {
+    //   // @ts-ignore
+    //   formData.append('file', file);
+    // })
+    // // @ts-ignore
+    // if (params.chat_id) formData.append('chat_id', params.chat_id)
+    // // @ts-ignore
+    // if (params.recipient) formData.append('recipient', params.recipient)
+    // return formData
   }
 })
 
@@ -52,21 +68,22 @@ $page.on(fetchMoreMessages, (state) => state + 1)
 export const $canLoadMore = createStore(false)
 $canLoadMore.on(submitRequestListMessagesFx.doneData, (state, payload) => payload.body.next)
 
+export const enterToChat = createEvent<void>()
 export const changeChatId = createEvent<number>()
-const $chat_id = restore(changeChatId, -1)
+export const $chat_id = restore(changeChatId, -1)
 $chat_id.on(submitRequestListMessagesFx.doneData, (state, payload) => payload.body.results.chat_id || -1)
 
 export const changerecipientId = createEvent<number>()
 const $recipient_id = restore(changerecipientId, -1)
 
+export const catchIncommingMessage = createEvent<Message>()
 export const changeListMessages = createEvent<Message[]>()
 export const $listMessages = restore(changeListMessages, [])
 $listMessages.on(submitRequestListMessagesFx.doneData, (state, payload) => [...payload.body.results.messages, ...state])
-$listMessages.on(submitRequestSendMessagesFx.doneData, (state, payload) => [...state, payload.body.message])
+$listMessages.on(catchIncommingMessage, (state, message) => [...state, message])
 
-export const changeTriggerClean = createEvent<boolean>()
-export const $triggerClean = restore(changeTriggerClean, false)
-$triggerClean.on(submitRequestSendMessagesFx.doneData, (state) => !state)
+export const changeTriggerClean = createEvent<void>()
+export const $triggerClean = createStore(false).on(changeTriggerClean, state => !state)
 
 // Поле ввода ссобщения
 export const sendMessage = createEvent()
@@ -74,7 +91,6 @@ export const [$textMessage, textMessageChanged] = createEffectorField({ defaultV
 export const changeListFiles = createEvent<ElementFileType[]>()
 export const $listFiles = restore(changeListFiles, [])
 //
-
 const $canSendChatRequest = combine(
   $recipient_id,
   submitRequestListMessagesFx.pending,
@@ -104,7 +120,6 @@ const $prepareMessageData = combine(
     return data
   }
 )
-
 // методы
 sample({
   clock: [fetchListMessages, fetchMoreMessages],
@@ -116,11 +131,8 @@ sample({
   source: guard({ source: $prepareMessageData, filter: $canSendMessageRequest }),
   target: submitRequestSendMessagesFx
 })
-forward({
-  from: submitRequestSendMessagesFx.doneData,
-  to: [
-    textMessageChanged.prepend(() => ''),
-    changeListFiles.prepend(() => []),
-    changeChatId.prepend(({ body }) => body.chat_id || -1),
-  ]
+sample({
+  clock: enterToChat,
+  source: $chat_id,
+  target: emitEnterToChatFx
 })

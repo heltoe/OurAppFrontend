@@ -6,6 +6,7 @@ import { $userId } from '@/App.module'
 import styled from 'styled-components'
 import Header from '@/components/common/Header'
 import SideBar from '@/components/common/sidebar/SideBar'
+import socket from '@/api/socket'
 
 const MainLayoutStyled = styled.div<{ isOpen: boolean }>`
   width: ${(props) => `calc(100% - ${props.isOpen ? 290 : 90}px);`};
@@ -30,6 +31,7 @@ export const MainLayout: React.FC = ({ children }) => {
   const idProfile = useStore($userId)
   const [isOpenSideBar, setIsOpenSideBar] = useState(true)
   useEffect(() => {
+    socket.init()
     loadPersonalInfo()
   }, [])
   useEffect(() => {

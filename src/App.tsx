@@ -9,14 +9,12 @@ import { $token } from '@/api/common/AuthorizedRequest'
 import { IntroPages, MainRoutes, getRouterByName } from '@/routes'
 import IntroLayout from '@/layouts/IntroLayout'
 import MainLayout from './layouts/main-layout'
-import io from 'socket.io-client'
 
 export const App: React.FC = () => {
   const token = useStore($token)
   useEffect(() => {
     const cookie = Cookies.get(config.TOKEN)
     if (cookie?.length) setTokenForRequest(cookie)
-    const socket = io(config.BACKEND_URL)
   }, [])
   return (
     <div className="App">

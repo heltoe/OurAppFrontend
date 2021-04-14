@@ -12,7 +12,9 @@ import {
   fetchListMessages,
   fetchMoreMessages,
   $canLoadMore,
-  changeListMessages
+  changeListMessages,
+  enterToChat,
+  $chat_id
 } from '@/components/pages/chat/ChatPage.model'
 import { $listMessages } from '@/components/pages/chat/ChatPage.model'
 import { debounce, isVisible } from '@/helpers/utils'
@@ -69,7 +71,7 @@ const ButtonGoToLastMessage = styled.div<{ isShow: boolean }>`
 const ChatPage: React.FC = () => {
   const messages = useStore($listMessages)
   const canLoadMore = useStore($canLoadMore)
-
+  const chat_id = useStore($chat_id)
   const chatPage = useRef(null)
   const loadMoreElement = useRef(null)
   const [isShow, setIsShow] = useState(false)
@@ -105,6 +107,9 @@ const ChatPage: React.FC = () => {
   useEffect(() => {
     goToLastMessage()
   }, [messages])
+  useEffect(() => {
+    if (chat_id !== -1) enterToChat()
+  }, [chat_id])
   useEffect(() => {
     const page = chatPage?.current as HTMLDivElement | null
     if (page) page.addEventListener('scroll', handlerScrolling)
