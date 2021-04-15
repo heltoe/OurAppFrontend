@@ -31,11 +31,14 @@ export const MainLayout: React.FC = ({ children }) => {
   const idProfile = useStore($userId)
   const [isOpenSideBar, setIsOpenSideBar] = useState(true)
   useEffect(() => {
-    socket.init()
     loadPersonalInfo()
   }, [])
   useEffect(() => {
-    fetchListChat()
+    if (idProfile) {
+      fetchListChat()
+      socket.init(idProfile)
+      socket.enterToApp(idProfile)
+    }
   }, [idProfile])
   return (
     <MainLayoutStyled isOpen={isOpenSideBar}>

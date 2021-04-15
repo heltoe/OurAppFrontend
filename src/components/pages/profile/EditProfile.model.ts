@@ -1,4 +1,4 @@
-import { attach, createEvent, restore, sample, guard, combine, forward } from 'effector-root'
+import { attach, createEvent, restore, sample, guard, combine, forward, createEffect } from 'effector-root'
 import { ProfileFx, PersonalInfoFx } from '@/api/Profile'
 import { PersonalInfoFxParams, UserId, User } from '@/api/types'
 import { $token } from '@/api/common/AuthorizedRequest'

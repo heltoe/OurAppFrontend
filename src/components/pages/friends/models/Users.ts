@@ -1,9 +1,19 @@
-import { attach, createEvent, sample, guard, combine, createStore } from 'effector-root'
-import { UserId, AllUsersInGrid, CommonFxParams } from '@/api/types'
+import { attach, createEvent, sample, guard, combine, createStore, createEffect } from 'effector-root'
+import { UserId, AllUsersInGrid, CommonFxParams, User } from '@/api/types'
 import { ListUsersFx } from '@/api/Friends'
 import { AddToFriendShipFx } from '@/api/FriendShip'
-import { $friendData, $prepareUserDataId, $canLoadMore, $page, loadListUsers, resetUsers } from '@/App.module'
+import {
+  $friendData,
+  $prepareUserDataId,
+  $friendId,
+  $canLoadMore,
+  $page,
+  loadListUsers,
+  resetUsers
+} from '@/App.module'
 import { $token } from '@/api/common/AuthorizedRequest'
+import { $profileUser } from '@/components/pages/profile/EditProfile.model'
+import socket from '@/api/socket'
 
 // эффекты
 // получить список пользователей
@@ -19,6 +29,9 @@ export const submitRequestUsersListFx = attach({
 export const submitRequestAddToFriendShipFx = attach({
   effect: AddToFriendShipFx,
   mapParams: (params: CommonFxParams) => params
+})
+const sendSocketAddToFriendshipFx = createEffect((data: { user: User, recipient: number }) => {
+  socket.addToFriendShip(data)
 })
 
 // события
@@ -62,4 +75,9 @@ sample({
   clock: addToFriendShip,
   source: guard({ source: $friendData, filter: $canSendAddToFriendShipRequest }),
   target: submitRequestAddToFriendShipFx
+})
+sample({
+  clock: submitRequestAddToFriendShipFx.doneData,
+  source: { user: $profileUser, recipient: $friendId },
+  target: sendSocketAddToFriendshipFx
 })

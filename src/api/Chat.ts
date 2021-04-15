@@ -3,8 +3,7 @@ import {
   UserId,
   ListChatFxParams,
   ListMessagesFxResponse,
-  SendMessageFxParams,
-  SendMessageFxResponse,
+  Message,
   ListChatsFxResponse
 } from '@/api/types'
 
@@ -22,7 +21,7 @@ export const ListChatsFx = createApiEffect<UserId, ListChatsFxResponse>({
     url: `/api/list-chats/${params.user_id}`,
   })
 })
-export const SendMessagesFx = createApiEffect<any, SendMessageFxResponse>({
+export const SendMessagesFx = createApiEffect<any, Message>({
   requestMapper: (params) => ({
     method: 'POST',
     url: `/api/set-message`,

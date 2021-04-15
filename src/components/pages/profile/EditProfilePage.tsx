@@ -7,9 +7,7 @@ import ChangePass from '@/components/pages/profile/content/change-pass/ChangePas
 import PhotoBlock from '@/components/pages/profile/content/photo-block/PhotoBlock'
 
 const ProfilePageStyled = styled(PageStyled)`
-  @media ${device.tabletL} {
-    padding: 0;
-  }
+  padding: 0;
 `
 const WrapperStyled = styled.div`
   display: flex;
@@ -17,8 +15,10 @@ const WrapperStyled = styled.div`
   width: 100%;
   max-width: 700px;
   color: ${(props) => props.theme.rgb(props.theme.colors.white)};
+  padding: 30px 34px;
   @media ${device.tabletL} {
     flex-direction: column;
+    padding: 0;
   }
 `
 const BlockInfoStyled = styled.div`

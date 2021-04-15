@@ -20,6 +20,7 @@ const TextAreaStyled = styled.textarea`
 `
 const WrapperCommentTextHiddenStyled = styled.div`
   position: relative;
+  overflow: hidden;
 `
 const CommentTextHiddenStyled = styled.div`
   width: 100%;

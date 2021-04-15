@@ -1,4 +1,4 @@
-import { attach, createEvent, combine, sample, forward, guard, createStore } from 'effector-root'
+import { attach, createEvent, combine, sample, guard, createStore, createEffect } from 'effector-root'
 import { UserId, CommonFxParams, User } from '@/api/types'
 import { AddToFriendsFx } from '@/api/Friends'
 import { ListFriendShipFx, RemoveFromFriendShipFx } from '@/api/FriendShip'
@@ -9,10 +9,11 @@ import {
   $canLoadMore,
   $page,
   loadListFriendShip,
-  loadAllFriends,
-  loadOnlineFriends,
+  $friendId,
   resetFriendShip
 } from '@/App.module'
+import { $profileUser } from '@/components/pages/profile/EditProfile.model'
+import socket from '@/api/socket'
 
 // эффекты
 // получить список предложений в друзья
@@ -42,6 +43,12 @@ export const submitRequestRemoveFromFriendShipFx = attach({
   effect: RemoveFromFriendShipFx,
   mapParams: (params: CommonFxParams) => params
 })
+const sendSocketRemoveFromFriendshipFx = createEffect((data: { user: User, recipient: number }) => {
+  socket.removeFromFriendShip(data)
+})
+const sendSocketAddtoFriendshipFx = createEffect((data: { user: User, recipient: number }) => {
+  socket.addToFriend(data)
+})
 
 // события
 export const fetchCountFriendShip = createEvent()
@@ -49,7 +56,9 @@ export const removeFromFriendShip = createEvent()
 export const addToFriends = createEvent()
 
 // сторы
+export const addToFriendShipsChanged = createEvent<User>()
 export const $friendShips = createStore<User[]>([]).reset(resetFriendShip)
+$friendShips.on(addToFriendShipsChanged, (state, payload) => [...state, payload])
 $friendShips.on(submitRequestFriendShipListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.croped_photo || '' }))])
 $friendShips.on(submitRequestAddToFriendsFx.doneData, (state, payload) => state.filter(item => item.user_id !== payload.body.user_id))
 $friendShips.on(submitRequestRemoveFromFriendShipFx.doneData, (state, payload) => state.filter(item => item.user_id !== payload.body.user_id))
@@ -57,6 +66,9 @@ $friendShips.on(submitRequestRemoveFromFriendShipFx.doneData, (state, payload) =
 export const $countFriendsShip = createStore(0)
 $countFriendsShip.on(submitRequestFriendShipListFx.doneData, (state, payload) => payload.body.count)
 $countFriendsShip.on(submitRequestFriendShipListCountFx.doneData, (state, payload) => payload.body.count)
+$countFriendsShip.on(submitRequestAddToFriendsFx.doneData, (state) => --state)
+$countFriendsShip.on(submitRequestRemoveFromFriendShipFx.doneData, (state) => --state)
+$countFriendsShip.on(addToFriendShipsChanged, (state) => ++state)
 $canLoadMore.on(submitRequestFriendShipListFx.doneData, (state, payload) => payload.body.next)
 
 const $canSendFriendShipRequest = combine(
@@ -101,13 +113,19 @@ sample({
   source: guard({ source: $friendData, filter: $canSendAddToFriendRequest }),
   target: submitRequestAddToFriendsFx
 })
-// forward({
-//   from: submitRequestAddToFriendsFx.doneData,
-//   to: [loadAllFriends, loadOnlineFriends]
-// })
+sample({
+  clock: submitRequestAddToFriendsFx.doneData,
+  source: { user: $profileUser, recipient: $friendId },
+  target: sendSocketAddtoFriendshipFx
+})
 // удалить из предложений в друзья
 sample({
   clock: removeFromFriendShip,
   source: guard({ source: $friendData, filter: $canSendRemoveFromFriendShipRequest }),
   target: submitRequestRemoveFromFriendShipFx
+})
+sample({
+  clock: submitRequestRemoveFromFriendShipFx.doneData,
+  source: { user: $profileUser, recipient: $friendId },
+  target: sendSocketRemoveFromFriendshipFx
 })

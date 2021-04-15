@@ -60,8 +60,10 @@ export const fetchCountFriends = createEvent()
 export const fetchCountOnlineFriends = createEvent()
 
 // сторы
+export const addToFriendChanged = createEvent<User>()
 export const $allFriends = createStore<User[]>([]).reset(resetAllFriends)
 $allFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => [...state, ...payload.body.results.map(item => ({ ...item, photo: item.croped_photo || '' }))])
+$allFriends.on(addToFriendChanged, (state, payload) => [...state, payload])
 $allFriends.on(submitRequestRemoveFromFriendsFx.doneData, (state, payload) => state.filter(item => item.user_id !== payload.body.user_id))
 
 export const $onlineFriends = createStore<User[]>([]).reset(resetOnlineFriends)
@@ -73,6 +75,8 @@ $canLoadMore.on(submitRequestOnlineFriendsListFx.doneData, (state, payload) => p
 
 export const $countAllFriends = createStore(0)
 $countAllFriends.on(submitRequestFriendsListFx.doneData, (state, payload) => payload.body.count)
+$countAllFriends.on(addToFriendChanged, (state) => ++state)
+$countAllFriends.on(submitRequestRemoveFromFriendsFx.doneData, (state) => --state)
 $countAllFriends.on(submitRequestFriendsListCountFx.doneData, (state, payload) => payload.body.count)
 
 export const $countOnlineFriends = createStore(0)

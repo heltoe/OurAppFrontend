@@ -1,6 +1,6 @@
 import { createEvent, attach, combine, sample, guard, restore, forward, createStore, createEffect } from 'effector-root'
 import { ListChatFxParams, Message, SendMessageFxParams } from '@/api/types'
-import { ListMessagesFx } from '@/api/Chat'
+import { ListMessagesFx, SendMessagesFx } from '@/api/Chat'
 import { ElementFileType } from '@/components/pages/chat/BindFile'
 import { createEffectorField } from '@/helpers/effector-field'
 import { $userId } from '@/App.module'
@@ -26,36 +26,24 @@ export const submitRequestListMessagesFx = attach({
 export const emitEnterToChatFx = createEffect((chat_id: number) => {
   socket.enterToChat(chat_id)
 })
-export const SendMessagesFx = createEffect((data: any) => {
-  changeTriggerClean()
-  textMessageChanged('')
-  changeListFiles([])
-  socket.sendMessage(data)
-})
 export const submitRequestSendMessagesFx = attach({
   effect: SendMessagesFx,
   mapParams: (params: SendMessageFxParams) => {
-    const data = {
-      ...params,
-      files: [],
-      date: params.date.toUTCString()
-    }
-    return data
-    // const formData = new FormData()
-    // // @ts-ignore
-    // formData.append('author', params.author)
-    // formData.append('message', params.message)
-    // // @ts-ignore
-    // formData.append('date', params.date.toUTCString())
-    // params.files.forEach(file => {
-    //   // @ts-ignore
-    //   formData.append('file', file);
-    // })
-    // // @ts-ignore
-    // if (params.chat_id) formData.append('chat_id', params.chat_id)
-    // // @ts-ignore
-    // if (params.recipient) formData.append('recipient', params.recipient)
-    // return formData
+    const formData = new FormData()
+    // @ts-ignore
+    formData.append('author', params.author)
+    formData.append('message', params.message)
+    // @ts-ignore
+    formData.append('date', params.date.toUTCString())
+    params.files.forEach(file => {
+      // @ts-ignore
+      formData.append('file', file);
+    })
+    // @ts-ignore
+    if (params.chat_id) formData.append('chat_id', params.chat_id)
+    // @ts-ignore
+    if (params.recipient) formData.append('recipient', params.recipient)
+    return formData
   }
 })
 
@@ -80,10 +68,11 @@ export const catchIncommingMessage = createEvent<Message>()
 export const changeListMessages = createEvent<Message[]>()
 export const $listMessages = restore(changeListMessages, [])
 $listMessages.on(submitRequestListMessagesFx.doneData, (state, payload) => [...payload.body.results.messages, ...state])
+$listMessages.on(submitRequestSendMessagesFx.doneData, (state, payload) => [...state, payload.body])
 $listMessages.on(catchIncommingMessage, (state, message) => [...state, message])
 
-export const changeTriggerClean = createEvent<void>()
-export const $triggerClean = createStore(false).on(changeTriggerClean, state => !state)
+export const $triggerClean = createStore(false)
+$triggerClean.on(submitRequestSendMessagesFx.doneData, (state) => !state)
 
 // Поле ввода ссобщения
 export const sendMessage = createEvent()
@@ -130,6 +119,17 @@ sample({
   clock: sendMessage,
   source: guard({ source: $prepareMessageData, filter: $canSendMessageRequest }),
   target: submitRequestSendMessagesFx
+})
+forward({
+  from: submitRequestSendMessagesFx.doneData,
+  to: [
+    textMessageChanged.prepend(() => ''),
+    changeListFiles.prepend(() => []),
+    changeChatId.prepend(({ body }) => {
+      socket.sendMessage(body)
+      return body.chat_id
+    }),
+  ]
 })
 sample({
   clock: enterToChat,
