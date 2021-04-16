@@ -8,6 +8,12 @@ import { User } from '@/api/types'
 import Avatar from '@/components/ui/Avatar'
 import { $profileUser } from '@/components/pages/profile/EditProfile.model'
 import { changeActiveUser } from '@/App.module'
+import {
+  changeRecipientId,
+  fetchListMessages,
+  changeListMessages,
+  $chat_id,
+} from '@/components/pages/chat/ChatPage.model'
 
 type CardType = {
   author: number
@@ -16,9 +22,10 @@ type CardType = {
   text: string
   photos: string[]
   isOpen: boolean
+  card_chat_id: number
 }
 
-export const AvatarOvarlay = styled.div<{ shortType?: boolean }>`
+export const AvatarOverlay = styled.div<{ shortType?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,7 +34,6 @@ export const AvatarOvarlay = styled.div<{ shortType?: boolean }>`
   height: 79px;
   transition: ${(props) => props.theme.transition};
   transform: ${(props) => `translateX(${props.shortType ? 0 : 200}px)`};
-  background-color: #fff;
   &:after {
     content: '';
     position: absolute;
@@ -49,18 +55,21 @@ const BlockColumnStyled = styled.div`
   padding: 10px;
   transition: ${(props) => `background-color ${props.theme.transition}`};
 `
-export const CardStyled = styled(Link)<{ shortType: boolean }>`
+export const CardStyled = styled(Link)<{
+  shorttype: number
+  isactive: number
+}>`
   display: flex;
   justify-content: space-between;
   height: 90px;
   width: 100%;
-  padding: ${(props) => (props.shortType ? '5px 0' : '5px')};
+  padding: ${(props) => (props.shorttype ? '5px 0' : '5px')};
   cursor: pointer;
-  transition: ${(props) => `box-shadow ${props.theme.transition}`};
+  transition: ${(props) => `background-color ${props.theme.transition}`};
+  background-color: ${(props) => props.isactive ? props.theme.rgba(props.theme.colors.lightBlue, 0.3) : props.theme.rgb(props.theme.colors.white)};
   &:hover {
-    box-shadow: ${(props) => props.theme.shadow.shadow2};
-    z-index: 10;
-    ${AvatarOvarlay} {
+    background-color: ${(props) => props.isactive ? props.theme.rgba(props.theme.colors.lightBlue, 0.3) : props.theme.rgb(props.theme.colors.grey6)};
+    ${AvatarOverlay} {
       &:after {
         background-color: ${(props) => props.theme.rgba(props.theme.colors.purple2, 0.1)};
       }
@@ -90,8 +99,10 @@ export const Card: React.FC<CardType> = ({
   time,
   text,
   photos,
+  card_chat_id,
   isOpen,
 }) => {
+  const chat_id = useStore($chat_id)
   const prifileInfo = useStore($profileUser)
   const authorInfo = author === prifileInfo.user_id ? prifileInfo : recipient
   const setActiveUser = () => {
@@ -105,14 +116,18 @@ export const Card: React.FC<CardType> = ({
       original_photo: recipient.original_photo,
       croped_photo: recipient.croped_photo,
     })
+    changeListMessages([])
+    changeRecipientId(recipient.user_id)
+    fetchListMessages()
   }
   return (
     <CardStyled
       to={`${getRouterByName('chat-page').path}?recipient=${recipient.user_id}`}
-      shortType={isOpen}
+      shorttype={isOpen ? 1 : 0}
+      isactive={chat_id === card_chat_id ? 1 : 0}
       onClick={() => setActiveUser()}
     >
-      <AvatarOvarlay shortType={isOpen}>
+      <AvatarOverlay shortType={isOpen}>
         <Avatar
           id={authorInfo.user_id}
           fullName={`${authorInfo.first_name} ${authorInfo.last_name}`}
@@ -120,7 +135,7 @@ export const Card: React.FC<CardType> = ({
           isRound
           image={authorInfo.croped_photo || ''}
         />
-      </AvatarOvarlay>
+      </AvatarOverlay>
       {isOpen && <BlockColumnStyled>
         <BlockStyled>
           <FullNameStyled className="middle">{`${authorInfo.first_name} ${authorInfo.last_name}`}</FullNameStyled>

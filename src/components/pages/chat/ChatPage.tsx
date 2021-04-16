@@ -8,7 +8,7 @@ import Message from '@/components/pages/chat/Message'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 import Icon from '@/components/ui/Icon'
 import {
-  changerecipientId,
+  changeRecipientId,
   fetchListMessages,
   fetchMoreMessages,
   $canLoadMore,
@@ -100,7 +100,7 @@ const ChatPage: React.FC = () => {
     const params = new URLSearchParams(window.location.search)
     const id = params.get('recipient')
     if (id) {
-      changerecipientId(parseInt(id))
+      changeRecipientId(parseInt(id))
       fetchListMessages()
     }
   }, [])

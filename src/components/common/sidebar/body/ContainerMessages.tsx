@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import { $listChat } from '@/components/common/sidebar/SideBar.model'
-import { getRouterByName } from '@/routes'
-import Card, { CardStyled } from '@/components/common/sidebar/body/Card'
+import Card from '@/components/common/sidebar/body/Card'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 
 type WrapperCardsType = {
@@ -15,9 +14,6 @@ const WrapperCardsStyled = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  & > ${CardStyled} {
-    border-bottom: ${(props) => `1px solid ${props.theme.rgb(props.theme.colors.grey2)}`};
-  }
 `
 export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
   const chats = useStore($listChat)
@@ -25,16 +21,16 @@ export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
     <WrapperCardsStyled>
       {
         chats.length ? chats.map((item) => (
-          <Link to={`${getRouterByName('chat-page').path}`} key={item.chat_id}>
-            <Card
-              author={item.last_message.author}
-              recipient={item.recipient_info}
-              time={item.last_message.date}
-              text={item.last_message.message}
-              photos={item.last_message.files}
-              isOpen={isOpen}
-            />
-          </Link>
+          <Card
+            author={item.last_message.author}
+            recipient={item.recipient_info}
+            time={item.last_message.date}
+            text={item.last_message.message}
+            photos={item.last_message.files}
+            card_chat_id={item.chat_id}
+            isOpen={isOpen}
+            key={item.chat_id}
+          />
         )) : <EmptyPlaceholder>Список чатов пуст</EmptyPlaceholder>
       }
     </WrapperCardsStyled>

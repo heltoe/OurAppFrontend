@@ -102,8 +102,8 @@ $chat_id.on(
   (_state, payload) => payload.body.results.chat_id || -1,
 )
 
-export const changerecipientId = createEvent<number>()
-const $recipient_id = restore(changerecipientId, -1)
+export const changeRecipientId = createEvent<number>()
+export const $recipient_id = restore(changeRecipientId, -1)
 
 export const catchIncommingMessage = createEvent<Message>()
 export const changeListMessages = createEvent<Message[]>()
