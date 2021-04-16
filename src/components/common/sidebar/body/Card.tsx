@@ -54,7 +54,7 @@ export const CardStyled = styled(Link)<{ shortType: boolean }>`
   justify-content: space-between;
   height: 90px;
   width: 100%;
-  padding: ${(props) => props.shortType ? '5px 0' : '5px'};
+  padding: ${(props) => (props.shortType ? '5px 0' : '5px')};
   cursor: pointer;
   transition: ${(props) => `box-shadow ${props.theme.transition}`};
   &:hover {
@@ -90,7 +90,7 @@ export const Card: React.FC<CardType> = ({
   time,
   text,
   photos,
-  isOpen
+  isOpen,
 }) => {
   const prifileInfo = useStore($profileUser)
   const authorInfo = author === prifileInfo.user_id ? prifileInfo : recipient
@@ -103,7 +103,7 @@ export const Card: React.FC<CardType> = ({
       birth_date: recipient.birth_date,
       phone: recipient.phone,
       original_photo: recipient.original_photo,
-      croped_photo: recipient.croped_photo
+      croped_photo: recipient.croped_photo,
     })
   }
   return (
@@ -113,14 +113,27 @@ export const Card: React.FC<CardType> = ({
       onClick={() => setActiveUser()}
     >
       <AvatarOvarlay shortType={isOpen}>
-        <Avatar id={authorInfo.user_id} fullName={`${authorInfo.first_name} ${authorInfo.last_name}`} size="70px" isRound image={authorInfo.croped_photo || ''} />
+        <Avatar
+          id={authorInfo.user_id}
+          fullName={`${authorInfo.first_name} ${authorInfo.last_name}`}
+          size="70px"
+          isRound
+          image={authorInfo.croped_photo || ''}
+        />
       </AvatarOvarlay>
       {isOpen && <BlockColumnStyled>
         <BlockStyled>
           <FullNameStyled className="middle">{`${authorInfo.first_name} ${authorInfo.last_name}`}</FullNameStyled>
           <p>{dayjs(time).format('HH:mm')}</p>
         </BlockStyled>
-        <MessageStyled dangerouslySetInnerHTML={{__html: text.length === 18 && photos.length ? '<div>Изображение</div>' : text }} />
+          <MessageStyled
+            dangerouslySetInnerHTML={{
+              __html:
+                text.length === 18 && photos.length
+                  ? '<div>Изображение</div>'
+                  : text,
+            }}
+          />
       </BlockColumnStyled>}
     </CardStyled>
   )

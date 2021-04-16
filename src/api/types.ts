@@ -108,7 +108,7 @@ export type ListChatFxParams = {
 export type ChatItem = {
   chat_id: number
   last_message: Message
-  recipient: User
+  recipient_info: User
 }
 export type ListChatsFxResponse = {
   count: number

@@ -2,8 +2,12 @@ import io from 'socket.io-client'
 import { config } from '@/config'
 import { catchIncommingMessage } from '@/components/pages/chat/ChatPage.model'
 import { addToFriendShipsChanged } from '@/components/pages/friends/models/FriendShip'
-import { addToFriendChanged } from '@/components/pages/friends/models/Friends'
-import { Message, User } from '@/api/types'
+import {
+  fetchCountFriends,
+  fetchCountOnlineFriends,
+} from '@/components/pages/friends/models/Friends'
+import { changeLastMessage } from '@/components/common/sidebar/SideBar.model'
+import { Message, User, ChatItem } from '@/api/types'
 
 const typeEmits = {
   FRIENDSHIP_ADD: 'FRIENDSHIP:ADD',
@@ -19,10 +23,12 @@ const typeEmits = {
   CHAT_ENTER: 'CHAT:JOIN',
   CHAT_MESSAGE_SEND: 'CHAT:MESSAGE_SEND',
   CHAT_MESSAGE_SENDED: 'CHAT:MESSAGE_SENDED',
+  SIDEBAR_MESSAGE_SEND: 'SIDEBAR:MESSAGE_SEND',
+  SIDEBAR_MESSAGE_SENDED: 'SIDEBAR:MESSAGE_SENDED',
   //
   APP_ENTER: 'APP:ENTER',
   APP_EXIT: 'APP:EXIT',
-  APP_SEND_MESSAGE: 'APP:SEND_MESSAGE'
+  APP_SEND_MESSAGE: 'APP:SEND_MESSAGE',
 }
 
 class SocketApi {
@@ -33,17 +39,29 @@ class SocketApi {
     this.socket.on(typeEmits.CHAT_MESSAGE_SENDED, (data: Message) => {
       catchIncommingMessage(data)
     })
+    this.socket.on(typeEmits.SIDEBAR_MESSAGE_SENDED, (data: ChatItem) => {
+      console.log(data, 111)
+      changeLastMessage(data)
+    })
     this.socket.on(typeEmits.FRIENDSHIP_ADD_MESSAGE_SENDED, (data: { user: User, recipient: number }) => {
-      if (data.recipient === this.user_id) addToFriendShipsChanged(data.user)
+      if (data.recipient === this.user_id) addToFriendShipsChanged(data.user) // TODO: add notification
     })
     this.socket.on(typeEmits.FRIENDSHIP_REMOVE_MESSAGE_SENDED, (data: { user: User, recipient: number }) => {
       if (data.recipient === this.user_id) console.log(data.user) // TODO: add notification
     })
     this.socket.on(typeEmits.FRIEND_ADD_MESSAGE_SENDED, (data: { user: User, recipient: number }) => {
-      if (data.recipient === this.user_id) addToFriendChanged(data.user)
+      if (data.recipient === this.user_id) {
+        fetchCountFriends()
+        fetchCountOnlineFriends()
+        // TODO: add notification
+      }
     })
     this.socket.on(typeEmits.FRIEND_REMOVE_MESSAGE_SENDED, (data: { user: User, recipient: number }) => {
-      if (data.recipient === this.user_id) console.log(data.user) // TODO: add notification
+      if (data.recipient === this.user_id) {
+        fetchCountFriends()
+        fetchCountOnlineFriends()
+        // TODO: add no tification
+      }
     })
   }
   public disconnect() {
@@ -70,8 +88,20 @@ class SocketApi {
   public enterToChat(chat_id: number) {
     this.socket.emit(typeEmits.CHAT_ENTER, chat_id)
   }
-  public sendMessage(data: Message) {
-    this.socket.emit(typeEmits.CHAT_MESSAGE_SEND, data)
+  public sendMessage(data: { user: User, message: Message, recipient_id: number }) {
+    this.socket.emit(typeEmits.CHAT_MESSAGE_SEND, data.message)
+    this.socket.emit(typeEmits.SIDEBAR_MESSAGE_SEND, {
+      chat_id: data.message.chat_id,
+      last_message: {
+        message_id: data.message.message_id,
+        message: data.message.message,
+        date: data.message.date,
+        author: data.message.author,
+        files: data.message.files,
+      },
+      recipient_info: data.user,
+      user_id: data.recipient_id,
+    })
   }
   public init(user_id: number) {
     this.user_id = user_id

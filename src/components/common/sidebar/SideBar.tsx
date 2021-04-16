@@ -21,10 +21,16 @@ const SideBarBodyStyled = styled.div`
     height: 100%;
   }
 `
-export const SideBar: React.FC<ToggleSideBarType> = ({ isOpen, setIsOpenSideBar }) => {
+export const SideBar: React.FC<ToggleSideBarType> = ({
+  isOpen,
+  setIsOpenSideBar,
+}) => {
   return (
     <SideBarStyled isOpen={isOpen}>
-      <TopMenu isOpen={isOpen} setIsOpenSideBar={(value) => setIsOpenSideBar(value)} />
+      <TopMenu
+        isOpen={isOpen}
+        setIsOpenSideBar={(value) => setIsOpenSideBar(value)}
+      />
       <SideBarBodyStyled>
         <Simple maxHeight="calc(100vh - 70px)">
           <ContainerMessages isOpen={isOpen} />
