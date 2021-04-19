@@ -6,7 +6,7 @@ import Icon, { IconStyled } from '@/components/ui/Icon'
 export type ModalBoxType = {
   closeModal?(): void
 }
-const ModalBoxStyled = styled(BlockStyled)`
+export const ModalBoxStyled = styled(BlockStyled)`
   display: flex;
   width: 400px;
   margin: 0 auto;

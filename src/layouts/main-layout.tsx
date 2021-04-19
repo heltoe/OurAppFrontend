@@ -8,6 +8,8 @@ import styled from 'styled-components'
 import Header from '@/components/common/Header'
 import SideBar from '@/components/common/sidebar/SideBar'
 import socket from '@/api/socket'
+import CallModal from '@/components/common/modal/CallModal'
+import { $isShowModal } from '@/components/common/modal/CallModal.model'
 
 const MainLayoutStyled = styled.div<{ isOpen: boolean }>`
   width: ${(props) => `calc(100% - ${props.isOpen ? 290 : 90}px);`};
@@ -20,6 +22,7 @@ const ContentContainerStyled = styled.div`
 `
 export const MainLayout: React.FC = ({ children }) => {
   const idProfile = useStore($userId)
+  const isShowModal = useStore($isShowModal)
   const [isOpenSideBar, setIsOpenSideBar] = useState(true)
   useEffect(() => {
     loadPersonalInfo()
@@ -42,6 +45,7 @@ export const MainLayout: React.FC = ({ children }) => {
       <ContentContainerStyled>
         <Header />
         {children}
+        {isShowModal && <CallModal />}
       </ContentContainerStyled>
     </MainLayoutStyled>
   )

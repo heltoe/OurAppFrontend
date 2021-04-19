@@ -9,6 +9,7 @@ import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form
 import { $userId } from '@/App.module'
 import { getRouterByPath } from '@/routes'
 import Avatar from '@/components/ui/Avatar'
+import Icon, { IconStyled } from '@/components/ui/Icon'
 
 const HeaderStyled = styled.div`
   display: flex;
@@ -22,6 +23,10 @@ const HeaderStyled = styled.div`
   z-index: 100;
   background: rgb(146,129,255);
   background: linear-gradient(45deg, rgba(146,129,255,1) 0%, rgba(109,170,254,1) 100%);
+  & ${IconStyled} {
+    margin-right: 15px;
+    cursor: pointer;
+  }
 `
 const LogoStyled = styled(Link)`
   position: absolute;
@@ -50,6 +55,8 @@ export const Header: React.FC = () => {
       <LogoStyled to={getRouterByName('profile-page').path} className="no-select">
         Chat
       </LogoStyled>
+      {getRouterByPath(location.pathname).name === 'chat-page' && <Icon type="phone-2" size="24px" color="#fff" />}
+      {getRouterByPath(location.pathname).name === 'chat-page' && <Icon type="video" size="24px" color="#fff" />}
       {getRouterByPath(location.pathname).name !== 'profile-page' && <PersonInfoStyled to={getRouterByName('profile-page').path}>
         <Avatar
           id={idProfile}
