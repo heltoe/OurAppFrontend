@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
+import styled from 'styled-components'
 import { useStore } from 'effector-react'
 import Cookies from 'js-cookie'
 import { config } from '@/config'
@@ -10,6 +11,11 @@ import { IntroPages, MainRoutes, getRouterByName } from '@/routes'
 import IntroLayout from '@/layouts/IntroLayout'
 import MainLayout from './layouts/main-layout'
 
+const AppStyled = styled.div`
+  min-height: 100vh;
+  background-color: ${(props) => props.theme.rgb(props.theme.colors.grey5)};
+`
+
 export const App: React.FC = () => {
   const token = useStore($token)
   useEffect(() => {
@@ -17,7 +23,7 @@ export const App: React.FC = () => {
     if (cookie?.length) setTokenForRequest(cookie)
   }, [])
   return (
-    <div className="App">
+    <AppStyled>
       <Switch>
         {!token.length && <IntroLayout>
           {IntroPages.map((item) => (
@@ -46,7 +52,7 @@ export const App: React.FC = () => {
           />
         </MainLayout>}
       </Switch>
-    </div>
+    </AppStyled>
   )
 }
 

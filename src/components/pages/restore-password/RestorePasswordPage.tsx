@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
 import {
   $email,
@@ -6,7 +6,8 @@ import {
   emilFormChanged,
   $feedBack,
   $canSubmit,
-  validateForm
+  validateForm,
+  resetFields
 } from '@/components/pages/restore-password/RestorePassword.model'
 import FormIntroContainer from '@/components/common/form-intro/FotmIntroContainer'
 import TogglePage from '@/components/common/form-intro/TogglePage'
@@ -23,6 +24,11 @@ export const RestorePasswordPage: React.FC = () => {
     { routeName: 'login-page', content: 'Вход' },
     { routeName: 'registration-page', content: 'Регистрация' },
   ]
+  useEffect(() => {
+    return () => {
+      resetFields()
+    }
+  }, [])
   return (
     <FormIntroContainer>
       <FormIntro feedBack={feedBack} onSubmit={() => validateForm()}>

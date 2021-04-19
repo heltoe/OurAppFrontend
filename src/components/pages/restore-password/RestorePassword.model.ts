@@ -22,11 +22,11 @@ const setErrorFx = createEffect(() => feedBackChanged('Сервис времен
 // events
 export const validateForm = createEvent()
 export const submitForm = createEvent()
-const resetFields = createEvent()
+export const resetFields = createEvent()
 // сторы
 export const [$email, emailChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
-export const [$feedBack, feedBackChanged] = createEffectorField({ defaultValue: '' })
-export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '' })
+export const [$feedBack, feedBackChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const emilFormChanged = {
   email: emailChanged,
   errorEmail: emailErrorChanged

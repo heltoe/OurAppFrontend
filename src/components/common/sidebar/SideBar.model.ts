@@ -33,7 +33,7 @@ $page.on(fetchMoreChats, (state) => state + 1)
 
 // сторы
 export const changeLastMessage = createEvent<ChatItem>()
-const listChatChanged = createEvent<ChatItem[]>()
+export const listChatChanged = createEvent<ChatItem[]>()
 export const $listChat = restore(listChatChanged, [])
 $listChat.on(changeLastMessage, (state, payload) => {
   const index = state.findIndex((item) => item.chat_id === payload.chat_id)

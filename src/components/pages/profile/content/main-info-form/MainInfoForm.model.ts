@@ -61,19 +61,20 @@ export const $oldValueForm = restore(oldValueFormChanged, {
   birth_date: new Date(),
   phone: ''
 })
-export const [$firstName, firstNameChanged] = createEffectorField({ defaultValue: '' })
-export const [$lastName, lastNameChanged] = createEffectorField({ defaultValue: '' })
-export const [$email, emailChanged] = createEffectorField({ defaultValue: '' })
-export const [$fullName, fullNameChanged] = createEffectorField({ defaultValue: '' })
-export const [$phone, phoneChanged] = createEffectorField({ defaultValue: '' })
-export const [$birth_date, birthDateChanged] = createEffectorField<Date | null>({ defaultValue: null })
+export const resetFields = createEvent()
+export const [$firstName, firstNameChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$lastName, lastNameChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$email, emailChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$fullName, fullNameChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$phone, phoneChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$birth_date, birthDateChanged] = createEffectorField<Date | null>({ defaultValue: null, reset: resetFields })
 
-export const [$firstNameError, firstNameErrorChanged] = createEffectorField({ defaultValue: '' })
-export const [$lastNameError, lastNameErrorChanged] = createEffectorField({ defaultValue: '' })
-export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '' })
-export const [$phoneError, phoneErrorChanged] = createEffectorField({ defaultValue: '' })
-export const [$birthDateError, birthDateErrorChanged] = createEffectorField({ defaultValue: '' })
-const [$errorForm, errorFormChanged] = createEffectorField({ defaultValue: '' })
+export const [$firstNameError, firstNameErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$lastNameError, lastNameErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$phoneError, phoneErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$birthDateError, birthDateErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+const [$errorForm, errorFormChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 
 export const $mainInfoForm = combine({
   first_name: $firstName,

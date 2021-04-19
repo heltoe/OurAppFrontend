@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -11,7 +11,8 @@ import {
   passwordChanged,
   emailErrorChanged,
   passwordErrorChanged,
-  validateForm
+  validateForm,
+  resetFields
 } from '@/components/pages/login/Login.model'
 import { getRouterByName } from '@/routes'
 import FormIntroContainer from '@/components/common/form-intro/FotmIntroContainer'
@@ -42,6 +43,11 @@ export const LoginPage: React.FC = () => {
   const feedBack = useStore($feedBack)
   const errors = useStore($errors)
   const canSubmit = useStore($canSubmit)
+  useEffect(() => {
+    return () => {
+      resetFields()
+    }
+  }, [])
   return (
     <FormIntroContainer>
       <FormIntro feedBack={feedBack} onSubmit={() => validateForm()}>

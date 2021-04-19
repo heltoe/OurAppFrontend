@@ -41,8 +41,9 @@ export const submitRequestUserInfoFx = attach({
 export const loadPersonalInfo = createEvent()
 export const loadUser = createEvent()
 const changeProfile = createEvent<User>()
-
+export const resetProfile = createEvent<void>()
 // сторы
+
 export const $profileUser = restore(changeProfile, {
   user_id: 0,
   first_name: '',
@@ -52,7 +53,7 @@ export const $profileUser = restore(changeProfile, {
   original_photo: '',
   croped_photo: '',
   phone: '',
-})
+}).reset(resetProfile)
 export const $canSendPersonalRequest = combine(
   $token,
   submitRequestPersonalInfoFx.pending,

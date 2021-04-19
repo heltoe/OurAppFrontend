@@ -106,6 +106,7 @@ export const Card: React.FC<CardType> = ({
   const prifileInfo = useStore($profileUser)
   const authorInfo = author === prifileInfo.user_id ? prifileInfo : recipient
   const setActiveUser = () => {
+    if (chat_id === card_chat_id) return 
     changeActiveUser({
       user_id: recipient.user_id,
       first_name: recipient.first_name,

@@ -33,11 +33,9 @@ const PageInfiniteScrolling: React.FC<PageInfiniteScrollig> = ({
   callBackToLoadMore,
   canLoadMore = true
 }) => {
-  const scrolledPage = useRef(null)
   const loadMoreElement = useRef(null)
   const scrollPage = () => {
-    const page = scrolledPage?.current as HTMLDivElement | null
-    if (page) callBack(page.scrollTop)
+    callBack(window.pageYOffset)
     if (canLoadMore && callBackToLoadMore) {
       const toggler = loadMoreElement?.current as HTMLDivElement | null
       if (toggler && isVisible(toggler)) callBackToLoadMore()
@@ -47,14 +45,13 @@ const PageInfiniteScrolling: React.FC<PageInfiniteScrollig> = ({
     scrollPage()
   }, 300)
   useEffect(() => {
-    const page = scrolledPage?.current as HTMLDivElement | null
-    if (page) page.addEventListener('scroll', handlerScrolling)
+    window.addEventListener('scroll', handlerScrolling)
     return () => {
-      if (page) page.removeEventListener('scroll', handlerScrolling)
+      window.removeEventListener('scroll', handlerScrolling)
     }
   })
   return (
-    <PageStyled ref={scrolledPage}>
+    <PageStyled>
       {children}
       {canLoadMore && callBackToLoadMore &&
         <ScrollingHelperStyled

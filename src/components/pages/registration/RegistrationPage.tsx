@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import {
@@ -7,7 +7,8 @@ import {
   $errors,
   $canSubmit,
   formChanged,
-  validateForm
+  validateForm,
+  resetFields
 } from '@/components/pages/registration/Registration.model'
 import FormIntroContainer from '@/components/common/form-intro/FotmIntroContainer'
 import TogglePage from '@/components/common/form-intro/TogglePage'
@@ -94,6 +95,11 @@ export const RegistrationPage: React.FC = () => {
       onFocus: () => formChanged.phoneError('')
     }
   ]
+  useEffect(() => {
+    return () => {
+      resetFields()
+    }
+  }, [])
   return (
     <FormIntroContainer>
       <FormIntro feedBack={feedBack} onSubmit={() => validateForm()}>

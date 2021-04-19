@@ -26,6 +26,7 @@ const WrapperContentStyled = styled.div`
   flex-direction: column;
   width: 560px;
   margin: 0 auto;
+  padding: 30px 0;
 `
 export const FriendsPage: React.FC = () => {
   const page = useStore($page)

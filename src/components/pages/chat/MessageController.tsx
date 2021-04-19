@@ -36,7 +36,8 @@ const MessageControllerStyled = styled.div`
   border-top: ${(props) => `1px solid ${props.theme.rgb(props.theme.colors.grey7)}`};
   padding: 20px;
   position: sticky;
-  bottom: 0;
+  position: -webkit-sticky;
+  bottom: 30px;
   z-index: 100;
   &:after {
     content: '';

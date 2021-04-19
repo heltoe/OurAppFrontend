@@ -28,13 +28,13 @@ const setErrorFx = createEffect((data: any) => {
 // events
 export const validateForm = createEvent()
 export const submitForm = createEvent()
-const resetFields = createEvent()
+export const resetFields = createEvent()
 // сторы
 export const [$email, emailChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$password, passwordChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
-export const [$feedBack, feedBackChanged] = createEffectorField({ defaultValue: '' })
-export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '' })
-export const [$passwordError, passwordErrorChanged] = createEffectorField({ defaultValue: '' })
+export const [$feedBack, feedBackChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$emailError, emailErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
+export const [$passwordError, passwordErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const $form = combine({ email: $email, password: $password })
 export const $errors = combine({ email: $emailError, password: $passwordError })
 const $isFormValid = combine(

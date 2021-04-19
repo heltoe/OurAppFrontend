@@ -14,11 +14,12 @@ const HeaderStyled = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  position: relative;
   height: ${(props) => props.theme.Hheader};
   min-height: ${(props) => props.theme.Hheader};
   padding: 15px 34px;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 100;
   background: rgb(146,129,255);
   background: linear-gradient(45deg, rgba(146,129,255,1) 0%, rgba(109,170,254,1) 100%);
 `

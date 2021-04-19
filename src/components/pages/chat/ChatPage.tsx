@@ -23,7 +23,9 @@ const ChatPageStyled = styled(PageStyled)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: auto;
   max-width: 100%;
+  padding: 30px 0;
 `
 const BLockContainer = styled(BlockStyled)`
   display: flex;
@@ -77,16 +79,12 @@ const ChatPage: React.FC = () => {
   const [isShow, setIsShow] = useState(false)
 
   const goToLastMessage = (typeScrolling: 'auto' | 'smooth' | undefined = 'auto'): void => {
-    const page = chatPage?.current as HTMLDivElement | null
-    if (page) page.scrollTo({ top: page.scrollHeight, behavior: typeScrolling })
+    window.scrollTo({ top: document.body.scrollHeight, behavior: typeScrolling })
   }
   const scrollPage = () => {
-    const wrapperContent = chatPage?.current as HTMLDivElement | null
-    if (wrapperContent) {
-      const condition = (wrapperContent.scrollHeight - wrapperContent.scrollTop) > (wrapperContent.offsetHeight + 200)
-      if (condition && !isShow) setIsShow(true)
-      if (!condition && isShow) setIsShow(false)
-    }
+    const condition = (document.body.scrollHeight - window.pageYOffset) > (window.innerHeight + 200)
+    if (condition && !isShow) setIsShow(true)
+    if (!condition && isShow) setIsShow(false)
     if (canLoadMore) {
       const toggler = loadMoreElement?.current as HTMLDivElement | null
       if (toggler && isVisible(toggler)) fetchMoreMessages()
@@ -111,10 +109,9 @@ const ChatPage: React.FC = () => {
     if (chat_id !== -1) enterToChat()
   }, [chat_id])
   useEffect(() => {
-    const page = chatPage?.current as HTMLDivElement | null
-    if (page) page.addEventListener('scroll', handlerScrolling)
+    window.addEventListener('scroll', handlerScrolling)
     return () => {
-      if (page) page.removeEventListener('scroll', handlerScrolling)
+      window.removeEventListener('scroll', handlerScrolling)
     }
   })
   return (
