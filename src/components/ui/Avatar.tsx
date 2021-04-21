@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 type AvatarType = {
   id: number
@@ -8,8 +8,25 @@ type AvatarType = {
   image?: string
   color?: string
   fullName?: string
+  isPulse?: boolean
 }
-export const AvatarStyled = styled.div<{ size: string, image: string, isRound: boolean, color: string }>`
+
+const pulseBuilder = (color: string) => {
+  const pulse = keyframes`
+    0% {
+      box-shadow: 0 0 0 0 rgba(${color}, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 20px rgba(${color}, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(${color}, 0);
+    }
+  `
+  return pulse;
+}
+
+export const AvatarStyled = styled.div<{ size: string, image: string, isRound: boolean, color: string, isPulse: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,9 +40,10 @@ export const AvatarStyled = styled.div<{ size: string, image: string, isRound: b
   width: ${(props) => props.size};
   height: ${(props) => props.size};
   background-image: ${(props) => `url(${props.image})`};
-  background-color: ${(props) => props.color};
+  background-color: ${(props) => props.theme.rgb(props.color)};
   border-radius: ${(props) => (props.isRound ? '50%' : '0')};
   transition: ${(props) => props.theme.transition};
+  animation: ${(props) => props.isPulse ? css`${pulseBuilder(props.color)} 2s ease-in-out infinite` : 'none'};
 `
 const InitialsStyled = styled.p<{ size: string }>`
   position: relative;
@@ -37,27 +55,25 @@ const InitialsStyled = styled.p<{ size: string }>`
 `
 
 const colors = [
-  `#7fc8e8`,
-  `#fdc16c`,
-  `#fd6c6d`,
-  `#7abc7a`,
-  `#ae69bf`,
-  `#7fa2e8`,
-  `#d5c9b8`,
-  `#989898`,
-  `#ffb8e8`,
-  `#5d414d`,
-  `#cbe9ab`,
-  `#c0cce2`,
-  `#c0cce2`,
-  `#f58569`,
-  `#3a9af9`,
-  `#3a9af9`,
-  `#608190`,
-  `#fe9a9a`,
-  `#ad7d7d`,
-  `#94c2c6`,
-  `#a2b464`
+  `127, 200, 232`,
+  `253, 193, 108`,
+  `253, 108, 109`,
+  `122, 188, 122`,
+  `174, 105, 191`,
+  `127, 162, 232`,
+  `213, 201, 184`,
+  `152, 152, 152`,
+  `255, 184, 232`,
+  `93, 65, 77`,
+  `203, 233, 171`,
+  `192, 204, 226`,
+  `245, 133, 105`,
+  `58, 154, 249`,
+  `96, 129, 144`,
+  `254, 154, 154`,
+  `173, 125, 125`,
+  `148, 194, 198`,
+  `162, 180, 100`
 ]
 export const getColorById = (id: number) => colors[id % colors.length] || '#000'
 
@@ -66,7 +82,8 @@ export const Avatar: React.FC<AvatarType> = ({
   image = '',
   size = '30px',
   isRound = false,
-  fullName = ''
+  fullName = '',
+  isPulse = false
 }) => {
   const [initials, setInitials] = useState('')
   useEffect(() => {
@@ -79,6 +96,7 @@ export const Avatar: React.FC<AvatarType> = ({
       image={image}
       color={getColorById(id)}
       isRound={isRound}
+      isPulse={isPulse}
     >
       {!image.length && <InitialsStyled size={size} className="no-select">{initials}</InitialsStyled>}
     </AvatarStyled>

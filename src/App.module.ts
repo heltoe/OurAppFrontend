@@ -2,6 +2,9 @@ import { combine, createEffect, createEvent, restore, split, sample } from 'effe
 import { $token } from '@/api/common/AuthorizedRequest'
 import { User } from '@/api/types'
 
+export const setCallUser = createEvent<User | null>()
+export const $callUser = restore(setCallUser, null)
+
 export const setIdUser = createEvent<number>()
 export const $userId = restore(setIdUser, 0)
 export const friendIdChanged = createEvent<number>()

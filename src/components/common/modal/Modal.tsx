@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { ModalBoxType } from '@/components/common/modal/ModalBox'
 
-const ModalWindowSwtyled = styled.div`
+export const ModalWindowStyled = styled.div`
   display: flex;
   align-items: center;
   position: fixed;
@@ -15,7 +15,7 @@ const ModalWindowSwtyled = styled.div`
 `
 const ModalWindow: React.FC<ModalBoxType> = ({ children, closeModal = () => {} }) => {
   return (
-    <ModalWindowSwtyled onClick={() => closeModal()}>{children}</ModalWindowSwtyled>
+    <ModalWindowStyled onClick={() => closeModal()}>{children}</ModalWindowStyled>
   )
 }
 

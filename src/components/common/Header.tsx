@@ -62,7 +62,8 @@ export const Header: React.FC = () => {
           id={idProfile}
           image={photo}
           fullName={mainInfoForm.full_name}
-          isRound size="40px"
+          isRound
+          size="40px"
         />
       </PersonInfoStyled>}
     </HeaderStyled>
