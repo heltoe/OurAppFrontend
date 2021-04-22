@@ -113,6 +113,7 @@ export default () => {
   }, [])
 
   useEffect(() => {
+    handleNewPeer()
     socket.addPeer()
   }, [])
 
