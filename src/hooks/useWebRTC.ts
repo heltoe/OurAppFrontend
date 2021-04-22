@@ -29,16 +29,10 @@ const useStateWithCallback = (initialState: any) => {
 export default () => {
   const [clients, updateClients] = useStateWithCallback([])
 
-  const addNewClient = useCallback((newClient: string, cb) => {
-    if (!clients.includes(newClient)) updateClients((list: string[]) => [...list, newClient], cb)
-  }, [clients, updateClients])
-
   const peerConnections = useRef({})
   const localMediaStream = useRef(null)
-  const peerMediaElements = useRef({
-    [LOCAL_VIDEO]: null
-  })
-
+  const peerMediaElements = useRef({ [LOCAL_VIDEO]: null })
+  // получения данных с камеры и мирофона и добавление трансляции на экран
   const startCapture = async () => {
     try {
       localMediaStream.current = await (<any> navigator.mediaDevices).getUserMedia({
@@ -65,7 +59,19 @@ export default () => {
       console.error('Error getting UserMedia', e)
     }
   }
-
+  // завершения звонка
+  const leaveFromCall = () => {
+    const localStream = localMediaStream.current
+    if (localStream) {
+      (<any> localStream).getTracks().forEach((track: any) => track.stop())
+      socket.leaveFromCall()
+    }
+  }
+  // обновление списка участников звонка
+  const addNewClient = useCallback((newClient: string, cb) => {
+    if (!clients.includes(newClient)) updateClients((list: string[]) => [...list, newClient], cb)
+  }, [clients, updateClients])
+  // процесс добавления участника к звонку
   const handleNewPeer = async ({ peerId, createOffer }) => {
     if (peerId in peerConnections.current) return console.log(`Already connected to peer ${peerId}`)
     const localPeerConnections = peerConnections.current as any | null
@@ -101,17 +107,13 @@ export default () => {
     if (arrMediaElements) arrMediaElements[id] = node
   }, [])
 
+  // хук для начала звонка и выхода из него
   useEffect(() => {
     startCapture()
-    return () => {
-      const localStream = localMediaStream.current
-      if (localStream) {
-        (<any> localStream).getTracks().forEach((track: any) => track.stop())
-        socket.leaveFromCall()
-      }
-    }
+    return () => { leaveFromCall() }
   }, [])
 
+  // хук для добавления участников к звонку
   useEffect(() => {
     handleNewPeer()
     socket.addPeer()
