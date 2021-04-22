@@ -31,10 +31,18 @@ const typeEmits = {
   APP_SEND_MESSAGE: 'APP:SEND_MESSAGE',
 }
 
+const options = {
+  'force new connection': true,
+  reconnectionAttempts: 'Infinity',
+  timeout: 10000,
+  transports: ['websocket']
+}
+
 class SocketApi {
   private socket: any
   private user_id: number | undefined
   private connect() {
+    // if (!this.socket) this.socket = io(config.BACKEND_URL, options)
     if (!this.socket) this.socket = io(config.BACKEND_URL)
     this.socket.on(typeEmits.CHAT_MESSAGE_SENDED, (data: Message) => {
       catchIncommingMessage(data)
@@ -102,6 +110,21 @@ class SocketApi {
       recipient_info: data.user,
       user_id: data.recipient_id,
     })
+  }
+  public joinToCall() {
+
+  }
+  public leaveFromCall() {
+
+  }
+  public addPeer() {
+
+  }
+  public relayIceCandidate() {
+
+  }
+  public relaySDP() {
+
   }
   public init(user_id: number) {
     this.user_id = user_id

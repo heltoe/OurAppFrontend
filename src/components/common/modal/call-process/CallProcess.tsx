@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import { ModalWindowStyled } from '@/components/common/modal/Modal'
 import ModalBox, { ModalBoxStyled } from '@/components/common/modal/ModalBox'
-import Icon, { IconStyled } from '@/components/ui/Icon'
+import Icon from '@/components/ui/Icon'
 import {
   changeIsShowModal,
   $isVideo,
@@ -11,6 +11,7 @@ import {
   $isAudio,
   changeIsAudio
 } from '@/components/common/modal/call-process/CallProcess.model'
+import useWebRTC, { LOCAL_VIDEO } from '@/hooks/useWebRTC'
 
 const ModalReStyled = styled(ModalWindowStyled)`
   min-height: 700px;
@@ -106,69 +107,34 @@ const LabelStyled = styled.p`
   max-width: 170px;
 `
 const CallModal: React.FC = () => {
-  const videoElement = useRef(null)
+  const { clients, provideMediaRef } = useWebRTC()
   const isVideo = useStore($isVideo)
   const isAudio = useStore($isAudio)
-  const [role, setRole] = useState('main')
-  const addStream = (stream: any) => {
-    const video = videoElement?.current as HTMLVideoElement | null
-    if (video) {
-      // @ts-ignore
-      window.stream = stream
-      video.srcObject = stream
-      video.addEventListener('loadedmetadata', () => {
-        video.play()
-      })
-    }
-  }
-  const closeStream = () => {
-    // @ts-ignore
-    window.stream.getAudioTracks().forEach((track: any) => {
-      track.stop()
-    })
-    // @ts-ignore
-    window.stream.getVideoTracks().forEach((track: any) => {
-      track.stop()
-    })
-    // @ts-ignore
-    window.stream = null
-    changeIsShowModal(false)
-  }
-  // useEffect(() => {
-  //   navigator.mediaDevices.getUserMedia({
-  //     video: true,
-  //     audio: true,
-  //   }).then(stream => {
-  //     addStream(stream)
-  //   })
-  //   return () => {
-  //     const video = videoElement?.current as HTMLVideoElement | null
-  //     if (video) video.srcObject = null
-  //   }
-  // }, [])
+  const [role, setRole] = useState(LOCAL_VIDEO)
   return (
     <ModalReStyled>
-      <ModalBox showClose={false} closeModal={() => closeStream()}>
-        {/* <video ref={videoElement} muted={true}/> */}
+      <ModalBox showClose={false} closeModal={() => changeIsShowModal(false)}>
         <MainVideoStyled>
-          <VideoWrapperStyled
-            isMain={role === 'main'}
-            onClick={() => setRole('main')}
-          >
-            <VideoStyled controls={false} muted={!isAudio} />
-            {!isVideo && <WrapperLabelStyled>
-              <LabelStyled>111</LabelStyled>
-            </WrapperLabelStyled>}
-          </VideoWrapperStyled>
-          <VideoWrapperStyled
-            isMain={role === 'second'}
-            onClick={() => setRole('second')}
-          >
-            <VideoStyled controls={false} muted={!isAudio} />
-            {!isVideo && <WrapperLabelStyled>
-              <LabelStyled>222</LabelStyled>
-            </WrapperLabelStyled>}
-          </VideoWrapperStyled>
+          {clients.map((clientId: string) => 
+            <VideoWrapperStyled
+              key={clientId}
+              isMain={role === clientId}
+              onClick={() => setRole(clientId)}
+            >
+              <VideoStyled
+                ref={instance => {
+                  provideMediaRef(clientId, instance)
+                }}
+                autoPlay
+                playsInline
+                controls={false}
+                muted={clientId === LOCAL_VIDEO ? true : false}
+              />
+              {!isVideo && <WrapperLabelStyled>
+                <LabelStyled>111</LabelStyled>
+              </WrapperLabelStyled>}
+            </VideoWrapperStyled>
+          )}
         </MainVideoStyled>
         <ControllerStyled>
           <GreyButtonStyled onClick={() => changeIsVideo(!isVideo)}>
@@ -177,7 +143,7 @@ const CallModal: React.FC = () => {
           <GreyButtonStyled onClick={() => changeIsAudio(!isAudio)}>
             <Icon type={isAudio ? 'microphone' : 'no-microphone'} color="#fff" size="18px" />
           </GreyButtonStyled>
-          <RedButtonStyled onClick={() => closeStream()}>
+          <RedButtonStyled onClick={() => changeIsShowModal(false)}>
             <Icon type="phone-2" color="#fff" size="18px" />
           </RedButtonStyled>
         </ControllerStyled>
