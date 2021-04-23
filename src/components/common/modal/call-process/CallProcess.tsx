@@ -9,9 +9,10 @@ import {
   $isVideo,
   changeIsVideo,
   $isAudio,
-  changeIsAudio
+  changeIsAudio,
 } from '@/components/common/modal/call-process/CallProcess.model'
-import useWebRTC, { LOCAL_VIDEO } from '@/hooks/useWebRTC'
+import useWebRTC, { PARTICIPANT_CALL } from '@/hooks/useWebRTC'
+import { $participantsCall, $userId } from '@/App.module'
 
 const ModalReStyled = styled(ModalWindowStyled)`
   min-height: 700px;
@@ -67,14 +68,17 @@ const MainVideoStyled = styled.div`
 const VideoWrapperStyled = styled.div<{ isMain: boolean }>`
   position: absolute;
   border-radius: 8px;
-  right: ${(props) => props.isMain ? '0' : '20px'};
-  bottom: ${(props) => props.isMain ? '0' : '20px'};
-  width: ${(props) => props.isMain ? '100%' : '200px'};
-  height: ${(props) => props.isMain ? '100%' : '130px'};
-  border: ${(props) => props.isMain ? 'none' : `1px solid ${props.theme.rgb(props.theme.colors.white)}`};
+  right: ${(props) => (props.isMain ? '0' : '20px')};
+  bottom: ${(props) => (props.isMain ? '0' : '20px')};
+  width: ${(props) => (props.isMain ? '100%' : '200px')};
+  height: ${(props) => (props.isMain ? '100%' : '130px')};
+  border: ${(props) =>
+    props.isMain
+      ? 'none'
+      : `1px solid ${props.theme.rgb(props.theme.colors.white)}`};
   background-color: ${(props) => props.theme.rgba(props.theme.colors.grey9, props.isMain ? 0 : 1)};
-  cursor: ${(props) => props.isMain ? 'default' : 'pointer'};
-  z-index: ${(props) => props.isMain ? '1' : '2'};
+  cursor: ${(props) => (props.isMain ? 'default' : 'pointer')};
+  z-index: ${(props) => (props.isMain ? '1' : '2')};
 `
 const VideoStyled = styled.video`
   position: absolute;
@@ -107,41 +111,53 @@ const LabelStyled = styled.p`
   max-width: 170px;
 `
 const CallModal: React.FC = () => {
-  const { clients, provideMediaRef } = useWebRTC()
+  const { provideMediaRef } = useWebRTC()
+  const participantsCall = useStore($participantsCall)
+  const userId = useStore($userId)
   const isVideo = useStore($isVideo)
   const isAudio = useStore($isAudio)
-  const [role, setRole] = useState(LOCAL_VIDEO)
+  const [role, setRole] = useState(userId)
   return (
     <ModalReStyled>
       <ModalBox showClose={false} closeModal={() => changeIsShowModal(false)}>
         <MainVideoStyled>
-          {clients.map((clientId: string) => 
+          {participantsCall.map((participant) => (
             <VideoWrapperStyled
-              key={clientId}
-              isMain={role === clientId}
-              onClick={() => setRole(clientId)}
+              key={participant.user_id}
+              isMain={role === participant.user_id}
+              onClick={() => setRole(participant.user_id)}
             >
               <VideoStyled
-                ref={instance => {
-                  provideMediaRef(clientId, instance)
+                ref={(instance) => {
+                  if (instance) provideMediaRef(participant.user_id, instance)
                 }}
                 autoPlay
                 playsInline
                 controls={false}
-                muted={clientId === LOCAL_VIDEO ? true : false}
+                muted={participant.user_id === userId}
               />
-              {!isVideo && <WrapperLabelStyled>
-                <LabelStyled>111</LabelStyled>
-              </WrapperLabelStyled>}
+              {!isVideo && (
+                <WrapperLabelStyled>
+                  <LabelStyled>111</LabelStyled>
+                </WrapperLabelStyled>
+              )}
             </VideoWrapperStyled>
-          )}
+          ))}
         </MainVideoStyled>
         <ControllerStyled>
           <GreyButtonStyled onClick={() => changeIsVideo(!isVideo)}>
-            <Icon type={isVideo ? 'video' : 'no-video'} color="#fff" size="18px" />
+            <Icon
+              type={isVideo ? 'video' : 'no-video'}
+              color="#fff"
+              size="18px"
+            />
           </GreyButtonStyled>
           <GreyButtonStyled onClick={() => changeIsAudio(!isAudio)}>
-            <Icon type={isAudio ? 'microphone' : 'no-microphone'} color="#fff" size="18px" />
+            <Icon
+              type={isAudio ? 'microphone' : 'no-microphone'}
+              color="#fff"
+              size="18px"
+            />
           </GreyButtonStyled>
           <RedButtonStyled onClick={() => changeIsShowModal(false)}>
             <Icon type="phone-2" color="#fff" size="18px" />

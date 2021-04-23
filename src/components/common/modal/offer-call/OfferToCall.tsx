@@ -6,8 +6,17 @@ import ModalBox, { ModalBoxStyled } from '@/components/common/modal/ModalBox'
 import { BaseButtonStyled } from '@/components/ui/BaseButton'
 import Icon, { IconStyled } from '@/components/ui/Icon'
 import Avatar, { AvatarStyled } from '@/components/ui/Avatar'
-import { changeIsShowModal, $typeCall } from '@/components/common/modal/offer-call/OfferToCall.model'
-import { $callUser, setCallUser } from '@/App.module'
+import {
+  changeIsShowModal,
+  $typeCall,
+} from '@/components/common/modal/offer-call/OfferToCall.model'
+import {
+  $recipientCallUser,
+  changeRecipientCallUser,
+  $sendlerCallUser,
+  changeSendlerCallUser,
+} from '@/App.module'
+import socket from '@/api/socket'
 
 const fade = keyframes`
   0% { opacity: 0.2 }
@@ -80,14 +89,18 @@ const DeclineBtn = styled(BaseButtonStyled)`
 `
 const OfferToCall: React.FC = () => {
   const typeCall = useStore($typeCall)
-  const callUser = useStore($callUser)
+  const sendlerCallUser = useStore($sendlerCallUser)
+  const recipientCallUser = useStore($recipientCallUser)
   const answer = () => {
-    console.log('answer')
+    socket.applyCall(sendlerCallUser.user_id)
     changeIsShowModal(false)
   }
   const decline = () => {
+    const userId = sendlerCallUser ? sendlerCallUser.user_id : recipientCallUser.user_id
+    if (sendlerCallUser) changeSendlerCallUser(null)
+    if (recipientCallUser) changeRecipientCallUser(null)
+    socket.declineCall(userId)
     changeIsShowModal(false)
-    setCallUser(null)
   }
   return (
     <ModalReStyled>

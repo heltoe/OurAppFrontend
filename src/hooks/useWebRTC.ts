@@ -1,62 +1,78 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
+import { useStore } from 'effector-react'
+import { $profileUser } from '@/components/pages/profile/EditProfile.model'
+import { $callUser, addParticipantCall } from '@/App.module'
 // @ts-ignore
 import freeice from 'freeice'
-import socket from '@/api/socket'
+import socket, { CallUserInfo } from '@/api/socket'
 
-export const LOCAL_VIDEO = 'LOCAL_VIDEO'
+export const PARTICIPANT_CALL = 'PARTICIPANT_CALL_'
 
-const useStateWithCallback = (initialState: any) => {
-  const [state, setState] = useState(initialState)
-  const cbRef = useRef(null)
+// const useStateWithCallback = (initialState: any) => {
+//   const [state, setState] = useState(initialState)
+//   const cbRef = useRef(null)
 
-  const updateState = useCallback((newState, cb) => {
-    cbRef.current = cb
-    setState((prev: any) => typeof newState === 'function' ? newState(prev) : newState)
-  }, [])
+//   const updateState = useCallback((newState, cb) => {
+//     cbRef.current = cb
+//     setState((prev: any) =>
+//       typeof newState === 'function' ? newState(prev) : newState,
+//     )
+//   }, [])
 
-  useEffect(() => {
-    if (cbRef.current) {
-      // @ts-ignore
-      cbRef.current(state)
-      // @ts-ignore
-      cbRef.current(null)
-    }
-  }, [state])
+//   useEffect(() => {
+//     if (cbRef.current) {
+//       // @ts-ignore
+//       cbRef.current(state)
+//       // @ts-ignore
+//       cbRef.current(null)
+//     }
+//   }, [state])
 
-  return [state, updateState]
-}
+//   return [state, updateState]
+// }
 
 export default () => {
-  const [clients, updateClients] = useStateWithCallback([])
+  const userInfo = useStore($profileUser)
+  const recipientInfo = useStore($callUser)
 
-  const peerConnections = useRef({})
-  const localMediaStream = useRef(null)
-  const peerMediaElements = useRef({ [LOCAL_VIDEO]: null })
+  const peerConnections = useRef<any>({})
+  const localMediaStream = useRef<any>(null)
+  const peerMediaElements = useRef<any>({})
   // получения данных с камеры и мирофона и добавление трансляции на экран
   const startCapture = async () => {
-    try {
-      localMediaStream.current = await (<any> navigator.mediaDevices).getUserMedia({
-        audio: true,
-        video: {
-          mandatory: {
-            minWidth: 640,
-            maxWidth: 640,
-            minHeight: 480,
-            maxHeight: 480,
-            minFrameRate: 30,
+    if (userInfo && recipientInfo) {
+      try {
+        localMediaStream.current = await (<any>(
+          navigator.mediaDevices
+        )).getUserMedia({
+          audio: true,
+          video: {
+            mandatory: {
+              minWidth: 640,
+              maxWidth: 640,
+              minHeight: 480,
+              maxHeight: 480,
+              minFrameRate: 30,
+            },
           },
-        },
-      })
-      addNewClient(LOCAL_VIDEO, () => {
-        const localVideoElement = peerMediaElements.current[LOCAL_VIDEO] as HTMLVideoElement | null
+        })
+        const userData = {
+          user_id: userInfo.user_id,
+          full_name: `${userInfo.first_name} ${userInfo.last_name}`,
+        }
+        addParticipantCall(userData)
+        const localVideoElement = peerMediaElements.current[`${PARTICIPANT_CALL}${userData.user_id}`]
         if (localVideoElement) {
           localVideoElement.volume = 0
           localVideoElement.srcObject = localMediaStream.current
         }
-      })
-      socket.joinToCall()
-    } catch(e) {
-      console.error('Error getting UserMedia', e)
+        socket.joinToCall({
+          user_id: userData.user_id,
+          recipient_id: recipientInfo.user_id,
+        })
+      } catch (e) {
+        console.error('Error getting UserMedia', e)
+      }
     }
   }
   // завершения звонка
@@ -64,60 +80,96 @@ export default () => {
     const localStream = localMediaStream.current
     if (localStream) {
       (<any> localStream).getTracks().forEach((track: any) => track.stop())
-      socket.leaveFromCall()
+      if (userInfo && recipientInfo) {
+        socket.leaveFromCall({
+          user_info: {
+            user_id: userInfo.user_id,
+            full_name: `${userInfo.first_name} ${userInfo.last_name}`,
+          },
+          recipient_info: {
+            user_id: recipientInfo.user_id,
+            full_name: `${recipientInfo.first_name} ${recipientInfo.last_name}`,
+          },
+        })
+      }
     }
   }
-  // обновление списка участников звонка
-  const addNewClient = useCallback((newClient: string, cb) => {
-    if (!clients.includes(newClient)) updateClients((list: string[]) => [...list, newClient], cb)
-  }, [clients, updateClients])
+  // создаем RTC peer connection
+  // const createRTCPeerConnection = () => {
+  //   peerConnections.current[userInfo.user_id] = new RTCPeerConnection({
+  //     iceServers: freeice(),
+  //   })
+  // }
+  // // создаем запрос на соединение
+  // const createOfferSDP = async () => {
+  //   const profileData = {
+  //     user_id: userInfo.user_id,
+  //     full_name: `${userInfo.first_name} ${userInfo.last_name}`,
+  //   }
+  //   const offerSDP = peerConnections.current[profileData.user_id].createOffer()
+  //   await peerConnections.current[profileData.user_id].setLocalDescription(
+  //     offerSDP,
+  //   )
+  //   socket.relaySDP({
+  //     user_info: profileData,
+  //     sessionDescription: offerSDP,
+  //   })
+  // }
+  // // создаем ответ для соединения
+  // const createAnswerSDP = async (offer: any) => {
+  //   const profileData = {
+  //     user_id: userInfo.user_id,
+  //     full_name: `${userInfo.first_name} ${userInfo.last_name}`,
+  //   }
+  //   peerConnections.current[userInfo.user_id].setRemoteDescription(offer)
+  //   // TODO добавить клиента себе
+  //   const answerSDP = peerConnections.current[userInfo.user_id].createAnswer()
+  //   await peerConnections.current[userInfo.user_id].setLocalDescription(
+  //     answerSDP,
+  //   )
+  //   socket.relaySDP({
+  //     user_info: profileData,
+  //     sessionDescription: answerSDP,
+  //   })
+  //   // peerConnections.current[userInfo.user_id].setRemoteDescription(offer)
+  // }
+  // создаем кандидата на ice connect
+  // const createIceCandidate = () => {
+  //   const profileData = {
+  //     user_id: userInfo.user_id,
+  //     full_name: `${userInfo.first_name} ${userInfo.last_name}`,
+  //   }
+  //   peerConnections.current[profileData.user_id].onicecandidate = (event: any) => {
+  //     if (event.candidate) {
+  //       socket.relayIceCandidate({
+  //         user_info: profileData,
+  //         iceCandidate: event.candidate,
+  //       })
+  //     }
+  //   }
+  // }
+
   // процесс добавления участника к звонку
-  const handleNewPeer = async ({ peerId, createOffer }) => {
-    if (peerId in peerConnections.current) return console.log(`Already connected to peer ${peerId}`)
-    const localPeerConnections = peerConnections.current as any | null
-    if (localPeerConnections) {
-      peerConnections.current[peerId] = new RTCPeerConnection({
-        iceServers: freeice(),
-      })
-      peerConnections.current[peerId].onicecandidate = (event: any) => {
-        if (event.candidate) socket.relayIceCandidate({ peerId, iceCandidate: event.candidate })
-      }
-      peerConnections.current[peerId].ontrack = ({ streams: [remoteStream] }) => {
-        addNewClient(peerId, () => {
-          peerMediaElements.current[peerId].srcObject = remoteStream
-        })
-      }
-      const localStream = localMediaStream.current
-      if (localStream) {
-        localStream.getTracks().forEach((track: any) => {
-          peerConnections.current[peerId].addTrack(track, localStream)
-        })
-      }
-
-      if (createOffer) {
-        const offer = await peerConnections.current[peerId].createOffer()
-        await peerConnections.current[peerId].setLocalDescription(offer)
-        socket.relaySDP({ peerId, sessionDescription: offer })
-      }
-    }
-  }
-
-  const provideMediaRef = useCallback((id: string, node: HTMLVideoElement) => {
-    const arrMediaElements = peerMediaElements.current as HTMLVideoElement[] | null
-    if (arrMediaElements) arrMediaElements[id] = node
+  const handler
+  // запись ссылок на video тэг
+  const provideMediaRef = useCallback((id: number, node: HTMLVideoElement) => {
+    const arrMediaElements = peerMediaElements.current
+    if (arrMediaElements) arrMediaElements[`${PARTICIPANT_CALL}${id}`] = node
   }, [])
-
   // хук для начала звонка и выхода из него
   useEffect(() => {
+    if (userInfo) peerMediaElements.current[`${PARTICIPANT_CALL}${userInfo.user_id}`] = null
+    // createRTCPeerConnection()
     startCapture()
-    return () => { leaveFromCall() }
+    return () => {
+      leaveFromCall()
+    }
   }, [])
 
-  // хук для добавления участников к звонку
-  useEffect(() => {
-    handleNewPeer()
-    socket.addPeer()
-  }, [])
+  // // хук для добавления участников к звонку
+  // useEffect(() => {
+  //   socket.addPeer(handlerNewPeer)
+  // }, [])
 
-  return { clients, provideMediaRef }
+  return { provideMediaRef }
 }

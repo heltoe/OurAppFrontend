@@ -1,9 +1,32 @@
-import { combine, createEffect, createEvent, restore, split, sample } from 'effector-root'
-import { $token } from '@/api/common/AuthorizedRequest'
+import {
+  combine,
+  createEffect,
+  createEvent,
+  restore,
+  split,
+  sample,
+  createStore,
+} from 'effector-root'
 import { User } from '@/api/types'
+import { $token } from '@/api/common/AuthorizedRequest'
+import { CallUserInfo } from '@/api/socket'
 
-export const setCallUser = createEvent<User | null>()
-export const $callUser = restore(setCallUser, null)
+export const removeParticipantCall = createEvent<number>()
+export const addParticipantCall = createEvent<CallUserInfo>()
+export const $participantsCall = createStore<CallUserInfo[]>([])
+$participantsCall.on(removeParticipantCall, (state, payload) =>
+  state.filter((item) => item.user_id !== payload),
+)
+$participantsCall.on(addParticipantCall, (state, payload) => [
+  ...state,
+  payload,
+])
+
+export const changeSendlerCallUser = createEvent<User | null>()
+export const $sendlerCallUser = restore(changeSendlerCallUser, null)
+
+export const changeRecipientCallUser = createEvent<User | null>()
+export const $recipientCallUser = restore(changeRecipientCallUser, null)
 
 export const setIdUser = createEvent<number>()
 export const $userId = restore(setIdUser, 0)
