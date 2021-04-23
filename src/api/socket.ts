@@ -170,7 +170,7 @@ class SocketApi {
     this.socket.emit(typeEmits.CALL_RELAY_ICE_CANDIDATE, data)
   }
 
-  public relaySDP(data: { user_info: CallUserInfo, sessionDescription: any }) {
+  public sendOfferSDP(data: { user_info: CallUserInfo, sessionDescription: any }) {
     this.socket.emit(typeEmits.CALL_RELAY_SDP, data)
   }
 
