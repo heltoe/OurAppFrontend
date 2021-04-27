@@ -42,7 +42,7 @@ export const $activeUser = restore(changeActiveUser, {
   birth_date: new Date(),
   original_photo: '',
   croped_photo: '',
-  phone: ''
+  phone: '',
 })
 
 export const $preparePersonDataId = combine({ id: $userId })
@@ -52,14 +52,14 @@ export const $prepareUserDataId = combine({ user_id: $userId })
 export const $prepareFriendDataId = combine({ friend_id: $friendId })
 export const $friendData = combine({
   user_id: $userId,
-  friend_id: $friendId
+  friend_id: $friendId,
 })
 
 export const typePages = {
   friends: 'friends',
   online: 'online',
   friendship: 'friendship',
-  findFriend: 'findFriend'
+  findFriend: 'findFriend',
 }
 export const typePageChanged = createEvent<string>()
 export const $typePage = restore(typePageChanged, typePages.friends)
@@ -73,7 +73,7 @@ export const $canLoadMore = restore(canLoadMoreChanged, true)
 
 export const $prepareDataToInfinityScroll = combine({
   page: $page,
-  typePage: $typePage
+  typePage: $typePage,
 })
 
 export const loadListUsers = createEvent()
@@ -95,7 +95,7 @@ const callRestFieldsFx = createEffect((type: string) => {
     friends: resetAllFriends,
     online: resetOnlineFriends,
     friendship: resetFriendShip,
-    findFriend: resetUsers
+    findFriend: resetUsers,
   }
   Object.keys(resetMethods).forEach((item) => {
     // @ts-ignore
@@ -105,7 +105,7 @@ const callRestFieldsFx = createEffect((type: string) => {
 sample({
   clock: resetListsUsers,
   source: $typePage,
-  target: callRestFieldsFx
+  target: callRestFieldsFx,
 })
 split({
   source: $prepareDataToInfinityScroll,
@@ -113,7 +113,7 @@ split({
     users: ({ typePage }) => typePage === typePages.findFriend,
     friendShips: ({ typePage }) => typePage === typePages.friendship,
     allFriends: ({ typePage }) => typePage === typePages.friends,
-    onlineFriends: ({ typePage }) => typePage === typePages.online
+    onlineFriends: ({ typePage }) => typePage === typePages.online,
   },
   cases: {
     // @ts-ignore
@@ -124,5 +124,5 @@ split({
     allFriends: [loadAllFriends, resetListsUsers],
     // @ts-ignore
     onlineFriends: [loadOnlineFriends, resetListsUsers]
-  }
+  },
 })

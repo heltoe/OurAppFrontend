@@ -6,17 +6,16 @@ import ModalBox, { ModalBoxStyled } from '@/components/common/modal/ModalBox'
 import { BaseButtonStyled } from '@/components/ui/BaseButton'
 import Icon, { IconStyled } from '@/components/ui/Icon'
 import Avatar, { AvatarStyled } from '@/components/ui/Avatar'
-import {
-  changeIsShowModal,
-  $typeCall,
-} from '@/components/common/modal/offer-call/OfferToCall.model'
+import { changeIsShowModal } from '@/components/common/modal/offer-call/OfferToCall.model'
 import {
   $recipientCallUser,
   changeRecipientCallUser,
   $sendlerCallUser,
   changeSendlerCallUser,
+  $userId,
 } from '@/App.module'
 import socket from '@/api/socket'
+import { User } from '@/api/types'
 
 const fade = keyframes`
   0% { opacity: 0.2 }
@@ -88,32 +87,34 @@ const DeclineBtn = styled(BaseButtonStyled)`
   background-color: ${(props) => props.theme.rgb(props.theme.colors.red)};
 `
 const OfferToCall: React.FC = () => {
-  const typeCall = useStore($typeCall)
-  const sendlerCallUser = useStore($sendlerCallUser)
-  const recipientCallUser = useStore($recipientCallUser)
+  const userId = useStore($userId)
+  const sendlerCallUser = useStore($sendlerCallUser) as User
+  const recipientCallUser = useStore($recipientCallUser) as User
+  const typeCall = userId === sendlerCallUser.user_id ? 'outgoing' : 'incomming'
+  const callUser = userId === sendlerCallUser.user_id ? recipientCallUser : sendlerCallUser
   const answer = () => {
     socket.applyCall(sendlerCallUser.user_id)
     changeIsShowModal(false)
   }
   const decline = () => {
-    const userId = sendlerCallUser ? sendlerCallUser.user_id : recipientCallUser.user_id
+    const user_id = userId === recipientCallUser.user_id ? sendlerCallUser.user_id : recipientCallUser.user_id
     if (sendlerCallUser) changeSendlerCallUser(null)
     if (recipientCallUser) changeRecipientCallUser(null)
-    socket.declineCall(userId)
+    socket.declineCall(user_id)
     changeIsShowModal(false)
   }
   return (
     <ModalReStyled>
       <ModalBox closeModal={() => decline()}>
         <Avatar
-          id={callUser ? callUser.user_id || 1 : 1}
-          image={callUser ? callUser.croped_photo || '' : ''}
-          fullName={callUser ? `${callUser.first_name || ''} ${callUser.last_name || ''}` : ''}
+          id={callUser.user_id}
+          image={callUser.croped_photo || ''}
+          fullName={`${callUser.first_name || ''} ${callUser.last_name || ''}`}
           isRound
           isPulse
           size="150px"
         />
-        <NameUserStyled>{callUser ? `${callUser.first_name || ''} ${callUser.last_name || ''}` : ''}</NameUserStyled>
+        <NameUserStyled>{`${callUser.first_name || ''} ${callUser.last_name || ''}`}</NameUserStyled>
         <DescriptionStyled>
           {typeCall === 'incomming' ? 'Входящий' : 'Исходящий'} звонок
           <AnumatedDotStyled>.</AnumatedDotStyled>
@@ -124,9 +125,7 @@ const OfferToCall: React.FC = () => {
           <Icon type="phone-2" color="#fff" size="18px" />
           Ответить на звонок
         </AnswerBtn>}
-        <DeclineBtn onClick={() => decline()}>
-          Отклонить
-        </DeclineBtn>
+        <DeclineBtn onClick={() => decline()}>Отклонить</DeclineBtn>
       </ModalBox>
     </ModalReStyled>
   )

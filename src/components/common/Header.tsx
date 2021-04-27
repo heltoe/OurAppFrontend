@@ -1,15 +1,20 @@
 import React from 'react'
 import { useStore } from 'effector-react'
-import { useLocation } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { getRouterByName } from '@/routes'
+import { getRouterByPath, getRouterByName } from '@/routes'
 import { $cropedPhoto } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
-import { $userId } from '@/App.module'
-import { getRouterByPath } from '@/routes'
+import { $profileUser } from '@/components/pages/profile/EditProfile.model'
+import {
+  $activeUser,
+  changeRecipientCallUser,
+  changeSendlerCallUser,
+} from '@/App.module'
 import Avatar from '@/components/ui/Avatar'
 import Icon, { IconStyled } from '@/components/ui/Icon'
+import { User } from '@/api/types'
+import socket from '@/api/socket'
 
 const HeaderStyled = styled.div`
   display: flex;
@@ -48,24 +53,56 @@ const PersonInfoStyled = styled(Link)`
 export const Header: React.FC = () => {
   const photo = useStore($cropedPhoto)
   const mainInfoForm = useStore($mainInfoForm)
-  const idProfile = useStore($userId)
+
+  const activeUser = useStore($activeUser)
+  const profileUser = useStore($profileUser)
+
   const location = useLocation()
+
+  const callToUser = (data: { sendler: User, recipient: User }) => {
+    changeSendlerCallUser(data.sendler)
+    changeRecipientCallUser(data.recipient)
+    socket.callToUser(data)
+  }
   return (
     <HeaderStyled>
-      <LogoStyled to={getRouterByName('profile-page').path} className="no-select">
+      <LogoStyled
+        to={getRouterByName('profile-page').path}
+        className="no-select"
+      >
         Chat
       </LogoStyled>
-      {getRouterByPath(location.pathname).name === 'chat-page' && <Icon type="phone-2" size="24px" color="#fff" />}
-      {getRouterByPath(location.pathname).name === 'chat-page' && <Icon type="video" size="24px" color="#fff" />}
-      {getRouterByPath(location.pathname).name !== 'profile-page' && <PersonInfoStyled to={getRouterByName('profile-page').path}>
-        <Avatar
-          id={idProfile}
-          image={photo}
-          fullName={mainInfoForm.full_name}
-          isRound
-          size="40px"
+      {getRouterByPath(location.pathname).name === 'chat-page' && (
+        <Icon
+          type="phone-2"
+          size="24px"
+          color="#fff"
+          onClick={() =>
+            callToUser({ sendler: profileUser, recipient: activeUser })
+          }
         />
-      </PersonInfoStyled>}
+      )}
+      {getRouterByPath(location.pathname).name === 'chat-page' && (
+        <Icon
+          type="video"
+          size="24px"
+          color="#fff"
+          onClick={() =>
+            callToUser({ sendler: profileUser, recipient: activeUser })
+          }
+        />
+      )}
+      {getRouterByPath(location.pathname).name !== 'profile-page' && (
+        <PersonInfoStyled to={getRouterByName('profile-page').path}>
+          <Avatar
+            id={profileUser.user_id}
+            image={photo}
+            fullName={mainInfoForm.full_name}
+            isRound
+            size="40px"
+          />
+        </PersonInfoStyled>
+      )}
     </HeaderStyled>
   )
 }

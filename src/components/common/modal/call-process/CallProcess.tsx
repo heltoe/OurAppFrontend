@@ -111,7 +111,7 @@ const LabelStyled = styled.p`
   max-width: 170px;
 `
 const CallModal: React.FC = () => {
-  const { provideMediaRef } = useWebRTC()
+  const { provideMediaRef, leaveFromCall } = useWebRTC()
   const participantsCall = useStore($participantsCall)
   const userId = useStore($userId)
   const isVideo = useStore($isVideo)
@@ -119,7 +119,7 @@ const CallModal: React.FC = () => {
   const [role, setRole] = useState(userId)
   return (
     <ModalReStyled>
-      <ModalBox showClose={false} closeModal={() => changeIsShowModal(false)}>
+      <ModalBox showClose={false} closeModal={() => leaveFromCall()}>
         <MainVideoStyled>
           {participantsCall.map((participant) => (
             <VideoWrapperStyled
@@ -159,7 +159,7 @@ const CallModal: React.FC = () => {
               size="18px"
             />
           </GreyButtonStyled>
-          <RedButtonStyled onClick={() => changeIsShowModal(false)}>
+          <RedButtonStyled onClick={() => leaveFromCall()}>
             <Icon type="phone-2" color="#fff" size="18px" />
           </RedButtonStyled>
         </ControllerStyled>

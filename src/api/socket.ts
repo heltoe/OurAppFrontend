@@ -7,6 +7,8 @@ import {
   fetchCountOnlineFriends,
 } from '@/components/pages/friends/models/Friends'
 import { changeLastMessage } from '@/components/common/sidebar/SideBar.model'
+import { changeIsShowModal as callProcessModalChanged } from '@/components/common/modal/call-process/CallProcess.model'
+import { changeIsShowModal as offerToCallModalChanged } from '@/components/common/modal/offer-call/OfferToCall.model'
 import { changeRecipientCallUser, changeSendlerCallUser } from '@/App.module'
 import { Message, User, ChatItem } from '@/api/types'
 
@@ -36,16 +38,21 @@ const typeEmits = {
   APP_EXIT: 'APP:EXIT',
   APP_SEND_MESSAGE: 'APP:SEND_MESSAGE',
   //
+  CALL_TO_USER: 'CALL:CALL_TO_USER',
+  CALL_CATCH_CALL_TO_USER: 'CALL:CATCH_CALL_TO_USER',
   CALL_APPLY_OFFER_CALL: 'CALL:APPLY_OFFER_CALL',
   CALL_CREATE_OFFER_SDP: 'CALL:CREATE_OFFER_SDP',
   CALL_DECLINE_OFFER_CALL: 'CALL:DECLINE_OFFER_CALL',
   CALL_DECLINE_CLEAN_CALL_DATA: 'CALL:DECLINE_CLEAN_CALL_DATA',
   //
+  CALL_SEND_ICE_CANDIDATE: 'CALL:SEND_ICE_CANDIDATE',
+  CALL_ADD_PEER: 'CALL:ADD_PEER',
+  CALL_LEAVE_FROM_CALL: 'CALL:LEAVE_FROM_CALL',
+  CALL_LEAVED_FROM_CALL: 'CALL:LEAVED_FROM_CALL',
+
   CALL_JOIN_TO_CALL: 'CALL:JOIN_TO_CALL',
-  CALL_LEAVE_FROM_CALL: 'CALL:LEAVE_FROm_CALL',
   CALL_RELAY_SDP: 'CALL:RELAY_SDP',
   CALL_SESSION_DESCRIPTION: 'CALL_SESSION_DESCRIPTION',
-  CALL_RELAY_ICE_CANDIDATE: 'CALL:RELAY_ICE',
   CALL_ICE_CANDIDATE: 'CALL:ICE_CANDIDATE',
 }
 
@@ -89,11 +96,26 @@ class SocketApi {
         // TODO: add no tification
       }
     })
+    this.socket.on(typeEmits.CALL_CATCH_CALL_TO_USER, (data: { sendler: User; recipient: User }) => {
+      changeSendlerCallUser(data.sendler)
+      changeRecipientCallUser(data.recipient)
+      offerToCallModalChanged(true)
+    })
     this.socket.on(typeEmits.CALL_CREATE_OFFER_SDP, () => {
-      // TODO make
+      callProcessModalChanged(true)
+      offerToCallModalChanged(false)
     })
     this.socket.on(typeEmits.CALL_DECLINE_CLEAN_CALL_DATA, () => {
       changeSendlerCallUser(null)
+      changeRecipientCallUser(null)
+      offerToCallModalChanged(false)
+    })
+    //
+    this.socket.on(typeEmits.CALL_ADD_PEER, (data: { recipient_id: number, iceCandidate: any }) => {
+      console.log(data)
+    })
+    this.socket.on(typeEmits.CALL_LEAVED_FROM_CALL, () => {
+      callProcessModalChanged(false)
     })
   }
 
@@ -128,7 +150,11 @@ class SocketApi {
     this.socket.emit(typeEmits.CHAT_ENTER, chat_id)
   }
 
-  public sendMessage(data: { user: User, message: Message, recipient_id: number }) {
+  public sendMessage(data: {
+    user: User
+    message: Message
+    recipient_id: number
+  }) {
     this.socket.emit(typeEmits.CHAT_MESSAGE_SEND, data.message)
     this.socket.emit(typeEmits.SIDEBAR_MESSAGE_SEND, {
       chat_id: data.message.chat_id,
@@ -145,7 +171,13 @@ class SocketApi {
   }
 
   // принятие или отказ от звонка
+  public callToUser(data: { sendler: User; recipient: User }) {
+    offerToCallModalChanged(true)
+    this.socket.emit(typeEmits.CALL_TO_USER, data)
+  }
+
   public applyCall(user_id: number) {
+    callProcessModalChanged(true)
     this.socket.emit(typeEmits.CALL_APPLY_OFFER_CALL, user_id)
   }
 
@@ -154,24 +186,28 @@ class SocketApi {
   }
 
   // процесс звонка
-  public joinToCall(data: { user_info: CallUserInfo, recipient_info: CallUserInfo }) {
+  public sendIceCandidate(data: { recipient_id: number, iceCandidate: any }) {
+    this.socket.emit(typeEmits.CALL_SEND_ICE_CANDIDATE, data)
+  }
+
+  public sendOfferSDP(data: { recipient_id: number, sessionDescription: any }) {
+    this.socket.emit(typeEmits.CALL_RELAY_SDP, data)
+  }
+
+  public joinToCall(data: {
+    user_info: CallUserInfo
+    recipient_info: CallUserInfo
+  }) {
     this.socket.emit(typeEmits.CALL_JOIN_TO_CALL, data)
   }
 
-  public leaveFromCall(data: { user_info: CallUserInfo, recipient_info: CallUserInfo }) {
-    this.socket.emit(typeEmits.CALL_JOIN_TO_CALL, data)
+  public leaveFromCall(recipient_id: number) {
+    callProcessModalChanged(false)
+    this.socket.emit(typeEmits.CALL_LEAVE_FROM_CALL, recipient_id)
   }
 
   public addPeer(args: any) {
 
-  }
-
-  public relayIceCandidate(data: { user_info: CallUserInfo, iceCandidate: any }) {
-    this.socket.emit(typeEmits.CALL_RELAY_ICE_CANDIDATE, data)
-  }
-
-  public sendOfferSDP(data: { user_info: CallUserInfo, sessionDescription: any }) {
-    this.socket.emit(typeEmits.CALL_RELAY_SDP, data)
   }
 
   public init(user_id: number) {
