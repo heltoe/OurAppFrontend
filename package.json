@@ -27,6 +27,7 @@
     "react-input-mask": "^3.0.0-alpha.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "simple-peer": "^9.11.0",
     "simplebar-react": "^3.0.0-beta.4",
     "socket.io-client": "^4.0.1",
     "styled-components": "^5.2.1"
@@ -44,6 +45,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-input-mask": "^3.0.0",
     "@types/react-router-dom": "^5.1.5",
+    "@types/simple-peer": "^9.6.2",
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",

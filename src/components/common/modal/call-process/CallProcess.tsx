@@ -1,18 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import { ModalWindowStyled } from '@/components/common/modal/Modal'
 import ModalBox, { ModalBoxStyled } from '@/components/common/modal/ModalBox'
 import Icon from '@/components/ui/Icon'
 import {
-  changeIsShowModal,
   $isVideo,
   changeIsVideo,
   $isAudio,
   changeIsAudio,
+  $participantsCall,
+  $settingsToCall,
+  $peerSignal,
 } from '@/components/common/modal/call-process/CallProcess.model'
-import useWebRTC, { PARTICIPANT_CALL } from '@/hooks/useWebRTC'
-import { $participantsCall, $userId } from '@/App.module'
+import { $userId } from '@/App.module'
+import useWebRTC from '@/components/common/modal/useWebRTC'
 
 const ModalReStyled = styled(ModalWindowStyled)`
   min-height: 700px;
@@ -111,12 +113,30 @@ const LabelStyled = styled.p`
   max-width: 170px;
 `
 const CallModal: React.FC = () => {
-  const { provideMediaRef, leaveFromCall } = useWebRTC()
-  const participantsCall = useStore($participantsCall)
+  const { provideMediaRef, leaveFromCall, handlerPeer, peerSignal } = useWebRTC()
   const userId = useStore($userId)
+  const settingsToCall = useStore($settingsToCall)
+  const peerSignalData = useStore($peerSignal)
+
+  const participantsCall = useStore($participantsCall)
+
   const isVideo = useStore($isVideo)
   const isAudio = useStore($isAudio)
   const [role, setRole] = useState(userId)
+
+  useEffect(() => {
+    if (settingsToCall) handlerPeer(settingsToCall)
+  }, [settingsToCall])
+
+  useEffect(() => {
+    if (peerSignalData) peerSignal(peerSignalData)
+  }, [peerSignalData])
+
+  useEffect(() => {
+    return () => {
+      leaveFromCall()
+    }
+  }, [])
   return (
     <ModalReStyled>
       <ModalBox showClose={false} closeModal={() => leaveFromCall()}>
@@ -138,7 +158,7 @@ const CallModal: React.FC = () => {
               />
               {!isVideo && (
                 <WrapperLabelStyled>
-                  <LabelStyled>111</LabelStyled>
+                  <LabelStyled>{participant.first_name} {participant.last_name}</LabelStyled>
                 </WrapperLabelStyled>
               )}
             </VideoWrapperStyled>

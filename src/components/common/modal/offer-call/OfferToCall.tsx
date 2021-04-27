@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
 import styled, { keyframes } from 'styled-components'
 import { ModalWindowStyled } from '@/components/common/modal/Modal'
@@ -16,6 +16,7 @@ import {
 } from '@/App.module'
 import socket from '@/api/socket'
 import { User } from '@/api/types'
+import { changeParticipantCall } from '../call-process/CallProcess.model'
 
 const fade = keyframes`
   0% { opacity: 0.2 }
@@ -93,16 +94,23 @@ const OfferToCall: React.FC = () => {
   const typeCall = userId === sendlerCallUser.user_id ? 'outgoing' : 'incomming'
   const callUser = userId === sendlerCallUser.user_id ? recipientCallUser : sendlerCallUser
   const answer = () => {
-    socket.applyCall(sendlerCallUser.user_id)
+    changeParticipantCall(sendlerCallUser)
+    changeParticipantCall(recipientCallUser)
+    socket.applyCall({ to: sendlerCallUser.user_id, recipient: recipientCallUser, sendler: sendlerCallUser })
     changeIsShowModal(false)
   }
   const decline = () => {
     const user_id = userId === recipientCallUser.user_id ? sendlerCallUser.user_id : recipientCallUser.user_id
-    if (sendlerCallUser) changeSendlerCallUser(null)
-    if (recipientCallUser) changeRecipientCallUser(null)
+    changeSendlerCallUser(null)
+    changeRecipientCallUser(null)
     socket.declineCall(user_id)
     changeIsShowModal(false)
   }
+  useEffect(() => {
+    return () => {
+      decline()
+    }
+  })
   return (
     <ModalReStyled>
       <ModalBox closeModal={() => decline()}>
