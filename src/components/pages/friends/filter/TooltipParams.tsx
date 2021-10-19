@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import useClickOutside from '@/directives/ClickOutside'
 import { BlockStyled } from '@/components/ui/Block'
 import RadioButton, { LabelRadioStyled } from '@/components/ui/RadioButton'
-import DropDown from '@/components/ui/DropDown'
 
 const ParamsStyled = styled.div`
   display: flex;
@@ -21,21 +20,6 @@ const BlockContentTooltipStyled = styled(BlockStyled)`
   width: auto;
   box-shadow: ${(props) => props.theme.shadow.shadow1};
 `
-const WrapperYearBlock = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  margin-top: 10px;
-  & span {
-    display: flex;
-    flex-shrink: 0;
-    width: 10px;
-    height: 1px;
-    background-color: ${(props) => props.theme.rgb(props.theme.colors.black)};
-    margin: 0 5px;
-    border-radius: 8px;
-  }
-`
 const WrapperGenderBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,12 +27,9 @@ const WrapperGenderBlock = styled.div`
     margin-top: 10px;
   }
 `
-const ages = Array.from({ length: 81 }, (v, k) => k).filter(item => item > 13).map(item => ({ id: item, name: `${item}` })); 
 const TooltipParams: React.FC = () => {
   const ref = useRef(null)
   const [isShowParams, setIsShowParams] = useState(false)
-  const [minYear, setMinYear] = useState(0)
-  const [maxYear, setMaxYear] = useState(0)
   const [gender, setGender] = useState('all')
   const handleClickOutside = () => {
     if (isShowParams) setIsShowParams(false)
@@ -59,22 +40,6 @@ const TooltipParams: React.FC = () => {
       <p className="light no-select" onClick={() => setIsShowParams(!isShowParams)}>Параметры</p>
       {isShowParams && <BlockContentTooltipStyled>
         <WrapperGenderBlock>
-          <p>Возраст:</p>
-          <WrapperYearBlock>
-            <DropDown
-              value={minYear}
-              placeholder="От"
-              options={maxYear ? ages.filter(item => item.id < maxYear) : ages}
-              selected={(year => setMinYear(year))}
-            />
-            <span>-</span>
-            <DropDown
-              value={maxYear}
-              placeholder="До"
-              options={ages.filter(item => item.id > minYear)}
-              selected={(year => setMaxYear(year))}
-            />
-          </WrapperYearBlock>
           <p>Пол:</p>
           <RadioButton
             name="gender"

@@ -13,7 +13,6 @@ type IncommingData = {
   first_name: string
   last_name: string
   gender: string
-  birth_date: Date | null
   phone: string
 }
 // эффекты
@@ -25,7 +24,6 @@ const validateFormFx = createEffect((params: IncommingData) => {
   const firstNameErr = validatorForm({ value: params.first_name, minSize: 2 })
   const lastNameErr = validatorForm({ value: params.last_name, minSize: 2 })
   const genderErr = validatorForm({ value: params.gender })
-  const birthDateErr = validatorForm({ value: params.birth_date })
   const phoneErr = validatorForm({ value: params.phone, isPhone: true })
   if (
     !emailErr.length
@@ -34,7 +32,6 @@ const validateFormFx = createEffect((params: IncommingData) => {
     && !firstNameErr.length
     && !lastNameErr.length
     && !genderErr.length
-    && !birthDateErr.length
     && !phoneErr.length
   ) return submitForm()
   emailErrorChanged(emailErr)
@@ -43,14 +40,13 @@ const validateFormFx = createEffect((params: IncommingData) => {
   firstNameErrorChanged(firstNameErr)
   lastNameErrorChanged(lastNameErr)
   genderErrorChanged(genderErr)
-  birthDateErrorChanged(birthDateErr)
   phoneErrorChanged(phoneErr)
 })
 const submitFormFx = attach({
   effect: RegistrationFx,
   mapParams: (params: IncommingData) => {
     feedBackChanged('')
-    return { ...params, birth_date: params.birth_date || new Date() }
+    return params
   }
 })
 const setErrorFx = createEffect((data: any) => {
@@ -67,7 +63,6 @@ export const [$repeatPassword, repeatPasswordChanged] = createEffectorField({ de
 export const [$firstName, firstNameChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$lastName, lastNameChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$gender, genderChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
-export const [$birthDate, birthDateChanged] = createEffectorField<Date | null>({ defaultValue: null, reset: resetFields })
 export const [$phone, phoneChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$feedBack, feedBackChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 
@@ -77,7 +72,6 @@ export const [$repeatPasswordError, repeatPasswordErrorChanged] = createEffector
 export const [$firstNameError, firstNameErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$lastNameError, lastNameErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$genderError, genderErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
-export const [$birthDateError, birthDateErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 export const [$phoneError, phoneErrorChanged] = createEffectorField({ defaultValue: '', reset: resetFields })
 
 export const $form = combine({
@@ -87,7 +81,6 @@ export const $form = combine({
   first_name: $firstName,
   last_name: $lastName,
   gender: $gender,
-  birth_date: $birthDate,
   phone: $phone
 })
 export const formChanged = {
@@ -97,7 +90,6 @@ export const formChanged = {
   firstName: firstNameChanged,
   lastName: lastNameChanged,
   gender: genderChanged,
-  birthDate: birthDateChanged,
   phone: phoneChanged,
   emailError: emailErrorChanged,
   passwordError: passwordErrorChanged,
@@ -105,7 +97,6 @@ export const formChanged = {
   firstNameError: firstNameErrorChanged,
   lastNameError: lastNameErrorChanged,
   genderError: genderErrorChanged,
-  birthDateError: birthDateErrorChanged,
   phoneError: phoneErrorChanged
 }
 export const $errors = combine({
@@ -115,7 +106,6 @@ export const $errors = combine({
   firstNameError: $firstNameError,
   lastNameError: $lastNameError,
   genderError: $genderError,
-  birthDateError: $birthDateError,
   phoneError: $phoneError
 })
 const $isFormValid = combine(
@@ -126,7 +116,6 @@ const $isFormValid = combine(
     && form.first_name.length > 0
     && form.last_name.length > 0
     && form.gender.length > 0
-    && form.birth_date instanceof Date
     && form.phone.length > 0
 )
 const $validErrors = combine(
@@ -137,7 +126,6 @@ const $validErrors = combine(
     && errors.firstNameError.length === 0
     && errors.lastNameError.length === 0
     && errors.genderError.length === 0
-    && errors.birthDateError.length === 0
     && errors.phoneError.length === 0
 )
 export const $canSubmit = combine(

@@ -72,7 +72,6 @@ const FriendsList: React.FC = () => {
             user_id={card.user_id}
             first_name={card.first_name}
             last_name={card.last_name}
-            birth_date={card.birth_date}
             phone={card.phone}
             gender={card.gender}
             original_photo={card.original_photo}

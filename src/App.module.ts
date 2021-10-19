@@ -26,10 +26,9 @@ export const $activeUser = restore(changeActiveUser, {
   first_name: '',
   last_name: '',
   gender: '',
-  birth_date: new Date(),
   original_photo: '',
   croped_photo: '',
-  phone: '',
+  phone: ''
 })
 
 export const $preparePersonDataId = combine({ id: $userId })

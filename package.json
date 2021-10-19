@@ -22,7 +22,6 @@
     "patronum": "^1.0.0",
     "react": "^16.14.0",
     "react-avatar-editor": "^11.1.0",
-    "react-datepicker": "^3.6.0",
     "react-dom": "^16.14.0",
     "react-input-mask": "^3.0.0-alpha.2",
     "react-router-dom": "^5.2.0",

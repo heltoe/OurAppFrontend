@@ -127,7 +127,6 @@ const CardFriend: React.FC<User> = ({
   first_name,
   last_name,
   gender,
-  birth_date,
   phone,
   original_photo,
   croped_photo
@@ -145,7 +144,6 @@ const CardFriend: React.FC<User> = ({
       first_name,
       last_name,
       gender,
-      birth_date,
       phone,
       original_photo,
       croped_photo

@@ -112,7 +112,6 @@ export const Card: React.FC<CardType> = ({
       first_name: recipient.first_name,
       last_name: recipient.last_name,
       gender: recipient.gender,
-      birth_date: recipient.birth_date,
       phone: recipient.phone,
       original_photo: recipient.original_photo,
       croped_photo: recipient.croped_photo,

@@ -4,7 +4,6 @@ export const user: any = {
   firstName: 'Влад',
   lastName: 'Жулинский',
   fullName: 'Влад Жулинский',
-  birthday: '24.05.1995',
   email: 'x-outhink@mail.ru',
   location: {
     label: '123',

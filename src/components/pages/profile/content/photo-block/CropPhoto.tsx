@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import Icon, { IconStyled } from '@/components/ui/Icon'
 import {
+  $cropedPhoto,
   $originalPhoto,
   originalFileChanged,
   cropedFileChanged,
@@ -110,13 +111,13 @@ const StyledFileInput = styled.input`
 const CropPhoto: React.FC = () => {
   const editorRef = useRef(null)
   const inputFile = useRef<HTMLInputElement>(null)
-  const originalPhoto = useStore($originalPhoto)
+  const originalPhoto = useStore($cropedPhoto)
   const idUser = useStore($userId)
   const isPending = useStore(uploadAvatarFx.pending)
   const profile = useStore($profileUser)
   const [scale, setScale] = useState('1')
   const [localPhoto, setLocalPhoto] = useState('')
-  const FileLoad = (e: any) => {
+  const fileLoad = (e: any) => {
     fetch(originalPhoto)
       .then(res => res.blob())
       .then(blob => {
@@ -164,7 +165,7 @@ const CropPhoto: React.FC = () => {
           color={[0, 0, 0, 0.4]}
           scale={Math.ceil(parseInt(scale) / 10)}
           crossOrigin="anonymous"
-          onLoadSuccess={(e) => FileLoad(e)}
+          onLoadSuccess={(e) => fileLoad(e)}
         />
         {localPhoto.length === 0 && <WrapperFileInput backgroundImage={profile.gender === 'male' ? MalePlaceholder : FemalePlaceholder}>
           <div>Выбрать фото</div>

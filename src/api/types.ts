@@ -14,7 +14,6 @@ export type RegistrationFxParams = {
   first_name: string
   last_name: string
   gender: string
-  birth_date: Date
   phone: string
 }
 //
@@ -31,7 +30,6 @@ export type UpdatePersonalInfoParams = {
   first_name?: string
   last_name?: string
   email?: string
-  birth_date?: Date
   phone?: string
 }
 export type ChangePasswordFxParams = {
@@ -57,7 +55,6 @@ export interface User {
   first_name: string
   last_name: string
   gender: string
-  birth_date: Date
   phone: string
   original_photo: string | null
   croped_photo: string | null
@@ -73,7 +70,6 @@ export type UserInGrid = {
   first_name: string
   last_name: string
   gender: string
-  birth_date: Date
   phone: string
   photo: string
 }

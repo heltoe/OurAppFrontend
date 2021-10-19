@@ -14,7 +14,6 @@ import {
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import FormInput, { LabelStyled, FormInputStyled } from '@/components/ui/FormInput'
 import Loader from '@/components/ui/Loader'
-import DatePicker from '@/components/ui/DatePicker'
 import { FeedBackMessageStyled } from '@/components/common/form-intro/FormIntro'
 
 export const FormStyled = styled.div`
@@ -74,13 +73,6 @@ export const MainInfoForm: React.FC = () => {
         onChange={(e) => mainInfoFormChanged.phone(e)}
         onFocus={() => mainInfoFormErrorsChanged.phoneError('')}
       />
-      <DatePicker
-        value={form.birth_date}
-        placeholder={'Дата рождения'}
-        error={errors.birthDateError}
-        onChange={(e) => mainInfoFormChanged.birthDate(e)}
-      />
-        {/* onFocus={() => mainInfoFormErrorsChanged.birthDateError('')} */}
       {errors.errorForm && errors.errorForm.length && <FeedBackMessageStyled>{errors.errorForm}</FeedBackMessageStyled>}
       {isChanged && <BaseButton disabled={isDisabled} onClick={() => validateForm()}>Сохранить</BaseButton>}
       {isPending ? <Loader /> : ''}

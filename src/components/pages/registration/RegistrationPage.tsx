@@ -17,7 +17,6 @@ import FormInput, { ErrorMessageStyled } from '@/components/ui/FormInput'
 import BaseButton from '@/components/ui/BaseButton'
 import FadeInOut from '@/components/ui/FadeInOut'
 import RadioButton, { LabelRadioStyled } from '@/components/ui/RadioButton'
-import DatePicker from '@/components/ui/DatePicker'
 
 export const RequiredDescriptionStyled = styled.p`
   font-size: 12px;
@@ -114,12 +113,6 @@ export const RegistrationPage: React.FC = () => {
             onFocus={() => item.onFocus()}
           />
         )}
-        <DatePicker
-          value={form.birth_date}
-          placeholder={'Дата рождения'}
-          error={errors.birthDateError}
-          onChange={(e) => formChanged.birthDate(e)}
-        />
         <GenderRowStyled>
           <p>Пол*:</p>
           <RadioButton

@@ -14,6 +14,7 @@ export const uploadAvatarFx = attach({
     formData.append('original_photo', params.original_photo)
     // @ts-ignore
     formData.append('croped_photo', params.croped_photo)
+    console.log(params)
     // @ts-ignore
     if (params.original_photo_name) formData.append('original_photo_name', params.original_photo_name)
     // @ts-ignore
