@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import BaseButton, { BaseButtonStyled } from '@/components/ui/BaseButton'
 import Icon, { IconStyled } from '@/components/ui/Icon'
 import {
-  $cropedPhoto,
   $originalPhoto,
   originalFileChanged,
   cropedFileChanged,
@@ -110,29 +109,36 @@ const StyledFileInput = styled.input`
 `
 const CropPhoto: React.FC = () => {
   const editorRef = useRef(null)
+  const [isFirstUpload, setIsFirstUpload] = useState(true)
   const inputFile = useRef<HTMLInputElement>(null)
-  const originalPhoto = useStore($cropedPhoto)
+  const originalPhoto = useStore($originalPhoto)
   const idUser = useStore($userId)
   const isPending = useStore(uploadAvatarFx.pending)
   const profile = useStore($profileUser)
   const [scale, setScale] = useState('1')
   const [localPhoto, setLocalPhoto] = useState('')
-  const fileLoad = (e: any) => {
+  const fileLoad = () => {
+    if (!isFirstUpload) return
+    const patt =/\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi //any regexp more/less suitable
+    const patResult = originalPhoto.match(patt)
+    const defaultTypeFile = '.png'
+    const typeFile = patResult && patResult.length ? patResult[0] || defaultTypeFile : defaultTypeFile
     fetch(originalPhoto)
       .then(res => res.blob())
       .then(blob => {
-        const photo: File = new File([blob], `avatar-original-photo${idUser}.png`, { lastModified: Math.round(new Date().getTime()/1000) })
+        const photo: File = new File([blob], `avatar-original-photo${idUser}${typeFile}`, { lastModified: Math.round(new Date().getTime()/1000) })
         originalFileChanged(photo)
+        setIsFirstUpload(false)
       })
   }
   const changeImage = () => {
     const editor = editorRef?.current as any | null
     if (editor) {
-      const canvas = editor.getImage().toDataURL()
-      fetch(canvas)
-        .then(res => res.blob())
+      const base64 = editor.canvas.toDataURL()
+      fetch(base64)
+        .then(res => res.arrayBuffer())
         .then(blob => {
-          const photo: File = new File([blob], `avatar-croped-photo${idUser}.png`, { lastModified: Math.round(new Date().getTime()/1000) })
+          const photo: File = new File([blob], `avatar-croped-photo${idUser}.png`, { type: 'image/png', lastModified: Math.round(new Date().getTime()/1000) })
           cropedFileChanged(photo)
           changeAvatar()
         })
@@ -142,6 +148,10 @@ const CropPhoto: React.FC = () => {
     const el = inputFile?.current
     if (el?.files) {
       const filesList = Object.values(el.files).map(file => ({ file, preview: URL.createObjectURL(file) }))
+      originalFileChanged(filesList[0].file)
+      originalFileChanged(filesList[0].file)
+      originalFileChanged(filesList[0].file)
+      originalFileChanged(filesList[0].file)
       originalFileChanged(filesList[0].file)
       setLocalPhoto(filesList[0].preview)
       el.value = ''
@@ -165,7 +175,7 @@ const CropPhoto: React.FC = () => {
           color={[0, 0, 0, 0.4]}
           scale={Math.ceil(parseInt(scale) / 10)}
           crossOrigin="anonymous"
-          onLoadSuccess={(e) => fileLoad(e)}
+          onLoadSuccess={() => fileLoad()}
         />
         {localPhoto.length === 0 && <WrapperFileInput backgroundImage={profile.gender === 'male' ? MalePlaceholder : FemalePlaceholder}>
           <div>Выбрать фото</div>
