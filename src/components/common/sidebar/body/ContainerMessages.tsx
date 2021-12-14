@@ -31,7 +31,7 @@ export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
             isOpen={isOpen}
             key={item.chat_id}
           />
-        )) : <EmptyPlaceholder>Список чатов пуст</EmptyPlaceholder>
+        )) : <EmptyPlaceholder isShort={!isOpen}>Список чатов пуст</EmptyPlaceholder>
       }
     </WrapperCardsStyled>
   )

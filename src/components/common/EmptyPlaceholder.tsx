@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import Icon, { IconStyled } from '@/components/ui/Icon'
 
 export const EmptyListStyled = styled.div`
   display: flex;
@@ -10,10 +11,15 @@ export const EmptyListStyled = styled.div`
   padding: 10px;
 `
 
-const EmptyPlaceholder: React.FC = ({ children }) => {
+type EmptyPlaceholderType = {
+  isShort?: boolean
+}
+
+const EmptyPlaceholder: React.FC<EmptyPlaceholderType> = ({ children, isShort = false }) => {
   return (
     <EmptyListStyled>
-      <p className="light no-select">{children}</p>
+      {isShort && <Icon type="letter" size="26px" />}
+      {!isShort && <p className="light no-select">{children}</p>}
     </EmptyListStyled>
   )
 }
