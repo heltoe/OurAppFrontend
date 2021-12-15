@@ -1,5 +1,6 @@
 import React from 'react'
 import { useStore } from 'effector-react'
+import { device } from '@/Theme'
 import { $users } from '@/components/pages/friends/models/Users'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
@@ -16,7 +17,7 @@ const UserListStyled = styled(BlockStyled)<{ isSpecialStyle: boolean }>`
     margin-right: 20px;
     margin-top: 20px;
   }
-  @media screen and (max-width: 480px) {
+  @media ${device.mobileL} {
     padding-right: 20px;
     & ${CardUserStyled} {
       margin-right: 0;
