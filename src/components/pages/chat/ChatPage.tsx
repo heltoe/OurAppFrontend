@@ -23,8 +23,8 @@ const ChatPageStyled = styled(PageStyled)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* height: auto; */
-  height: calc(100vh - 70px);
+  height: auto;
+  min-height: calc(100vh - 70px);
   max-width: 100%;
   padding: 30px 20px;
 `
