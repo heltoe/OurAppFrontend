@@ -11,6 +11,11 @@ body {
   min-width: 720px;
   overflow-x: hidden;
 }
+@media screen and (max-width: 720px) {
+  body {
+    min-width: 320px;
+  }
+}
 a {
   text-decoration: none;
 }

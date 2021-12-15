@@ -16,6 +16,12 @@ const UserListStyled = styled(BlockStyled)<{ isSpecialStyle: boolean }>`
     margin-right: 20px;
     margin-top: 20px;
   }
+  @media screen and (max-width: 480px) {
+    padding-right: 20px;
+    & ${CardUserStyled} {
+      margin-right: 0;
+    }
+  }
 `
 const FindNewFriendList: React.FC = () => {
   const usersList = useStore($users)

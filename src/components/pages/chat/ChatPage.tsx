@@ -23,20 +23,23 @@ const ChatPageStyled = styled(PageStyled)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: auto;
+  /* height: auto; */
+  height: calc(100vh - 70px);
   max-width: 100%;
-  padding: 30px 0;
+  padding: 30px 20px;
 `
 const BLockContainer = styled(BlockStyled)`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  width: 560px;
+  width: 100%;
+  max-width: 560px;
   border-radius: 8px 8px 0 0;
   padding: 0;
 `
 const ScrollingHelperStyled = styled.div`
-  width: 560px;
+  max-width: 560px;
+  width: 100%;
   margin: 0 auto;
   background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   text-align: center;

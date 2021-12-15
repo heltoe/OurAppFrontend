@@ -9,7 +9,8 @@ type PageInfiniteScrollig = {
   canLoadMore?: boolean
 }
 const ScrollingHelperStyled = styled.div`
-  width: 560px;
+  width: 100%;
+  max-width: 560px;
   margin: 0 auto;
   background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   text-align: center;

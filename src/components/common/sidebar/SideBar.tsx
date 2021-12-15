@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { device } from '@/Theme'
 import Simple from '@/components/ui/SimpleBar'
 import TopMenu, { ToggleSideBarType } from '@/components/common/sidebar/TopMenu'
 import ContainerMessages from '@/components/common/sidebar/body/ContainerMessages'
@@ -14,6 +15,11 @@ const SideBarStyled = styled.div<{ isOpen: boolean }>`
   background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   transition: ${(props) => `transform ${props.theme.transition}`};
   transform: ${(props) => `translateX(${props.isOpen ? 0 : -200}px)`};
+  @media ${device.mobileL} {
+    width: 100%;
+    transform: ${(props) => `translateX(${props.isOpen ? '0px' : '-100%'})`};
+    z-index: 9999;
+  }
 `
 const SideBarBodyStyled = styled.div`
   height: 100%;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { device } from '@/Theme'
 import { useStore } from 'effector-react'
 import {
   typePages,
@@ -24,9 +25,13 @@ import SearchField from '@/components/pages/friends/SearchField/SearchField'
 const WrapperContentStyled = styled.div`
   display: flex;
   flex-direction: column;
-  width: 560px;
+  width: 100%;
+  max-width: 560px;
   margin: 0 auto;
   padding: 30px 0;
+  @media ${device.laptop} {
+    padding: 30px 20px;
+  }
 `
 export const FriendsPage: React.FC = () => {
   const page = useStore($page)

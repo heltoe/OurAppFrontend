@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from 'effector-react'
+import { device } from '@/Theme'
 import { loadPersonalInfo, resetProfile } from '@/components/pages/profile/EditProfile.model'
 import { resetFields } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { fetchListChat, listChatChanged } from '@/components/common/sidebar/SideBar.model'
@@ -17,10 +18,13 @@ const MainLayoutStyled = styled.div<{ isOpen: boolean }>`
   width: ${(props) => `calc(100% - ${props.isOpen ? 290 : 90}px);`};
   margin-left: auto;
   transition: ${(props) => `width ${props.theme.transition}`};
+  @media ${device.mobileL} {
+    width: 100%;
+  }
 `
 const ContentContainerStyled = styled.div`
   width: 100%;
-  min-width: 630px;
+  /* min-width: 630px; */
 `
 export const MainLayout: React.FC = ({ children }) => {
   const idProfile = useStore($userId)
@@ -46,7 +50,7 @@ export const MainLayout: React.FC = ({ children }) => {
     <MainLayoutStyled isOpen={isOpenSideBar}>
       <SideBar isOpen={isOpenSideBar} setIsOpenSideBar={(value) => setIsOpenSideBar(value)}/>
       <ContentContainerStyled>
-        <Header />
+        <Header isOpen={isOpenSideBar} setIsOpenSideBar={(value) => setIsOpenSideBar(value)} />
         {children}
         {isShowModalCallOffer && <OfferToCall />}
         {isShowModalCallProcess && <CallModal />}

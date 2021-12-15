@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { device } from '@/Theme'
 import { friendIdChanged } from '@/App.module'
 import { addToFriendShip } from '@/components/pages/friends/models/Users'
 import Icon from '@/components/ui/Icon'
@@ -21,6 +22,9 @@ export const CardUserStyled = styled.div`
   & ${AvatarStyled} {
     cursor: pointer;
     border-radius: 8px;
+  }
+  @media ${device.mobileL} {
+    width: 100%;
   }
 `
 const WrapperContentStyled = styled.div`

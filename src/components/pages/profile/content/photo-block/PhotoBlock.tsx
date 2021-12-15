@@ -37,6 +37,9 @@ export const WrapperImageStyled = styled.div`
   border-radius: 50%;
   border: ${(props) => `2px solid ${props.theme.rgb(props.theme.colors.white)}`};
   z-index: 10;
+  @media ${device.tabletL} {
+    opacity: 0;
+  }
 `
 const ControllerBoxStyled = styled.div`
   display: flex;

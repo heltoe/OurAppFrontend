@@ -2,7 +2,9 @@ import React from 'react'
 import { useStore } from 'effector-react'
 import { useLocation, Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { device } from '@/Theme'
 import { getRouterByPath, getRouterByName } from '@/routes'
+import { ToggleSideBarType } from '@/components/common/sidebar/TopMenu'
 import { $cropedPhoto } from '@/components/pages/profile/content/photo-block/PhotoBlock.model'
 import { $mainInfoForm } from '@/components/pages/profile/content/main-info-form/MainInfoForm.model'
 import { $profileUser } from '@/components/pages/profile/EditProfile.model'
@@ -32,6 +34,9 @@ const HeaderStyled = styled.div`
     margin-right: 15px;
     cursor: pointer;
   }
+  @media ${device.mobileL} {
+    justify-content: space-between;
+  }
 `
 const LogoStyled = styled(Link)`
   position: absolute;
@@ -50,7 +55,13 @@ const PersonInfoStyled = styled(Link)`
     box-shadow: ${(props) => props.theme.shadow.shadow2};
   }
 `
-export const Header: React.FC = () => {
+const WrapperOpenMenuStyled = styled.div`
+  display: none;
+  @media ${device.mobileL} {
+    display: flex;
+  }
+`
+export const Header: React.FC<ToggleSideBarType> = ({ isOpen, setIsOpenSideBar }) => {
   const photo = useStore($cropedPhoto)
   const mainInfoForm = useStore($mainInfoForm)
 
@@ -66,6 +77,13 @@ export const Header: React.FC = () => {
   }
   return (
     <HeaderStyled>
+      <WrapperOpenMenuStyled>
+        <Icon
+          type="menu"
+          color="#fff"
+          onClick={() => setIsOpenSideBar(true)}
+        />
+      </WrapperOpenMenuStyled>
       <LogoStyled
         to={getRouterByName('profile-page').path}
         className="no-select"

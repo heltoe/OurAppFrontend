@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
+import { device } from '@/Theme'
 import { $typePage, friendIdChanged, changeActiveUser } from '@/App.module'
 import { removeFromFriends } from '@/components/pages/friends/models/Friends'
 import { addToFriends, removeFromFriendShip } from '@/components/pages/friends/models/FriendShip'
@@ -82,6 +83,9 @@ const WriteMessageStyled = styled(Link)`
   user-select: none;
   &:hover {
     color: ${(props) => props.theme.rgb(props.theme.colors.purple1)};
+  }
+  @media ${device.mobileM} {
+    max-width: 100px;
   }
 `
 const LinkStyled = styled(Link)`

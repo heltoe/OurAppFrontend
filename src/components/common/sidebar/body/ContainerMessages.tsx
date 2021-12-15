@@ -1,24 +1,27 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
 import { $listChat } from '@/components/common/sidebar/SideBar.model'
 import Card from '@/components/common/sidebar/body/Card'
-import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
+import EmptyPlaceholder, { EmptyListStyled } from '@/components/common/EmptyPlaceholder'
 
 type WrapperCardsType = {
   isOpen: boolean
 }
 
-const WrapperCardsStyled = styled.div`
+const WrapperCardsStyled = styled.div<{ isShort?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  ${EmptyListStyled} {
+    max-width: ${(props) => (props.isShort ? '90px' : '100%')};
+    margin-left: auto;
+  }
 `
 export const ContainerMessages: React.FC<WrapperCardsType> = ({ isOpen }) => {
   const chats = useStore($listChat)
   return (
-    <WrapperCardsStyled>
+    <WrapperCardsStyled isShort={!isOpen}>
       {
         chats.length ? chats.map((item) => (
           <Card
