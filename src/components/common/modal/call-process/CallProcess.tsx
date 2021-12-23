@@ -9,8 +9,8 @@ import {
   $isAudio,
   changeIsAudio,
 } from '@/components/common/modal/call-process/CallProcess.model'
+import { changeStream, $userSignal } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 import { User } from '@/api/types'
-import { changeStream } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 
 const WrapperCallProcess = styled.div`
   width: 100%;
@@ -103,15 +103,23 @@ const LabelStyled = styled.p`
   max-width: 170px;
 `
 interface ICallProcessModal {
+  isInitiator: boolean
   myInfo: User
   userInfo: User
   leaveFromCall(): void
+  callUser(): void
+  answerCall(): void
+  initiatorSignal(): void
 }
 
 const CallProcessModal: React.FC<ICallProcessModal> = ({
+  isInitiator,
   myInfo,
   userInfo,
   leaveFromCall,
+  callUser,
+  answerCall,
+  initiatorSignal,
 }) => {
   const isVideo = useStore($isVideo)
   const isAudio = useStore($isAudio)
@@ -119,6 +127,8 @@ const CallProcessModal: React.FC<ICallProcessModal> = ({
   //
   const myVideo = useRef<HTMLVideoElement>(null)
   const userVideo = useRef<HTMLVideoElement>(null)
+  //
+  const userSignal = useStore($userSignal)
 
   useEffect(() => {
     navigator.mediaDevices
@@ -138,8 +148,13 @@ const CallProcessModal: React.FC<ICallProcessModal> = ({
       .then((stream) => {
         changeStream(stream)
         if (myVideo && myVideo.current) myVideo.current.srcObject = stream
+        if (isInitiator) callUser()
       })
-  })
+  }, [])
+
+  useEffect(() => {
+    isInitiator ? initiatorSignal() : answerCall()
+  }, [userSignal])
   return (
     <WrapperCallProcess>
       <ModalBox showClose={false} closeModal={() => leaveFromCall()}>

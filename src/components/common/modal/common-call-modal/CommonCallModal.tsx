@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
 import CallModal from '@/components/common/modal/call-process/CallProcess'
@@ -11,6 +11,8 @@ import {
   changeIsShowCommonModal,
   changeIsShowProcessModal,
   changeIsShowOfferModal,
+  changeUserStream,
+  $userSignal,
 } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 import {
   $recipientCallUser,
@@ -50,32 +52,61 @@ const CommonCallModal: React.FC = () => {
   const stream = useStore($stream)
   const isShowModalCallOffer = useStore($isShowOfferModal)
   const isShowModalCallProcess = useStore($isShowProcessModal)
-  const connectionRef = useRef(null)
+  const connectionRef = useRef<any>()
+  const userSignal = useStore($userSignal)
+  const [peer, setPeer] = useState<Peer.Instance>()
   //
   const answer = () => {
-    // const peer = new Peer({
-    //   initiator: false,
-    //   trickle: false,
-    //   stream,
-    // })
-    // peer.on("signal", (data) => {
-    //   socket.emit("answerCall", { signal: data, to: caller })
-    // })
-    // peer.on("stream", (stream) => {
-    //   userVideo.current.srcObject = stream
-    // })
-
-    // peer.signal(callerSignal)
-    // connectionRef.current = peer
-
     changeIsShowOfferModal(false)
     changeIsShowProcessModal(true)
-    socket.applyCall({
-      to: sendlerCallUser.user_id,
-      recipient: recipientCallUser,
-      sendler: sendlerCallUser,
-    })
+    socket.applyCall(sendlerCallUser.user_id)
   }
+
+  const callUserMethod = () => {
+    if (stream) {
+      const localPeer = new Peer({
+        initiator: true,
+        trickle: false,
+        stream,
+      })
+      if (localPeer && peer) {
+        setPeer(localPeer)
+        peer.on('signal', (data: any) => {
+          socket.sendOfferSDP({ to: callUser.user_id, signal: data })
+        })
+        peer.on('stream', (peerStream: any) => {
+          changeUserStream(peerStream)
+        })
+        if (connectionRef && connectionRef.current) connectionRef.current = peer
+      }
+    }
+	}
+
+  const initiatorSignal = () => {
+    if (peer) peer.signal(userSignal)
+  }
+
+  const answerCallMethod = () => {
+    if (stream) {
+      const localPeer = new Peer({
+        initiator: false,
+        trickle: false,
+        stream,
+      })
+      if (localPeer && peer) {
+        setPeer(localPeer)
+        peer.on('signal', (data: any) => {
+          socket.sendAnswerSDP({ signal: data, to: callUser.user_id })
+        })
+        peer.on('stream', (peerStream: any) => {
+          changeUserStream(peerStream)
+        })
+        peer.signal(userSignal)
+        if (connectionRef && connectionRef.current) connectionRef.current = peer
+      }
+    }
+	}
+
   const decline = () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const user_id =
@@ -92,7 +123,7 @@ const CommonCallModal: React.FC = () => {
     changeIsShowCommonModal(false)
     // if (connectionRef && connectionRef.current) connectionRef.current.destroy()
     if (sendlerCallUser && recipientCallUser)
-      socket.sendLeaveFromCall({ to: callUser.user_id, from: myInfo })
+      socket.sendLeaveFromCall({ to: callUser.user_id, from: myInfo.user_id })
   }
 
   useEffect(() => {
@@ -117,6 +148,10 @@ const CommonCallModal: React.FC = () => {
         <CallModal
           myInfo={myInfo}
           userInfo={callUser}
+          isInitiator={userId === sendlerCallUser.user_id}
+          initiatorSignal={() => initiatorSignal()}
+          callUser={() => callUserMethod()}
+          answerCall={() => answerCallMethod()}
           leaveFromCall={() => leaveFromCall()}
         />
       )}

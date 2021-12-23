@@ -11,6 +11,7 @@ import {
   changeIsShowCommonModal,
   changeIsShowProcessModal,
   changeIsShowOfferModal,
+  changeUserSignal,
 } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 import { changeRecipientCallUser, changeSendlerCallUser } from '@/App.module'
 import { Message, User, ChatItem } from '@/api/types'
@@ -38,13 +39,13 @@ const typeEmits = {
   //
   CALL_TO_USER: 'CALL:CALL_TO_USER',
   CALL_CATCH_CALL_TO_USER: 'CALL:CATCH_CALL_TO_USER',
-  CALL_APPLY_OFFER_CALL: 'CALL:APPLY_OFFER_CALL',
-  CALL_CREATE_OFFER_SDP: 'CALL:CREATE_OFFER_SDP',
+  CALL_APPLY_CALL: 'CALL:APPLY_CALL',
+  CALL_ANSWER_APPLY_CALL: 'CALL:ANSWER_APPLY_CALL',
   CALL_DECLINE_OFFER_CALL: 'CALL:DECLINE_OFFER_CALL',
   CALL_DECLINE_CLEAN_CALL_DATA: 'CALL:DECLINE_CLEAN_CALL_DATA',
   //
   CALL_SEND_OFFER_SDP: 'CALL:SEND_OFFER_SDP',
-  CALL_CREATE_ANSWER_SDP: 'CALL:CREATE_ANSWER_SDP',
+  CALL_CATCH_OFFER_SDP: 'CALL:CATCH_OFFER_SDP',
   CALL_SEND_ANSWER_SDP: 'CALL:SEND_ANSWER_SDP',
   CALL_CATCH_ANSWER_SDP: 'CALL:CATCH_ANSWER_SDP',
   CALL_LEAVE_FROM_CALL: 'CALL:LEAVE_FROM_CALL',
@@ -121,7 +122,7 @@ class SocketApi {
       },
     )
 
-    this.socket.on(typeEmits.CALL_CREATE_OFFER_SDP, () => {
+    this.socket.on(typeEmits.CALL_ANSWER_APPLY_CALL, () => {
       // мне ответили на звонок
       changeIsShowOfferModal(false)
       changeIsShowProcessModal(true)
@@ -133,13 +134,14 @@ class SocketApi {
       changeIsShowCommonModal(false)
     })
     //
-    this.socket.on(typeEmits.CALL_CREATE_ANSWER_SDP, (data: { to: number, signal: any }) => {
-      // changeSettingsToCall({ id: data.to, type: 'answer', signal: data.signal })
+    this.socket.on(typeEmits.CALL_CATCH_OFFER_SDP, (signal: any) => {
+      changeUserSignal(signal)
     })
 
     this.socket.on(typeEmits.CALL_CATCH_ANSWER_SDP, (signal: any) => {
-      // changePeerSignal(signal)
+      changeUserSignal(signal)
     })
+    
     this.socket.on(typeEmits.CALL_LEAVED_FROM_CALL, (user_info: User) => {
       // он вышел из звонка
       changeIsShowProcessModal(false)
@@ -206,11 +208,11 @@ class SocketApi {
     this.socket.emit(typeEmits.CALL_TO_USER, data)
   }
 
-  public applyCall(data: { to: number, recipient: User, sendler: User }) {
+  public applyCall(data: number) {
     // принимаю вызов
     changeIsShowOfferModal(false)
     changeIsShowProcessModal(true)
-    this.socket.emit(typeEmits.CALL_APPLY_OFFER_CALL, data)
+    this.socket.emit(typeEmits.CALL_APPLY_CALL, data)
   }
 
   public declineCall(user_id: number) {
@@ -229,7 +231,7 @@ class SocketApi {
     this.socket.emit(typeEmits.CALL_SEND_ANSWER_SDP, data)
   }
 
-  public sendLeaveFromCall(data: { to: number, from: User }) {
+  public sendLeaveFromCall(data: { to: number, from: number }) {
     this.socket.emit(typeEmits.CALL_LEAVE_FROM_CALL, data)
   }
 

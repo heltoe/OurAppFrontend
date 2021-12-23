@@ -11,3 +11,9 @@ export const $isShowProcessModal = restore(changeIsShowProcessModal, false)
 
 export const changeStream = createEvent<MediaStream>()
 export const $stream = restore(changeStream, null)
+
+export const changeUserStream = createEvent<MediaStream>()
+export const $userStream = restore(changeUserStream, null)
+
+export const changeUserSignal = createEvent<any>()
+export const $userSignal = restore(changeUserSignal, null)
