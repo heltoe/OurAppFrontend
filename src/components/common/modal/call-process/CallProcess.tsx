@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import styled from 'styled-components'
-import { ModalWindowStyled } from '@/components/common/modal/Modal'
 import ModalBox, { ModalBoxStyled } from '@/components/common/modal/ModalBox'
 import Icon from '@/components/ui/Icon'
 import {
@@ -9,16 +8,12 @@ import {
   changeIsVideo,
   $isAudio,
   changeIsAudio,
-  $participantsCall,
-  $settingsToCall,
-  $peerSignal,
 } from '@/components/common/modal/call-process/CallProcess.model'
-import { $userId } from '@/App.module'
-import useWebRTC from '@/components/common/modal/useWebRTC'
+import { User } from '@/api/types'
+import { changeStream } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 
-const ModalReStyled = styled(ModalWindowStyled)`
-  min-height: 700px;
-  min-width: 720px;
+const WrapperCallProcess = styled.div`
+  margin: 0 auto;
   ${ModalBoxStyled} {
     display: flex;
     flex-direction: column;
@@ -29,15 +24,8 @@ const ModalReStyled = styled(ModalWindowStyled)`
     padding: 40px 20px;
     border-radius: 0px;
   }
-  use {
-    fill: ${(props) => props.theme.rgb(props.theme.colors.white)};
-  }
-  &:hover {
-    use {
-      fill: ${(props) => props.theme.rgb(props.theme.colors.white)};
-    }
-  }
 `
+
 const ControllerStyled = styled.div`
   display: flex;
   align-items: center;
@@ -112,57 +100,86 @@ const LabelStyled = styled.p`
   text-overflow: ellipsis;
   max-width: 170px;
 `
-const CallModal: React.FC = () => {
-  const { provideMediaRef, leaveFromCall, handlerPeer, peerSignal } = useWebRTC()
-  const userId = useStore($userId)
-  const settingsToCall = useStore($settingsToCall)
-  const peerSignalData = useStore($peerSignal)
+interface ICallProcessModal {
+  myInfo: User
+  userInfo: User
+  leaveFromCall(): void
+}
 
-  const participantsCall = useStore($participantsCall)
-
+const CallProcessModal: React.FC<ICallProcessModal> = ({
+  myInfo,
+  userInfo,
+  leaveFromCall,
+}) => {
   const isVideo = useStore($isVideo)
   const isAudio = useStore($isAudio)
-  const [role, setRole] = useState(userId)
+  const [role, setRole] = useState(myInfo.user_id)
+  //
+  const myVideo = useRef<HTMLVideoElement>(null)
+  const userVideo = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    if (settingsToCall) handlerPeer(settingsToCall)
-  }, [settingsToCall])
-
-  useEffect(() => {
-    if (peerSignalData) peerSignal(peerSignalData)
-  }, [peerSignalData])
-
-  useEffect(() => {
-    return () => {
-      leaveFromCall()
-    }
-  }, [])
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+        video: true,
+        // video: {
+        //   mandatory: {
+        //     minWidth: 640,
+        //     maxWidth: 640,
+        //     minHeight: 480,
+        //     maxHeight: 480,
+        //     minFrameRate: 30,
+        //   },
+        // },
+      })
+      .then((stream) => {
+        changeStream(stream)
+        if (myVideo && myVideo.current) myVideo.current.srcObject = stream
+      })
+  })
   return (
-    <ModalReStyled>
+    <WrapperCallProcess>
       <ModalBox showClose={false} closeModal={() => leaveFromCall()}>
         <MainVideoStyled>
-          {participantsCall.map((participant) => (
-            <VideoWrapperStyled
-              key={participant.user_id}
-              isMain={role === participant.user_id}
-              onClick={() => setRole(participant.user_id)}
-            >
-              <VideoStyled
-                ref={(instance) => {
-                  if (instance) provideMediaRef(participant.user_id, instance)
-                }}
-                autoPlay
-                playsInline
-                controls={false}
-                muted={participant.user_id === userId}
-              />
-              {!isVideo && (
-                <WrapperLabelStyled>
-                  <LabelStyled>{participant.first_name} {participant.last_name}</LabelStyled>
-                </WrapperLabelStyled>
-              )}
-            </VideoWrapperStyled>
-          ))}
+          <VideoWrapperStyled
+            isMain={role === myInfo.user_id}
+            onClick={() => setRole(myInfo.user_id)}
+          >
+            <VideoStyled
+              ref={myVideo}
+              autoPlay
+              playsInline
+              controls={false}
+              muted
+            />
+            {!isVideo && (
+              <WrapperLabelStyled>
+                <LabelStyled>
+                  {myInfo.first_name} {myInfo.last_name}
+                </LabelStyled>
+              </WrapperLabelStyled>
+            )}
+          </VideoWrapperStyled>
+          <VideoWrapperStyled
+            isMain={role === userInfo.user_id}
+            onClick={() => setRole(userInfo.user_id)}
+          >
+            <VideoStyled
+              ref={userVideo}
+              autoPlay
+              playsInline
+              controls={false}
+              muted={false}
+            />
+            {!isVideo && (
+              <WrapperLabelStyled>
+                <LabelStyled>
+                  {userInfo.first_name} {userInfo.last_name}
+                </LabelStyled>
+              </WrapperLabelStyled>
+            )}
+          </VideoWrapperStyled>
         </MainVideoStyled>
         <ControllerStyled>
           <GreyButtonStyled onClick={() => changeIsVideo(!isVideo)}>
@@ -184,8 +201,8 @@ const CallModal: React.FC = () => {
           </RedButtonStyled>
         </ControllerStyled>
       </ModalBox>
-    </ModalReStyled>
+    </WrapperCallProcess>
   )
 }
 
-export default CallModal
+export default CallProcessModal

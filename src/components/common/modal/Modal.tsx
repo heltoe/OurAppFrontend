@@ -10,12 +10,18 @@ export const ModalWindowStyled = styled.div`
   height: 100%;
   left: 0;
   top: 0;
-  background-color: ${(props) => props.theme.rgba(props.theme.colors.black, 0.4)};
+  background-color: ${(props) =>
+    props.theme.rgba(props.theme.colors.black, 0.4)};
   z-index: 999;
 `
-const ModalWindow: React.FC<ModalBoxType> = ({ children, closeModal = () => {} }) => {
+const ModalWindow: React.FC<ModalBoxType> = ({
+  children,
+  closeModal = () => {},
+}) => {
   return (
-    <ModalWindowStyled onClick={() => closeModal()}>{children}</ModalWindowStyled>
+    <ModalWindowStyled onClick={() => closeModal()}>
+      {children}
+    </ModalWindowStyled>
   )
 }
 

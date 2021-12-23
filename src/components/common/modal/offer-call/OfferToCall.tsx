@@ -1,29 +1,17 @@
-import React, { useEffect } from 'react'
-import { useStore } from 'effector-react'
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
-import { ModalWindowStyled } from '@/components/common/modal/Modal'
 import ModalBox, { ModalBoxStyled } from '@/components/common/modal/ModalBox'
 import { BaseButtonStyled } from '@/components/ui/BaseButton'
 import Icon, { IconStyled } from '@/components/ui/Icon'
 import Avatar, { AvatarStyled } from '@/components/ui/Avatar'
-import { changeIsShowModal } from '@/components/common/modal/offer-call/OfferToCall.model'
-import {
-  $recipientCallUser,
-  changeRecipientCallUser,
-  $sendlerCallUser,
-  changeSendlerCallUser,
-  $userId,
-} from '@/App.module'
-import socket from '@/api/socket'
 import { User } from '@/api/types'
-import { changeParticipantCall } from '../call-process/CallProcess.model'
 
 const fade = keyframes`
   0% { opacity: 0.2 }
   100% { opacity: 1 }
 `
-
-const ModalReStyled = styled(ModalWindowStyled)`
+const WrapperOfferCall = styled.div`
+  margin: 0 auto;
   & ${ModalBoxStyled} {
     display: flex;
     flex-direction: column;
@@ -44,15 +32,8 @@ const ModalReStyled = styled(ModalWindowStyled)`
   ${AvatarStyled} {
     margin-top: 20px;
   }
-  use {
-    fill: ${(props) => props.theme.rgb(props.theme.colors.white)};
-  }
-  &:hover {
-    use {
-      fill: ${(props) => props.theme.rgb(props.theme.colors.white)};
-    }
-  }
 `
+
 const NameUserStyled = styled.p`
   font-size: 24px;
   color: ${(props) => props.theme.rgb(props.theme.colors.white)};
@@ -87,32 +68,22 @@ const AnswerBtn = styled(BaseButtonStyled)`
 const DeclineBtn = styled(BaseButtonStyled)`
   background-color: ${(props) => props.theme.rgb(props.theme.colors.red)};
 `
-const OfferToCall: React.FC = () => {
-  const userId = useStore($userId)
-  const sendlerCallUser = useStore($sendlerCallUser) as User
-  const recipientCallUser = useStore($recipientCallUser) as User
-  const typeCall = userId === sendlerCallUser.user_id ? 'outgoing' : 'incomming'
-  const callUser = userId === sendlerCallUser.user_id ? recipientCallUser : sendlerCallUser
-  const answer = () => {
-    changeParticipantCall(sendlerCallUser)
-    changeParticipantCall(recipientCallUser)
-    socket.applyCall({ to: sendlerCallUser.user_id, recipient: recipientCallUser, sendler: sendlerCallUser })
-    changeIsShowModal(false)
-  }
-  const decline = () => {
-    const user_id = userId === recipientCallUser.user_id ? sendlerCallUser.user_id : recipientCallUser.user_id
-    changeSendlerCallUser(null)
-    changeRecipientCallUser(null)
-    socket.declineCall(user_id)
-    changeIsShowModal(false)
-  }
-  useEffect(() => {
-    return () => {
-      decline()
-    }
-  })
+
+interface IOfferToCall {
+  callUser: User
+  typeCall: 'incomming' | 'outgoing'
+  answer(): void
+  decline(): void
+}
+
+const OfferToCall: React.FC<IOfferToCall> = ({
+  callUser,
+  typeCall,
+  answer,
+  decline,
+}) => {
   return (
-    <ModalReStyled>
+    <WrapperOfferCall>
       <ModalBox closeModal={() => decline()}>
         <Avatar
           id={callUser.user_id}
@@ -122,20 +93,24 @@ const OfferToCall: React.FC = () => {
           isPulse
           size="150px"
         />
-        <NameUserStyled>{`${callUser.first_name || ''} ${callUser.last_name || ''}`}</NameUserStyled>
+        <NameUserStyled>{`${callUser.first_name || ''} ${
+          callUser.last_name || ''
+        }`}</NameUserStyled>
         <DescriptionStyled>
           {typeCall === 'incomming' ? 'Входящий' : 'Исходящий'} звонок
           <AnumatedDotStyled>.</AnumatedDotStyled>
           <AnumatedDotStyled>.</AnumatedDotStyled>
           <AnumatedDotStyled>.</AnumatedDotStyled>
         </DescriptionStyled>
-        {typeCall === 'incomming' && <AnswerBtn onClick={() => answer()}>
-          <Icon type="phone-2" color="#fff" size="18px" />
-          Ответить на звонок
-        </AnswerBtn>}
+        {typeCall === 'incomming' && (
+          <AnswerBtn onClick={() => answer()}>
+            <Icon type="phone-2" color="#fff" size="18px" />
+            Ответить на звонок
+          </AnswerBtn>
+        )}
         <DeclineBtn onClick={() => decline()}>Отклонить</DeclineBtn>
       </ModalBox>
-    </ModalReStyled>
+    </WrapperOfferCall>
   )
 }
 
