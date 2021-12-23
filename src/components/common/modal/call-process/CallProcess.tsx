@@ -9,7 +9,10 @@ import {
   $isAudio,
   changeIsAudio,
 } from '@/components/common/modal/call-process/CallProcess.model'
-import { changeStream, $userSignal } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
+import {
+  changeStream,
+  $userSignal,
+} from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 import { User } from '@/api/types'
 
 const WrapperCallProcess = styled.div`

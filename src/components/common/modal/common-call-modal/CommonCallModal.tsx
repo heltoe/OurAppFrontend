@@ -8,11 +8,11 @@ import {
   $stream,
   $isShowProcessModal,
   $isShowOfferModal,
+  $userSignal,
   changeIsShowCommonModal,
   changeIsShowProcessModal,
   changeIsShowOfferModal,
   changeUserStream,
-  $userSignal,
 } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 import {
   $recipientCallUser,
@@ -59,7 +59,7 @@ const CommonCallModal: React.FC = () => {
   const answer = () => {
     changeIsShowOfferModal(false)
     changeIsShowProcessModal(true)
-    socket.applyCall(sendlerCallUser.user_id)
+    socket.applyCall(callUser.user_id)
   }
 
   const callUserMethod = () => {
@@ -83,7 +83,9 @@ const CommonCallModal: React.FC = () => {
 	}
 
   const initiatorSignal = () => {
-    if (peer) peer.signal(userSignal)
+    if (peer) {
+      peer.signal(userSignal)
+    }
   }
 
   const answerCallMethod = () => {
@@ -93,6 +95,7 @@ const CommonCallModal: React.FC = () => {
         trickle: false,
         stream,
       })
+      console.log(localPeer, 'answerCallMethod')
       if (localPeer && peer) {
         setPeer(localPeer)
         peer.on('signal', (data: any) => {
@@ -134,6 +137,10 @@ const CommonCallModal: React.FC = () => {
       if (sendlerCallUser && recipientCallUser) changeRecipientCallUser(null)
     }
   }, [])
+
+  // useEffect(() => {
+  //   userId === sendlerCallUser.user_id ? callUserMethod() : answerCallMethod()
+  // }, [stream])
   return (
     <ModalReStyled>
       {isShowModalCallOffer && (
