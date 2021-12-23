@@ -13,6 +13,8 @@ import { User } from '@/api/types'
 import { changeStream } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 
 const WrapperCallProcess = styled.div`
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
   ${ModalBoxStyled} {
     display: flex;

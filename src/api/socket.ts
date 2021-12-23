@@ -125,11 +125,6 @@ class SocketApi {
       // мне ответили на звонок
       changeIsShowOfferModal(false)
       changeIsShowProcessModal(true)
-      // changeSendlerCallUser(data.sendler)
-      // changeRecipientCallUser(data.recipient)
-      // // запись участников звонка
-      // changeParticipantCall(data.sendler)
-      // changeParticipantCall(data.recipient)
     })
 
     this.socket.on(typeEmits.CALL_DECLINE_CLEAN_CALL_DATA, () => {
