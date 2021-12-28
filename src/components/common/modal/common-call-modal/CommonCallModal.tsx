@@ -5,7 +5,6 @@ import CallModal from '@/components/common/modal/call-process/CallProcess'
 import OfferToCall from '@/components/common/modal/offer-call/OfferToCall'
 import { ModalWindowStyled } from '@/components/common/modal/Modal'
 import {
-  $stream,
   $isShowProcessModal,
   $isShowOfferModal,
   $userSignal,
@@ -49,7 +48,6 @@ const CommonCallModal: React.FC = () => {
   const myInfo =
     userId === sendlerCallUser.user_id ? sendlerCallUser : recipientCallUser
   //
-  const stream = useStore($stream)
   const isShowModalCallOffer = useStore($isShowOfferModal)
   const isShowModalCallProcess = useStore($isShowProcessModal)
   const connectionRef = useRef<any>()
@@ -62,22 +60,22 @@ const CommonCallModal: React.FC = () => {
     socket.applyCall(callUser.user_id)
   }
 
-  const callUserMethod = () => {
+  const callUserMethod = (stream: MediaStream) => {
     if (stream) {
       const localPeer = new Peer({
         initiator: true,
         trickle: false,
         stream,
       })
-      if (localPeer && peer) {
-        setPeer(localPeer)
-        peer.on('signal', (data: any) => {
+      setPeer(localPeer)
+      if (localPeer) {
+        localPeer.on('signal', (data: any) => {
           socket.sendOfferSDP({ to: callUser.user_id, signal: data })
         })
-        peer.on('stream', (peerStream: any) => {
+        localPeer.on('stream', (peerStream: any) => {
           changeUserStream(peerStream)
         })
-        if (connectionRef && connectionRef.current) connectionRef.current = peer
+        if (connectionRef && connectionRef.current) connectionRef.current = localPeer
       }
     }
 	}
@@ -88,24 +86,23 @@ const CommonCallModal: React.FC = () => {
     }
   }
 
-  const answerCallMethod = () => {
+  const answerCallMethod = (stream: MediaStream) => {
     if (stream) {
       const localPeer = new Peer({
         initiator: false,
         trickle: false,
         stream,
       })
-      console.log(localPeer, 'answerCallMethod')
-      if (localPeer && peer) {
-        setPeer(localPeer)
-        peer.on('signal', (data: any) => {
+      setPeer(localPeer)
+      if (localPeer) {
+        localPeer.on('signal', (data: any) => {
           socket.sendAnswerSDP({ signal: data, to: callUser.user_id })
         })
-        peer.on('stream', (peerStream: any) => {
+        localPeer.on('stream', (peerStream: any) => {
           changeUserStream(peerStream)
         })
-        peer.signal(userSignal)
-        if (connectionRef && connectionRef.current) connectionRef.current = peer
+        localPeer.signal(userSignal)
+        if (connectionRef && connectionRef.current) connectionRef.current = localPeer
       }
     }
 	}
@@ -124,7 +121,7 @@ const CommonCallModal: React.FC = () => {
   const leaveFromCall = () => {
     changeIsShowProcessModal(false)
     changeIsShowCommonModal(false)
-    // if (connectionRef && connectionRef.current) connectionRef.current.destroy()
+    if (connectionRef && connectionRef.current) connectionRef.current.destroy()
     if (sendlerCallUser && recipientCallUser)
       socket.sendLeaveFromCall({ to: callUser.user_id, from: myInfo.user_id })
   }
@@ -138,9 +135,6 @@ const CommonCallModal: React.FC = () => {
     }
   }, [])
 
-  // useEffect(() => {
-  //   userId === sendlerCallUser.user_id ? callUserMethod() : answerCallMethod()
-  // }, [stream])
   return (
     <ModalReStyled>
       {isShowModalCallOffer && (
@@ -157,8 +151,8 @@ const CommonCallModal: React.FC = () => {
           userInfo={callUser}
           isInitiator={userId === sendlerCallUser.user_id}
           initiatorSignal={() => initiatorSignal()}
-          callUser={() => callUserMethod()}
-          answerCall={() => answerCallMethod()}
+          callUser={(mediaStream) => callUserMethod(mediaStream)}
+          answerCall={(mediaStream) => answerCallMethod(mediaStream)}
           leaveFromCall={() => leaveFromCall()}
         />
       )}

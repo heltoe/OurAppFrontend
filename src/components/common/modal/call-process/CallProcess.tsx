@@ -10,7 +10,7 @@ import {
   changeIsAudio,
 } from '@/components/common/modal/call-process/CallProcess.model'
 import {
-  changeStream,
+  $userStream,
   $userSignal,
 } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
 import { User } from '@/api/types'
@@ -110,8 +110,8 @@ interface ICallProcessModal {
   myInfo: User
   userInfo: User
   leaveFromCall(): void
-  callUser(): void
-  answerCall(): void
+  callUser(stream: MediaStream): void
+  answerCall(stream: MediaStream): void
   initiatorSignal(): void
 }
 
@@ -127,37 +127,69 @@ const CallProcessModal: React.FC<ICallProcessModal> = ({
   const isVideo = useStore($isVideo)
   const isAudio = useStore($isAudio)
   const [role, setRole] = useState(myInfo.user_id)
+  const [stream, setStream] = useState<MediaStream>()
   //
   const myVideo = useRef<HTMLVideoElement>(null)
   const userVideo = useRef<HTMLVideoElement>(null)
   //
   const userSignal = useStore($userSignal)
+  const userStream = useStore($userStream)
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: true,
-        video: true,
-        // video: {
-        //   mandatory: {
-        //     minWidth: 640,
-        //     maxWidth: 640,
-        //     minHeight: 480,
-        //     maxHeight: 480,
-        //     minFrameRate: 30,
-        //   },
-        // },
-      })
-      .then((stream) => {
-        changeStream(stream)
-        if (myVideo && myVideo.current) myVideo.current.srcObject = stream
-        if (isInitiator) callUser()
-      })
+    setTimeout(() => {
+      // Старые браузеры могут не реализовывать свойство mediaDevices,
+      // поэтому сначала присваиваем свойству ссылку на пустой объект
+      if (navigator.mediaDevices === undefined) {
+        // @ts-ignore
+        navigator.mediaDevices = {}
+      }
+      // Некоторые браузеры частично реализуют свойство mediaDevices, поэтому
+      // мы не можем присвоить ссылку на объект свойству getUserMedia, поскольку
+      // это переопределит существующие свойства. Здесь, просто добавим свойство
+      // getUserMedia, если оно отсутствует.
+      if (navigator.mediaDevices.getUserMedia === undefined) {
+        navigator.mediaDevices.getUserMedia = function (constraints) {
+          // Сначала, если доступно, получим устаревшее getUserMedia
+          // @ts-ignore
+          const getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+          // Некоторые браузеры не реализуют его, тогда вернём отменённый промис
+          // с ошибкой для поддержания последовательности интерфейса
+          if (!getUserMedia) {
+            return Promise.reject(
+              new Error('getUserMedia is not implemented in this browser'),
+            )
+          }
+          // Иначе, обернём промисом устаревший navigator.getUserMedia
+          return new Promise(function (resolve, reject) {
+            getUserMedia.call(navigator, constraints, resolve, reject)
+          })
+        }
+      }
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: {
+            facingMode: 'user',
+            width: { min: 640, ideal: 640, max: 640 },
+            height: { min: 480, ideal: 480, max: 480 },
+            frameRate: { ideal: 30, max: 30 },
+          },
+        })
+        .then((streamm) => {
+          setStream(streamm)
+          if (myVideo && myVideo.current) myVideo.current.srcObject = streamm
+          if (isInitiator) callUser(streamm)
+        })
+    }, 2000)
   }, [])
 
   useEffect(() => {
-    isInitiator ? initiatorSignal() : answerCall()
+    if (isInitiator) initiatorSignal()
+    if (!isInitiator && stream) answerCall(stream)
   }, [userSignal])
+  useEffect(() => {
+    if (userVideo && userVideo.current) userVideo.current.srcObject = userStream
+  }, [userStream])
   return (
     <WrapperCallProcess>
       <ModalBox showClose={false} closeModal={() => leaveFromCall()}>
