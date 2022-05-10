@@ -2,10 +2,7 @@ import io from 'socket.io-client'
 import { config } from '@/config'
 import { catchIncommingMessage } from '@/components/pages/chat/ChatPage.model'
 import { addToFriendShipsChanged } from '@/components/pages/friends/models/FriendShip'
-import {
-  fetchCountFriends,
-  fetchCountOnlineFriends,
-} from '@/components/pages/friends/models/Friends'
+import { fetchCountFriends } from '@/components/pages/friends/models/Friends'
 import { changeLastMessage } from '@/components/common/sidebar/SideBar.model'
 import {
   changeIsShowCommonModal,
@@ -13,6 +10,10 @@ import {
   changeIsShowOfferModal,
   changeUserSignal,
 } from '@/components/common/modal/common-call-modal/CommonCallModal.model'
+import {
+  changeIsAudioRecipient,
+  changeIsVideoRecipient,
+} from '@/components/common/modal/call-process/CallProcess.model'
 import { changeRecipientCallUser, changeSendlerCallUser } from '@/App.module'
 import { Message, User, ChatItem } from '@/api/types'
 
@@ -50,6 +51,11 @@ const typeEmits = {
   CALL_CATCH_ANSWER_SDP: 'CALL:CATCH_ANSWER_SDP',
   CALL_LEAVE_FROM_CALL: 'CALL:LEAVE_FROM_CALL',
   CALL_LEAVED_FROM_CALL: 'CALL:LEAVED_FROM_CALL',
+  //
+  CALL_SEND_TOGGLE_STATE_AUDIO: 'CALL:SEND_TOGGLE_STATE_AUDIO',
+  CALL_CATCH_TOGGLE_STATE_AUDIO: 'CALL:CATCH_TOGGLE_STATE_AUDIO',
+  CALL_SEND_TOGGLE_STATE_VIDEO: 'CALL:SEND_TOGGLE_STATE_VIDEO',
+  CALL_CATCH_TOGGLE_STATE_VIDEO: 'CALL:CATCH_TOGGLE_STATE_VIDEO',
 }
 
 const options = {
@@ -57,6 +63,11 @@ const options = {
   reconnectionAttempts: 'Infinity',
   timeout: 10000,
   transports: ['websocket'],
+}
+
+type FromStateAudioVideo = {
+  id: number
+  state: boolean
 }
 
 class SocketApi {
@@ -94,7 +105,6 @@ class SocketApi {
       (data: { user: User; recipient: number }) => {
         if (data.recipient === this.user_id) {
           fetchCountFriends()
-          fetchCountOnlineFriends()
           // TODO: add notification
         }
       },
@@ -105,7 +115,6 @@ class SocketApi {
       (data: { user: User; recipient: number }) => {
         if (data.recipient === this.user_id) {
           fetchCountFriends()
-          fetchCountOnlineFriends()
           // TODO: add no tification
         }
       },
@@ -141,12 +150,25 @@ class SocketApi {
     this.socket.on(typeEmits.CALL_CATCH_ANSWER_SDP, (signal: any) => {
       changeUserSignal(signal)
     })
-    
+
     this.socket.on(typeEmits.CALL_LEAVED_FROM_CALL, (user_info: User) => {
       // он вышел из звонка
       changeIsShowProcessModal(false)
       changeIsShowCommonModal(false)
     })
+    // смена состояния аудио/видео
+    this.socket.on(
+      typeEmits.CALL_CATCH_TOGGLE_STATE_AUDIO,
+      (data: FromStateAudioVideo) => {
+        changeIsAudioRecipient(data.state)
+      },
+    )
+    this.socket.on(
+      typeEmits.CALL_CATCH_TOGGLE_STATE_VIDEO,
+      (data: FromStateAudioVideo) => {
+        changeIsVideoRecipient(data.state)
+      },
+    )
   }
 
   public disconnect() {
@@ -158,16 +180,16 @@ class SocketApi {
   }
 
   //
-  public addToFriendShip(data: { user: User, recipient: number }) {
+  public addToFriendShip(data: { user: User; recipient: number }) {
     this.socket.emit(typeEmits.FRIENDSHIP_ADD, data)
   }
 
-  public removeFromFriendShip(data: { user: User, recipient: number }) {
+  public removeFromFriendShip(data: { user: User; recipient: number }) {
     this.socket.emit(typeEmits.FRIENDSHIP_REMOVE, data)
   }
 
   //
-  public addToFriend(data: { user: User, recipient: number }) {
+  public addToFriend(data: { user: User; recipient: number }) {
     this.socket.emit(typeEmits.FRIEND_ADD, data)
   }
 
@@ -223,16 +245,25 @@ class SocketApi {
   }
 
   // процесс звонка
-  public sendOfferSDP(data: { to: number, signal: any }) {
+  public sendOfferSDP(data: { to: number; signal: any }) {
     this.socket.emit(typeEmits.CALL_SEND_OFFER_SDP, data)
   }
 
-  public sendAnswerSDP(data: { to: number, signal: any }) {
+  public sendAnswerSDP(data: { to: number; signal: any }) {
     this.socket.emit(typeEmits.CALL_SEND_ANSWER_SDP, data)
   }
 
-  public sendLeaveFromCall(data: { to: number, from: number }) {
+  public sendLeaveFromCall(data: { to: number; from: number }) {
     this.socket.emit(typeEmits.CALL_LEAVE_FROM_CALL, data)
+  }
+
+  // смена состояния аудио/видео
+  public sendToggleStateAudio(data: { to: number; from: FromStateAudioVideo }) {
+    this.socket.emit(typeEmits.CALL_SEND_TOGGLE_STATE_AUDIO, data)
+  }
+
+  public sendToggleStateVideo(data: { to: number; from: FromStateAudioVideo }) {
+    this.socket.emit(typeEmits.CALL_SEND_TOGGLE_STATE_VIDEO, data)
   }
 
   public init(user_id: number) {

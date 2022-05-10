@@ -15,6 +15,7 @@ const SideBarStyled = styled.div<{ isOpen: boolean }>`
   background-color: ${(props) => props.theme.rgb(props.theme.colors.white)};
   transition: ${(props) => `transform ${props.theme.transition}`};
   transform: ${(props) => `translateX(${props.isOpen ? 0 : -200}px)`};
+  z-index: 999;
   @media ${device.mobileL} {
     width: 100%;
     transform: ${(props) => `translateX(${props.isOpen ? '0px' : '-100%'})`};

@@ -9,14 +9,14 @@ import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 import Icon from '@/components/ui/Icon'
 import {
   changeRecipientId,
-  fetchListMessages,
   fetchMoreMessages,
   $canLoadMore,
   changeListMessages,
   enterToChat,
-  $chat_id
+  $chat_id,
+  $listMessages,
 } from '@/components/pages/chat/ChatPage.model'
-import { $listMessages } from '@/components/pages/chat/ChatPage.model'
+
 import { debounce, isVisible } from '@/helpers/utils'
 
 const ChatPageStyled = styled(PageStyled)`
@@ -58,7 +58,7 @@ const ScrollingHelperStyled = styled.div`
   }
 `
 const ButtonGoToLastMessage = styled.div<{ isShow: boolean }>`
-  display: ${(prop) => prop.isShow ? 'flex' : 'none'};
+  display: ${(prop) => (prop.isShow ? 'flex' : 'none')};
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -81,11 +81,17 @@ const ChatPage: React.FC = () => {
   const loadMoreElement = useRef(null)
   const [isShow, setIsShow] = useState(false)
 
-  const goToLastMessage = (typeScrolling: 'auto' | 'smooth' | undefined = 'auto'): void => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: typeScrolling })
+  const goToLastMessage = (
+    typeScrolling: 'auto' | 'smooth' | undefined = 'auto',
+  ): void => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: typeScrolling,
+    })
   }
   const scrollPage = () => {
-    const condition = (document.body.scrollHeight - window.pageYOffset) > (window.innerHeight + 200)
+    const condition =
+      document.body.scrollHeight - window.pageYOffset > window.innerHeight + 200
     if (condition && !isShow) setIsShow(true)
     if (!condition && isShow) setIsShow(false)
     if (canLoadMore) {
@@ -100,10 +106,7 @@ const ChatPage: React.FC = () => {
     changeListMessages([])
     const params = new URLSearchParams(window.location.search)
     const id = params.get('recipient')
-    if (id) {
-      changeRecipientId(parseInt(id))
-      fetchListMessages()
-    }
+    if (id) changeRecipientId(parseInt(id))
   }, [])
   useEffect(() => {
     goToLastMessage()
@@ -119,7 +122,7 @@ const ChatPage: React.FC = () => {
   })
   return (
     <ChatPageStyled ref={chatPage}>
-      {canLoadMore &&
+      {canLoadMore && (
         <ScrollingHelperStyled
           ref={loadMoreElement}
           className="no-select"
@@ -127,10 +130,10 @@ const ChatPage: React.FC = () => {
         >
           Показать больше
         </ScrollingHelperStyled>
-      }
+      )}
       <BLockContainer>
-        {
-          messages.length ? messages.map((item, index) => 
+        {messages.length ? (
+          messages.map((item, index) => (
             <Message
               key={index}
               messageId={item.message_id}
@@ -139,16 +142,21 @@ const ChatPage: React.FC = () => {
               text={item.message}
               photos={item.files}
             />
-          ) : <EmptyPlaceholder>Список сообщений пуст</EmptyPlaceholder>
-        }
+          ))
+        ) : (
+          <EmptyPlaceholder>Список сообщений пуст</EmptyPlaceholder>
+        )}
       </BLockContainer>
       <MessageController sendMessageEmit={() => goToLastMessage()}>
-        <ButtonGoToLastMessage isShow={isShow} onClick={() => goToLastMessage('smooth')}>
+        <ButtonGoToLastMessage
+          isShow={isShow}
+          onClick={() => goToLastMessage('smooth')}
+        >
           <Icon type="arrow-down" color="#343753" />
         </ButtonGoToLastMessage>
       </MessageController>
     </ChatPageStyled>
   )
-} 
+}
 
 export default ChatPage

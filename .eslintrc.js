@@ -42,5 +42,6 @@ module.exports = {
         depth: 3,
       },
     ],
+    'no-plusplus': 0,
   },
 }

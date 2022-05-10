@@ -75,10 +75,11 @@ const CommonCallModal: React.FC = () => {
         localPeer.on('stream', (peerStream: any) => {
           changeUserStream(peerStream)
         })
-        if (connectionRef && connectionRef.current) connectionRef.current = localPeer
+        if (connectionRef && connectionRef.current)
+          connectionRef.current = localPeer
       }
     }
-	}
+  }
 
   const initiatorSignal = () => {
     if (peer) {
@@ -102,10 +103,11 @@ const CommonCallModal: React.FC = () => {
           changeUserStream(peerStream)
         })
         localPeer.signal(userSignal)
-        if (connectionRef && connectionRef.current) connectionRef.current = localPeer
+        if (connectionRef && connectionRef.current)
+          connectionRef.current = localPeer
       }
     }
-	}
+  }
 
   const decline = () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -118,12 +120,33 @@ const CommonCallModal: React.FC = () => {
     socket.declineCall(user_id)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const leaveFromCall = () => {
     changeIsShowProcessModal(false)
     changeIsShowCommonModal(false)
     if (connectionRef && connectionRef.current) connectionRef.current.destroy()
     if (sendlerCallUser && recipientCallUser)
       socket.sendLeaveFromCall({ to: callUser.user_id, from: myInfo.user_id })
+  }
+
+  const toggleStateAudio = (val: boolean) => {
+    socket.sendToggleStateAudio({
+      to: callUser.user_id,
+      from: {
+        id: myInfo.user_id,
+        state: val,
+      },
+    })
+  }
+
+  const toggleStateVideo = (val: boolean) => {
+    socket.sendToggleStateVideo({
+      to: callUser.user_id,
+      from: {
+        id: myInfo.user_id,
+        state: val,
+      },
+    })
   }
 
   useEffect(() => {
@@ -133,6 +156,7 @@ const CommonCallModal: React.FC = () => {
       if (sendlerCallUser && recipientCallUser) changeSendlerCallUser(null)
       if (sendlerCallUser && recipientCallUser) changeRecipientCallUser(null)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -154,6 +178,8 @@ const CommonCallModal: React.FC = () => {
           callUser={(mediaStream) => callUserMethod(mediaStream)}
           answerCall={(mediaStream) => answerCallMethod(mediaStream)}
           leaveFromCall={() => leaveFromCall()}
+          toggleStateAudio={(val) => toggleStateAudio(val)}
+          toggleStateVideo={(val) => toggleStateVideo(val)}
         />
       )}
     </ModalReStyled>

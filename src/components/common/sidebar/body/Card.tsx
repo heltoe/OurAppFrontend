@@ -6,6 +6,7 @@ import { useStore } from 'effector-react'
 import { getRouterByName } from '@/routes'
 import { User } from '@/api/types'
 import Avatar from '@/components/ui/Avatar'
+import LastMessage from '@/components/common/sidebar/body/LastMessage'
 import { $profileUser } from '@/components/pages/profile/EditProfile.model'
 import { changeActiveUser } from '@/App.module'
 import {
@@ -43,7 +44,8 @@ export const AvatarOverlay = styled.div<{ shortType?: boolean }>`
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background-color: ${(props) => props.theme.rgba(props.theme.colors.purple2, 0)};
+    background-color: ${(props) =>
+      props.theme.rgba(props.theme.colors.purple2, 0)};
     transition: ${(props) => props.theme.transition};
     z-index: 10;
   }
@@ -66,12 +68,19 @@ export const CardStyled = styled(Link)<{
   padding: ${(props) => (props.shorttype ? '5px 0' : '5px')};
   cursor: pointer;
   transition: ${(props) => `background-color ${props.theme.transition}`};
-  background-color: ${(props) => props.isactive ? props.theme.rgba(props.theme.colors.lightBlue, 0.3) : props.theme.rgb(props.theme.colors.white)};
+  background-color: ${(props) =>
+    props.isactive
+      ? props.theme.rgba(props.theme.colors.lightBlue, 0.3)
+      : props.theme.rgb(props.theme.colors.white)};
   &:hover {
-    background-color: ${(props) => props.isactive ? props.theme.rgba(props.theme.colors.lightBlue, 0.3) : props.theme.rgb(props.theme.colors.grey6)};
+    background-color: ${(props) =>
+      props.isactive
+        ? props.theme.rgba(props.theme.colors.lightBlue, 0.3)
+        : props.theme.rgb(props.theme.colors.grey6)};
     ${AvatarOverlay} {
       &:after {
-        background-color: ${(props) => props.theme.rgba(props.theme.colors.purple2, 0.1)};
+        background-color: ${(props) =>
+          props.theme.rgba(props.theme.colors.purple2, 0.1)};
       }
     }
   }
@@ -106,7 +115,7 @@ export const Card: React.FC<CardType> = ({
   const prifileInfo = useStore($profileUser)
   const authorInfo = author === prifileInfo.user_id ? prifileInfo : recipient
   const setActiveUser = () => {
-    if (chat_id === card_chat_id) return 
+    if (chat_id === card_chat_id) return
     changeActiveUser({
       user_id: recipient.user_id,
       first_name: recipient.first_name,
@@ -129,27 +138,22 @@ export const Card: React.FC<CardType> = ({
     >
       <AvatarOverlay shortType={isOpen}>
         <Avatar
-          id={authorInfo.user_id}
-          fullName={`${authorInfo.first_name} ${authorInfo.last_name}`}
+          id={recipient.user_id}
+          fullName={`${recipient.first_name} ${recipient.last_name}`}
           size="70px"
           isRound
-          image={authorInfo.croped_photo || ''}
+          image={recipient.croped_photo || ''}
         />
       </AvatarOverlay>
-      {isOpen && <BlockColumnStyled>
-        <BlockStyled>
-          <FullNameStyled className="middle">{`${authorInfo.first_name} ${authorInfo.last_name}`}</FullNameStyled>
-          <p>{dayjs(time).format('HH:mm')}</p>
-        </BlockStyled>
-          <MessageStyled
-            dangerouslySetInnerHTML={{
-              __html:
-                text.length === 18 && photos.length
-                  ? '<div>Изображение</div>'
-                  : text,
-            }}
-          />
-      </BlockColumnStyled>}
+      {isOpen && (
+        <BlockColumnStyled>
+          <BlockStyled>
+            <FullNameStyled className="middle">{`${recipient.first_name} ${recipient.last_name}`}</FullNameStyled>
+            <p>{dayjs(time).format('HH:mm')}</p>
+          </BlockStyled>
+          <LastMessage author={authorInfo} text={text} photos={photos} />
+        </BlockColumnStyled>
+      )}
     </CardStyled>
   )
 }

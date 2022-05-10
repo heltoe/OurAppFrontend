@@ -4,7 +4,7 @@ import { device } from '@/Theme'
 import { useStore } from 'effector-react'
 import {
   typePages,
-  $typePage, 
+  $typePage,
   $canLoadMore,
   $page,
   pageChanged,
@@ -12,9 +12,8 @@ import {
   loadAllFriends,
   resetFriendShip,
   resetAllFriends,
-  resetOnlineFriends
 } from '@/App.module'
-import { fetchCountFriends, fetchCountOnlineFriends } from '@/components/pages/friends/models/Friends'
+import { fetchCountFriends } from '@/components/pages/friends/models/Friends'
 import { fetchCountFriendShip } from '@/components/pages/friends/models/FriendShip'
 import PageInfiniteScrolling from '@/components/ui/PageInfiniteScrolling'
 import TogglerBlock from '@/components/pages/friends/TogglerBlock'
@@ -47,13 +46,9 @@ export const FriendsPage: React.FC = () => {
   }
   useEffect(() => {
     resetAllFriends()
-    resetOnlineFriends()
     resetFriendShip()
-    //
-    if (typePage === typePages.friends) loadAllFriends()
-    else typePageChanged(typePages.friends)
+    loadAllFriends()
     fetchCountFriendShip()
-    fetchCountOnlineFriends()
   }, [])
   return (
     <PageInfiniteScrolling
@@ -64,7 +59,11 @@ export const FriendsPage: React.FC = () => {
       <WrapperContentStyled>
         <TogglerBlock />
         <SearchField isShadow={isShowShadow} />
-        { typePage !== typePages.findFriend ? <FriendsList /> : <FindNewFriendList /> }
+        {typePage !== typePages.findFriend ? (
+          <FriendsList />
+        ) : (
+          <FindNewFriendList />
+        )}
       </WrapperContentStyled>
     </PageInfiniteScrolling>
   )

@@ -8,6 +8,8 @@ import {
   changeIsVideo,
   $isAudio,
   changeIsAudio,
+  $isVideoRecipient,
+  $isAudioRecipient,
 } from '@/components/common/modal/call-process/CallProcess.model'
 import {
   $userStream,
@@ -35,6 +37,33 @@ const ControllerStyled = styled.div`
   display: flex;
   align-items: center;
   margin-top: 40px;
+`
+const ControllerStyledRecipient = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: ${(props) =>
+    props.theme.rgba(props.theme.colors.black, 0.4)};
+  z-index: 11;
+`
+const LayerVideoHide = styled.div`
+  display: flex;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background-color: ${(props) => props.theme.rgb(props.theme.colors.grey9)};
+  z-index: 10;
+`
+const RecipientButtonStyled = styled.div`
+  padding: 5px;
 `
 const RoundButton = styled.div`
   display: flex;
@@ -71,7 +100,8 @@ const VideoWrapperStyled = styled.div<{ isMain: boolean }>`
     props.isMain
       ? 'none'
       : `1px solid ${props.theme.rgb(props.theme.colors.white)}`};
-  background-color: ${(props) => props.theme.rgba(props.theme.colors.grey9, props.isMain ? 0 : 1)};
+  background-color: ${(props) =>
+    props.theme.rgba(props.theme.colors.grey9, props.isMain ? 0 : 1)};
   cursor: ${(props) => (props.isMain ? 'default' : 'pointer')};
   z-index: ${(props) => (props.isMain ? '1' : '2')};
 `
@@ -94,6 +124,7 @@ const WrapperLabelStyled = styled.div`
   height: 100%;
   border-radius: 8px;
   padding: 10px;
+  z-index: 11;
 `
 const LabelStyled = styled.p`
   color: ${(props) => props.theme.rgb(props.theme.colors.white)};
@@ -113,6 +144,8 @@ interface ICallProcessModal {
   callUser(stream: MediaStream): void
   answerCall(stream: MediaStream): void
   initiatorSignal(): void
+  toggleStateAudio(val: boolean): void
+  toggleStateVideo(val: boolean): void
 }
 
 const CallProcessModal: React.FC<ICallProcessModal> = ({
@@ -123,9 +156,14 @@ const CallProcessModal: React.FC<ICallProcessModal> = ({
   callUser,
   answerCall,
   initiatorSignal,
+  toggleStateAudio,
+  toggleStateVideo,
 }) => {
   const isVideo = useStore($isVideo)
   const isAudio = useStore($isAudio)
+  const isVideoRecipient = useStore($isVideoRecipient)
+  const isAudioRecipient = useStore($isAudioRecipient)
+  //
   const [role, setRole] = useState(myInfo.user_id)
   const [stream, setStream] = useState<MediaStream>()
   //
@@ -151,7 +189,9 @@ const CallProcessModal: React.FC<ICallProcessModal> = ({
         navigator.mediaDevices.getUserMedia = function (constraints) {
           // Сначала, если доступно, получим устаревшее getUserMedia
           // @ts-ignore
-          const getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+          const getUserMedia =
+            // @ts-ignore
+            navigator.webkitGetUserMedia || navigator.mozGetUserMedia
           // Некоторые браузеры не реализуют его, тогда вернём отменённый промис
           // с ошибкой для поддержания последовательности интерфейса
           if (!getUserMedia) {
@@ -181,15 +221,32 @@ const CallProcessModal: React.FC<ICallProcessModal> = ({
           if (isInitiator) callUser(streamm)
         })
     }, 2000)
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => {
+          track.stop()
+        })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
   useEffect(() => {
     if (isInitiator) initiatorSignal()
     if (!isInitiator && stream) answerCall(stream)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSignal])
   useEffect(() => {
     if (userVideo && userVideo.current) userVideo.current.srcObject = userStream
   }, [userStream])
+  //
+  useEffect(() => {
+    toggleStateAudio(isAudio)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAudio])
+  useEffect(() => {
+    toggleStateVideo(isVideo)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVideo])
   return (
     <WrapperCallProcess>
       <ModalBox showClose={false} closeModal={() => leaveFromCall()}>
@@ -198,6 +255,7 @@ const CallProcessModal: React.FC<ICallProcessModal> = ({
             isMain={role === myInfo.user_id}
             onClick={() => setRole(myInfo.user_id)}
           >
+            {!isVideo && <LayerVideoHide />}
             <VideoStyled
               ref={myVideo}
               autoPlay
@@ -222,15 +280,32 @@ const CallProcessModal: React.FC<ICallProcessModal> = ({
               autoPlay
               playsInline
               controls={false}
-              muted={false}
+              muted={!isAudioRecipient}
             />
-            {!isVideo && (
+            {!isVideoRecipient && <LayerVideoHide />}
+            {!isVideoRecipient && (
               <WrapperLabelStyled>
                 <LabelStyled>
                   {userInfo.first_name} {userInfo.last_name}
                 </LabelStyled>
               </WrapperLabelStyled>
             )}
+            <ControllerStyledRecipient>
+              <RecipientButtonStyled>
+                <Icon
+                  type={isVideoRecipient ? 'video' : 'no-video'}
+                  color="#fff"
+                  size="18px"
+                />
+              </RecipientButtonStyled>
+              <RecipientButtonStyled>
+                <Icon
+                  type={isAudioRecipient ? 'microphone' : 'no-microphone'}
+                  color="#fff"
+                  size="18px"
+                />
+              </RecipientButtonStyled>
+            </ControllerStyledRecipient>
           </VideoWrapperStyled>
         </MainVideoStyled>
         <ControllerStyled>

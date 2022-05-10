@@ -28,7 +28,7 @@ export const $activeUser = restore(changeActiveUser, {
   gender: '',
   original_photo: '',
   croped_photo: '',
-  phone: ''
+  phone: '',
 })
 
 export const $preparePersonDataId = combine({ id: $userId })
@@ -43,7 +43,6 @@ export const $friendData = combine({
 
 export const typePages = {
   friends: 'friends',
-  online: 'online',
   friendship: 'friendship',
   findFriend: 'findFriend',
 }
@@ -71,15 +70,11 @@ export const resetFriendShip = createEvent()
 export const loadAllFriends = createEvent()
 export const resetAllFriends = createEvent()
 
-export const loadOnlineFriends = createEvent()
-export const resetOnlineFriends = createEvent()
-
 export const resetListsUsers = createEvent()
 
 const callRestFieldsFx = createEffect((type: string) => {
   const resetMethods = {
     friends: resetAllFriends,
-    online: resetOnlineFriends,
     friendship: resetFriendShip,
     findFriend: resetUsers,
   }
@@ -99,7 +94,6 @@ split({
     users: ({ typePage }) => typePage === typePages.findFriend,
     friendShips: ({ typePage }) => typePage === typePages.friendship,
     allFriends: ({ typePage }) => typePage === typePages.friends,
-    onlineFriends: ({ typePage }) => typePage === typePages.online,
   },
   cases: {
     // @ts-ignore
@@ -108,7 +102,5 @@ split({
     friendShips: [loadListFriendShip, resetListsUsers],
     // @ts-ignore
     allFriends: [loadAllFriends, resetListsUsers],
-    // @ts-ignore
-    onlineFriends: [loadOnlineFriends, resetListsUsers]
   },
 })

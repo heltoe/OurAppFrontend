@@ -2,10 +2,12 @@ import React from 'react'
 import { useStore } from 'effector-react'
 import { typePages, $typePage } from '@/App.module'
 import { $friendShips } from '@/components/pages/friends/models/FriendShip'
-import { $allFriends, $onlineFriends } from '@/components/pages/friends/models/Friends'
+import { $allFriends } from '@/components/pages/friends/models/Friends'
 import styled from 'styled-components'
 import { BlockStyled } from '@/components/ui/Block'
-import CardFriend, { CardFriendStyled } from '@/components/pages/friends/cards/CardFriend'
+import CardFriend, {
+  CardFriendStyled,
+} from '@/components/pages/friends/cards/CardFriend'
 import EmptyPlaceholder from '@/components/common/EmptyPlaceholder'
 import { User } from '@/api/types'
 
@@ -56,28 +58,35 @@ const FriendsList: React.FC = () => {
   const typePage = useStore($typePage)
   const listFriendShips = useStore($friendShips)
   const allFriends = useStore($allFriends)
-  const onlineFriends = useStore($onlineFriends)
   const listUsers = {
     friends: allFriends,
-    online: onlineFriends,
-    friendship: listFriendShips
+    friendship: listFriendShips,
   }
   return (
     <FriendsListStyled>
       {
         // @ts-ignore
-        listUsers[typePage] && listUsers[typePage].length ? listUsers[typePage].map((card: User) => (
-          <CardFriend
-            key={card.user_id}
-            user_id={card.user_id}
-            first_name={card.first_name}
-            last_name={card.last_name}
-            phone={card.phone}
-            gender={card.gender}
-            original_photo={card.original_photo}
-            croped_photo={card.original_photo}
-          />
-        )) : <EmptyPlaceholder>{typePage !== typePages.friendship ? 'Список друзей пуст' : 'Список заявок в друзья пуст'}</EmptyPlaceholder>
+        listUsers[typePage] && listUsers[typePage].length ? (
+          // @ts-ignore
+          listUsers[typePage].map((card: User) => (
+            <CardFriend
+              key={card.user_id}
+              user_id={card.user_id}
+              first_name={card.first_name}
+              last_name={card.last_name}
+              phone={card.phone}
+              gender={card.gender}
+              original_photo={card.original_photo}
+              croped_photo={card.original_photo}
+            />
+          ))
+        ) : (
+          <EmptyPlaceholder>
+            {typePage !== typePages.friendship
+              ? 'Список друзей пуст'
+              : 'Список заявок в друзья пуст'}
+          </EmptyPlaceholder>
+        )
       }
     </FriendsListStyled>
   )
